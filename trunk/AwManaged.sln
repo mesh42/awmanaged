@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged", "AwManaged\AwManaged.csproj", "{5A015714-4A31-4054-B251-F705353CA91D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.Tests", "AwManaged.Tests\AwManaged.Tests.csproj", "{F5F71781-DA47-4C95-BCF0-18B524A23927}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{6196DA34-B6C3-45DE-9E66-EBF1A648D042}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "activeworlds.com", "activeworlds.com", "{A4D46A01-0AD4-4FF9-BBE1-F7DA75E55296}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\activeworlds.com\AW.Core.dll = Dependencies\activeworlds.com\AW.Core.dll
+		Dependencies\activeworlds.com\aw.dll = Dependencies\activeworlds.com\aw.dll
+		Dependencies\activeworlds.com\Aw.h = Dependencies\activeworlds.com\Aw.h
+		Dependencies\activeworlds.com\aw.lib = Dependencies\activeworlds.com\aw.lib
+		Dependencies\activeworlds.com\License.txt = Dependencies\activeworlds.com\License.txt
+		Dependencies\activeworlds.com\Readme.txt = Dependencies\activeworlds.com\Readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nunit.org", "nunit.org", "{474BE9B9-245D-4136-A704-39F4DA8E759A}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\NUnit.org\nunit.framework.dll = Dependencies\NUnit.org\nunit.framework.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A015714-4A31-4054-B251-F705353CA91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A015714-4A31-4054-B251-F705353CA91D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A4D46A01-0AD4-4FF9-BBE1-F7DA75E55296} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{474BE9B9-245D-4136-A704-39F4DA8E759A} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = 
+	EndGlobalSection
+EndGlobal
