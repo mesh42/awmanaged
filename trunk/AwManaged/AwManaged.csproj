@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5A015714-4A31-4054-B251-F705353CA91D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AwManaged</RootNamespace>
+    <AssemblyName>AwManaged</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AW.Core, Version=0.1.7.77, Culture=neutral, PublicKeyToken=a6783cdcd2651288, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\activeworlds.com\AW.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\BaseConfiguration.cs" />
+    <Compile Include="Configuration\Interfaces\ILoginConfiguration.cs" />
+    <Compile Include="Configuration\Interfaces\IConfigurable.cs" />
+    <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
+    <Compile Include="Configuration\LoginConfiguration.cs" />
+    <Compile Include="EventHandling\ChatTypes.cs" />
+    <Compile Include="ExceptionHandling\AwException.cs" />
+    <Compile Include="SceneNodes\Avatar.cs" />
+    <Compile Include="EventHandling\EventObjectScanEventArgs.cs" />
+    <Compile Include="EventHandling\EventChatArgs.cs" />
+    <Compile Include="Huds\HudBase.cs" />
+    <Compile Include="Huds\Interfaces\IHudBase.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventChatArgs.cs" />
+    <Compile Include="Interfaces\ICanLog.cs" />
+    <Compile Include="Interfaces\IIdentifiable.cs" />
+    <Compile Include="Interfaces\IInitialize.cs" />
+    <Compile Include="Interfaces\IPersistable.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Math\AxisAlignedBox.cs" />
+    <Compile Include="Math\Converters.cs" />
+    <Compile Include="Math\Enums.cs" />
+    <Compile Include="Math\MathUtil.cs" />
+    <Compile Include="Math\Matrix3.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Plane.cs" />
+    <Compile Include="Math\PlaneBoundedVolume.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Ray.cs" />
+    <Compile Include="Math\Sphere.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Serialization\FieldPropertyDescriptor.cs" />
+    <Compile Include="Serialization\IParsable.cs" />
+    <Compile Include="Serialization\ParsedData.cs" />
+    <Compile Include="Serialization\TypeConverterBase.cs" />
+    <Compile Include="SceneNodes\WorldAttributes.cs" />
+    <Compile Include="ExceptionHandling\AwExceptionAttribute.cs" />
+    <Compile Include="SceneNodes\ZoneObject.cs" />
+    <Compile Include="EventHandling\EventObjectClickArgs.cs" />
+    <Compile Include="EventHandling\EventAvatarRemoveArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventAvatarRemoveArgs.cs" />
+    <Compile Include="SceneNodes\MoverObject.cs" />
+    <Compile Include="EventHandling\EventAvatarAddArgs.cs" />
+    <Compile Include="EventHandling\EventObjectAddArgs.cs" />
+    <Compile Include="SceneNodes\Interfaces\IAvatar.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventObjectRemoveArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventObjectAddArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventObjectClickArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventAvatarClickArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventAvatarAddArgs.cs" />
+    <Compile Include="SceneNodes\Interfaces\IModel.cs" />
+    <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="SceneNodes\Model.cs" />
+    <Compile Include="Security\Authorization.cs" />
+    <Compile Include="BaseBotEngine.cs" />
+    <Compile Include="Interfaces\IBaseBotEngine.cs" />
+    <Compile Include="Interfaces\IEngineReference.cs" />
+    <Compile Include="SceneNodes\Interfaces\IWorld.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ExceptionHandling\ReasonCodeReturnType.cs" />
+    <Compile Include="Converters\AwConvert.cs" />
+    <Compile Include="SceneNodes\World.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="License.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>copy $(SolutionDir)\Dependencies\activeworlds.com\aw.dll $(TargetDir)</PreBuildEvent>
+  </PropertyGroup>
+</Project>
