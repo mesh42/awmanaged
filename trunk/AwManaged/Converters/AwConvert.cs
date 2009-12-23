@@ -7,7 +7,7 @@ namespace AwManaged.Converters
     /// <summary>
     /// Serveral converters for AW types.
     /// </summary>
-    public class AwConvert
+    internal class AwConvert
     {
         /// <summary>
         /// Converts an Active Worlds string based coordinate to vectors, afterwich the coordinates 
@@ -17,7 +17,7 @@ namespace AwManaged.Converters
         /// </summary>
         /// <param name="coordinates">The coordinates.</param>
         /// <returns></returns>
-        public static CoordinateVectors CoordinatesToVector3(string coordinates)
+        internal static CoordinateVectors CoordinatesToVector3(string coordinates)
         {
             var match =
                 new Regex(
@@ -36,7 +36,7 @@ namespace AwManaged.Converters
                 );
         }
 
-        public static DateTime ConvertFromUnixTimestamp(double timestamp)
+        internal static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
             var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return origin.AddSeconds(timestamp);

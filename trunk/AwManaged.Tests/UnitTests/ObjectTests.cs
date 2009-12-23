@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using AW;
+using AwManaged.Core;
 using AwManaged.Math;
 using AwManaged.SceneNodes;
 using NUnit.Framework;
@@ -11,6 +13,18 @@ namespace AwManaged.Tests
     [TestFixture]
     public class ObjectTests
     {
+        [Test]
+        public void ProtectedListTests()
+        {
+            var a = new ProtectedList<Model> {new Model {Id = 5, Action = "hello"}};
+            var i = a.Count;
+
+            foreach (var b in from p in a select p)
+            {
+                
+            }
+        }
+
         [Test]
         public void ObjectSerializationTests()
         {

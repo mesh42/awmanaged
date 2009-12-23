@@ -1,14 +1,17 @@
 ﻿using AwManaged.EventHandling.Interfaces;
+using AwManaged.SceneNodes.Interfaces;
 
 namespace AwManaged.EventHandling
 {
     public class EventAvatarRemoveArgs : IEventAvatarRemoveArgs
     {
-        public int Session { get; set; }
+        private IAvatar _avatar;
 
-        public EventAvatarRemoveArgs(int session)
+        public IAvatar Avatar { get { return _avatar;} }
+
+        public EventAvatarRemoveArgs(IAvatar avatar)
         {
-            Session = session;
+            _avatar = avatar;
         }
     }
 }

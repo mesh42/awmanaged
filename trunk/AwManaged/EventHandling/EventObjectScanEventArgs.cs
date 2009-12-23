@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AwManaged;
+using AwManaged.Core;
 using AwManaged.SceneNodes;
 
 namespace AwManaged.EventHandling
@@ -8,9 +9,9 @@ namespace AwManaged.EventHandling
     {
         #region IEventObjectScanEventArgs Members
 
-        public List<Model> Model { get; set; }
+        public ProtectedList<Model> Model { get; set; }
 
-        public EventObjectScanEventArgs(List<Model> model)
+        public EventObjectScanEventArgs(ProtectedList<Model> model)
         {
             Model = model;
         }
