@@ -37,6 +37,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dockpanel", "dockpanel", "{
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptControl", "ScriptControl", "{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\ScriptControl\CodeEditor.dll = Dependencies\ScriptControl\CodeEditor.dll
+		Dependencies\ScriptControl\CodeEditor.pdb = Dependencies\ScriptControl\CodeEditor.pdb
+		Dependencies\ScriptControl\ScriptControl.dll = Dependencies\ScriptControl\ScriptControl.dll
+		Dependencies\ScriptControl\ScriptControl.pdb = Dependencies\ScriptControl\ScriptControl.pdb
+		Dependencies\ScriptControl\ScriptEngine.dll = Dependencies\ScriptControl\ScriptEngine.dll
+		Dependencies\ScriptControl\ScriptEngine.pdb = Dependencies\ScriptControl\ScriptEngine.pdb
+		Dependencies\ScriptControl\ScriptRun.dll = Dependencies\ScriptControl\ScriptRun.dll
+		Dependencies\ScriptControl\ScriptRun.pdb = Dependencies\ScriptControl\ScriptRun.pdb
+		Dependencies\ScriptControl\SyntaxDocument.dll = Dependencies\ScriptControl\SyntaxDocument.dll
+		Dependencies\ScriptControl\SyntaxDocument.pdb = Dependencies\ScriptControl\SyntaxDocument.pdb
+		Dependencies\ScriptControl\SyntaxFiles.dll = Dependencies\ScriptControl\SyntaxFiles.dll
+		Dependencies\ScriptControl\SyntaxFiles.pdb = Dependencies\ScriptControl\SyntaxFiles.pdb
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
