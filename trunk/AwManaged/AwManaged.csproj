@@ -31,6 +31,27 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AW.Core, Version=0.1.7.77, Culture=neutral, PublicKeyToken=a6783cdcd2651288, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -54,13 +75,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.Shared.cs">
+      <Link>Properties\AssemblyInfo.Shared.cs</Link>
+    </Compile>
     <Compile Include="Configuration\BaseConfiguration.cs" />
     <Compile Include="Configuration\Interfaces\ILoginConfiguration.cs" />
     <Compile Include="Configuration\Interfaces\IConfigurable.cs" />
     <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
     <Compile Include="Configuration\LoginConfiguration.cs" />
+    <Compile Include="Core\BaseCacheList.cs" />
+    <Compile Include="Core\ProtectedList.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
     <Compile Include="ExceptionHandling\AwException.cs" />
+    <Compile Include="Interfaces\IAvatarCommands.cs" />
+    <Compile Include="Interfaces\IBotEvents.cs" />
+    <Compile Include="Interfaces\IChatCommands.cs" />
+    <Compile Include="Interfaces\ISceneNodeCommands.cs" />
+    <Compile Include="Interfaces\ISceneNodes.cs" />
     <Compile Include="SceneNodes\Avatar.cs" />
     <Compile Include="EventHandling\EventObjectScanEventArgs.cs" />
     <Compile Include="EventHandling\EventChatArgs.cs" />
@@ -85,6 +116,13 @@
     <Compile Include="Math\Sphere.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="SceneNodes\SessionArgumentType.cs" />
+    <Compile Include="ScriptServices\BaseBotInteractionScript.cs" />
+    <Compile Include="ScriptServices\IBotInteractionScript.cs" />
+    <Compile Include="ScriptServices\IRunScript.cs">
+    </Compile>
+    <Compile Include="ScriptServices\IScriptSceneNodes.cs" />
+    <Compile Include="ScriptServices\ScriptInstance.cs" />
     <Compile Include="Serialization\FieldPropertyDescriptor.cs" />
     <Compile Include="Serialization\IParsable.cs" />
     <Compile Include="Serialization\ParsedData.cs" />
@@ -119,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reflection\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

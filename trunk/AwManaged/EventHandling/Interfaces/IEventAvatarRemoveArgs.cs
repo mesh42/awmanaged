@@ -1,7 +1,9 @@
-﻿namespace AwManaged.EventHandling.Interfaces
+﻿using AwManaged.SceneNodes.Interfaces;
+
+namespace AwManaged.EventHandling.Interfaces
 {
     public interface IEventAvatarRemoveArgs
     {
-        int Session { get; set; }
+        IAvatar Avatar { get; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using AwManaged;
 using AwManaged.Configuration.Interfaces;
+using AwManaged.EventHandling.Interfaces;
 using AwManaged.Math;
+using AwManaged.SceneNodes;
 using AWManaged.Security;
 using AwManaged.Interfaces;
 
@@ -30,6 +32,32 @@ namespace AwManaged.Tests
             {
                 Console.WriteLine(ex.Message);
             }
+
+            AvatarEventAdd += HandleAvatarEventAdd;
+            AvatarEventRemove += HandleAvatarEventRemove;
+            ObjectEventAdd += HandleObjectEventAdd;
+        }
+
+        void HandleObjectEventAdd(IBaseBotEngine sender, IEventObjectAddArgs e)
+        {
+            Console.WriteLine(string.Format("object {0} with id {1} added.", e.Object.ModelName,e.Object.Id));
+        }
+
+        void HandleAvatarEventRemove(IBaseBotEngine sender, IEventAvatarRemoveArgs e)
+        {
+            Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.World));
+        }
+
+        void HandleAvatarEventAdd(IBaseBotEngine sender, IEventAvatarAddArgs e)
+        {
+            var teleport = new Vector3(500,500,500);
+            // transport the avatar to a certain location.
+            
+            var message = string.Format("Teleported {0} to location {1},{2},{3}",
+                          new[] {e.Avatar.Name, teleport.x.ToString(), teleport.y.ToString(), teleport.z.ToString()});
+            Say(5000,SessionArgumentType.AvatarSessionMustExist, e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
+            Say(10000,SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
+            SetPosition(e.Avatar, 500, 500, 500,45);
         }
 
         static void HandleObjectEventScanCompleted(IBaseBotEngine sender, IEventObjectScanEventArgs e)

@@ -22,20 +22,54 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nunit.org", "nunit.org", "{
 		Dependencies\NUnit.org\nunit.framework.dll = Dependencies\NUnit.org\nunit.framework.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{353DD003-2CBC-434A-BD61-B9C1C5F45426}"
+	ProjectSection(SolutionItems) = preProject
+		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
+		ChangLog.txt = ChangLog.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManagedIde", "AwManagedIde\AwManagedIde.csproj", "{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dockpanel", "dockpanel", "{02341E0F-3BB7-4C41-9CAE-2AF5329BC5E3}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\dockpanel\license.txt = Dependencies\dockpanel\license.txt
+		Dependencies\dockpanel\WeifenLuo.WinFormsUI.Docking.dll = Dependencies\dockpanel\WeifenLuo.WinFormsUI.Docking.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptControl", "ScriptControl", "{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|x86.ActiveCfg = Debug|x86
+		{5A015714-4A31-4054-B251-F705353CA91D}.Debug|x86.Build.0 = Debug|x86
 		{5A015714-4A31-4054-B251-F705353CA91D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A015714-4A31-4054-B251-F705353CA91D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A015714-4A31-4054-B251-F705353CA91D}.Release|x86.ActiveCfg = Release|x86
+		{5A015714-4A31-4054-B251-F705353CA91D}.Release|x86.Build.0 = Release|x86
 		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|x86.ActiveCfg = Debug|x86
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Debug|x86.Build.0 = Debug|x86
 		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|x86.ActiveCfg = Release|x86
+		{F5F71781-DA47-4C95-BCF0-18B524A23927}.Release|x86.Build.0 = Release|x86
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Debug|x86.ActiveCfg = Debug|x86
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Debug|x86.Build.0 = Debug|x86
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Release|x86.ActiveCfg = Release|x86
+		{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +77,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A4D46A01-0AD4-4FF9-BBE1-F7DA75E55296} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{474BE9B9-245D-4136-A704-39F4DA8E759A} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{02341E0F-3BB7-4C41-9CAE-2AF5329BC5E3} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = 

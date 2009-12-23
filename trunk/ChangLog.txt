@@ -1,0 +1,10 @@
+Release 0.1.2 (unstable)
+* Adding changelog text file
+* Adding Shared Assembly Info
+* Internalizing several unmanaged methods
+* Protecting Cache objects which use List<T>, using security exceptions.
+* Auto Sensing Enter Global, or non Global (CareTaker capability) and adjusting object query type.
+* Extending delayed Say command with attributes.
+* Adding premature IDE voor script testing.
+* Adding X86 build target
+* Encapslating AW unmanaged SDK methods with try catch blocks to propagate Managed Exceptions.

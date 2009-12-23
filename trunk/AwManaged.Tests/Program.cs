@@ -10,9 +10,9 @@ namespace AwManaged.Tests
         static void Main(string[] args)
         {
             var  authorization = new Authorization();
-            authorization.Matrix.Add(new CitizenRole(RoleType.debugger,32366));
-            var bot = new BotEngineExample(authorization, "###########", 0, 0, "##########", "testbot",
-                                           "kenteq", Vector3.Zero, Vector3.Zero);
+            authorization.Matrix.Add(new CitizenRole(RoleType.debugger,0));
+            var bot = new BotEngineExample(authorization, "3dworlds.nl", 7100, 0, "", "",
+                                           "", Vector3.Zero, Vector3.Zero);
 
             Console.ReadLine();
         }
