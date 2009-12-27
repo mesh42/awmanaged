@@ -2,15 +2,17 @@
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventObjectAddArgs
+    public interface IEventObjectAddArgs<TModel,TAvatar> where TModel : IModel<TModel> where TAvatar : IAvatar<TAvatar>
     {
         /// <summary>
         /// The object the user added.
         /// </summary>
-        IModel Object { get; set; }
+        /// <value>The object.</value>
+        TModel Model { get; }
         /// <summary>
         /// The user who added the object.
         /// </summary>
-        IAvatar Avatar { get; set; }
+        /// <value>The avatar.</value>
+        TAvatar Avatar { get; }
     }
 }

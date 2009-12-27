@@ -1,4 +1,4 @@
-﻿using Aw.Common;
+﻿using AwManaged.Interfaces;
 
 namespace AwManaged.Configuration.Interfaces
 {

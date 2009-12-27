@@ -2,8 +2,12 @@
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventAvatarClickArgs
+    /// <summary>
+    /// Event Avatar Clicked Argments.
+    /// </summary>
+    /// <typeparam name="TAvatar">The type of the avatar.</typeparam>
+    public interface IEventAvatarClickArgs<TAvatar> where TAvatar : IAvatar<TAvatar>
     {
-        IAvatar Avatar { get; set; }
+        TAvatar Avatar { get; }
     }
 }

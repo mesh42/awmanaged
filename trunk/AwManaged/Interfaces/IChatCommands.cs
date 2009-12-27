@@ -4,7 +4,7 @@ using AWManaged.Security;
 
 namespace AwManaged.Interfaces
 {
-    public interface IChatCommands
+    public interface IChatCommands<TAvatar>  where TAvatar : IAvatar<TAvatar>
     {
         /// <summary>
         /// Whispers a message to all user within a specified role.
@@ -12,19 +12,12 @@ namespace AwManaged.Interfaces
         /// <param name="role">The role.</param>
         /// <param name="message">The message.</param>
         void Whisper(RoleType role, string message);
-
-        /// <summary>
-        /// Whispers a message to the current avatar session.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        void Whisper(string message);
-
         /// <summary>
         /// Whispers a message to the a specific avatar
         /// </summary>
         /// <param name="avatar">The avatar.</param>
         /// <param name="message">The message.</param>
-        void Whisper(IAvatar avatar, string message);
+        void Whisper(TAvatar avatar, string message);
         /// <summary>
         /// Sends a specified message to the chatroom.
         /// </summary>
@@ -40,7 +33,6 @@ namespace AwManaged.Interfaces
         /// <param name="sessionArgumentType">Type of the session argument.</param>
         /// <param name="avatar">The avatar.</param>
         /// <param name="message">The message.</param>
-        void Say(int delay, SessionArgumentType sessionArgumentType, IAvatar avatar, string message);
-
+        void Say(int delay, SessionArgumentType sessionArgumentType, TAvatar avatar, string message);
     }
 }

@@ -1,21 +1,36 @@
 ﻿using System;
 using AwManaged;
+using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
-using AwManaged.EventHandling.Interfaces;
+using AwManaged.EventHandling;
 using AwManaged.Math;
 using AwManaged.SceneNodes;
-using AWManaged.Security;
-using AwManaged.Interfaces;
 
 namespace AwManaged.Tests
 {
     /// <summary>
-    /// Managed Bot Engine Example for testing purposes.
+    /// Managed Bot Engine Example for testing purposes. Currently only supports V3 objects. Expect updates on V4Object interaction soon.
+    /// This bot logs in to a designated world, then sets to receive avatar events and performs a world object scan.
+    /// after the scan the bot will receive upates on objects.
+    /// 
+    /// The bot will also trnasport users that enter the world, and will greet them.
+    /// 
+    /// There is a unit test which is evaluated when one or multiple objects are added in the world:
+    /// 
+    /// As part of this unit test, the bot will interact with objects that have either:
+    /// 
+    /// @remove or @change in their description field. 
+    /// 
+    /// The main purpose for this is to unit test massive updates in the world, currently tests are being done with
+    /// 40 objects simultaniously with good results.
     /// </summary>
-    public class BotEngineExample : BaseBotEngine, IDisposable
+    public class BotEngineExample : BotEngine, IDisposable
     {
-        public BotEngineExample(Authorization authorization, string domain, int port, int loginOwner, string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
-            : base(authorization, domain, port, loginOwner, privilegePassword, loginName, world, position, rotation)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BotEngineExample"/> class.
+        /// </summary>
+        /// <param name="loginConfiguration">The login configuration.</param>
+        public BotEngineExample(LoginConfiguration loginConfiguration) : base(loginConfiguration)
         {
             BotEventLoggedIn += HandleBotEventLoggedIn;
             BotEventEntersWorld += HandleBotEventEntersWorld;
@@ -24,55 +39,131 @@ namespace AwManaged.Tests
             {
                 Console.WriteLine("Connecting to universe...");
                 Start();
-                ObjectEventScanCompleted += HandleObjectEventScanCompleted;
-                Console.Write("Scanning objects...");
-                ScanObjects();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            AvatarEventAdd += HandleAvatarEventAdd;
-            AvatarEventRemove += HandleAvatarEventRemove;
-            ObjectEventAdd += HandleObjectEventAdd;
         }
 
-        void HandleObjectEventAdd(IBaseBotEngine sender, IEventObjectAddArgs e)
+        /// <summary>
+        /// Handles the object event click.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs e)
         {
-            Console.WriteLine(string.Format("object {0} with id {1} added.", e.Object.ModelName,e.Object.Id));
+            Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}.", e.Model.ModelName, e.Model.Id,e.Avatar.Name));
         }
 
-        void HandleAvatarEventRemove(IBaseBotEngine sender, IEventAvatarRemoveArgs e)
+        /// <summary>
+        /// Handles the object event remove.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleObjectEventRemove(BotEngine sender, EventObjectRemoveArgs e)
         {
-            Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.World));
+            Console.WriteLine(string.Format("object {0} with id {1} removed.", e.Model.ModelName, e.Model.Id));
         }
 
-        void HandleAvatarEventAdd(IBaseBotEngine sender, IEventAvatarAddArgs e)
+        /// <summary>
+        /// Handles the object event add.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleObjectEventAdd(BotEngine sender, EventObjectAddArgs e)
         {
-            var teleport = new Vector3(500,500,500);
+            Console.WriteLine(string.Format("object {0} with id {1} added.", e.Model.ModelName,e.Model.Id));
+
+            // perform some unit tests, these are invoked by the objct description.
+            switch (e.Model.Description)
+            {
+                case "@remove" :
+                    sender.DeleteObject(e.Model);
+                    break;
+                case "@change" :
+                    e.Model.Description = DateTime.Now.ToLongTimeString();
+                    sender.ChangeObject(e.Model);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Handles the avatar event remove.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleAvatarEventRemove(BotEngine sender, EventAvatarRemoveArgs e)
+        {
+            Console.WriteLine("Avatar {0} with session {1} has been removed.",e.Avatar.Name,e.Avatar.Session);
+            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.World));
+        }
+
+        /// <summary>
+        /// Handles the avatar event add.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleAvatarEventAdd(BotEngine sender, EventAvatarAddArgs e)
+        {
+            Console.WriteLine("Avatar {0} with session {1} has been added.", e.Avatar.Name, e.Avatar.Session);
             // transport the avatar to a certain location.
-            
+            var teleport = new Vector3(500,500,500);
+            sender.Teleport(e.Avatar, 500, 500, 500, 45);
+            // send a message that the user has entered the world and has been teleported to a certain location (with a time delay).
             var message = string.Format("Teleported {0} to location {1},{2},{3}",
                           new[] {e.Avatar.Name, teleport.x.ToString(), teleport.y.ToString(), teleport.z.ToString()});
-            Say(5000,SessionArgumentType.AvatarSessionMustExist, e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
-            Say(10000,SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
-            SetPosition(e.Avatar, 500, 500, 500,45);
+            sender.Say(5000,SessionArgumentType.AvatarSessionMustExist, e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
+            sender.Say(6000,SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
         }
 
-        static void HandleObjectEventScanCompleted(IBaseBotEngine sender, IEventObjectScanEventArgs e)
+        /// <summary>
+        /// Handles the object event scan completed.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="AwManaged.EventHandling.EventObjectScanCompletedEventArgs"/> instance containing the event data.</param>
+        static void HandleObjectEventScanCompleted(BotEngine sender, EventObjectScanCompletedEventArgs e)
         {
             Console.WriteLine(string.Format("Found {0} objects.", e.Model.Count));
+            // start receiving object events.
+            sender.ObjectEventAdd += HandleObjectEventAdd;
+            sender.ObjectEventRemove += HandleObjectEventRemove;
+            sender.ObjectEventClick += HandleObjectEventClick;
+            sender.ObjectEventChange += HandleObjectEventChange;
         }
 
-        static void HandleBotEventLoggedIn(IBaseBotEngine sender, ILoginConfiguration e)
+        static void HandleObjectEventChange(BotEngine sender, EventObjectChangeArgs e)
+        {
+            Console.WriteLine(
+                string.Format("object {0} with id {1} changed. old number {2}, new number {3}", 
+                new object[]{e.Model.ModelName, e.Model.Id,e.OldModel.Number,e.Model.Number}));
+        }
+
+        /// <summary>
+        /// Handles the bot event logged in.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleBotEventLoggedIn(BotEngine sender, ILoginConfiguration e)
         {
             Console.WriteLine(string.Format("Bot [{0}] logged into the {1} universe server on port {2}",e.LoginName, e.Domain,e.Port));
         }
 
-        static void HandleBotEventEntersWorld(IBaseBotEngine sender, ILoginConfiguration e)
+        /// <summary>
+        /// Handles the bot event enters world.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void HandleBotEventEntersWorld(BotEngine sender, ILoginConfiguration e)
         {
+            // start receiving avatar events.
+            sender.AvatarEventAdd += HandleAvatarEventAdd;
+            sender.AvatarEventRemove += HandleAvatarEventRemove;
+
             Console.WriteLine(string.Format("[{0}] Entered world {1}.",e.LoginName,e.World));
+            sender.ObjectEventScanCompleted += HandleObjectEventScanCompleted;
+            Console.Write("Scanning objects...");
+            sender.ScanObjects();
         }
     }
 }

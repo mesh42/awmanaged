@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumerates the different chat types that are available in the aw managed library.
     /// </summary>
-    public enum ChatType
+    public enum ChatType : byte
     {
         /// <summary>
         /// A normal chat message from a certain avatar.

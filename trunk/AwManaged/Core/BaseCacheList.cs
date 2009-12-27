@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security;
+using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Core
 {
@@ -9,8 +11,23 @@ namespace AwManaged.Core
     /// to provide a non writeable protected List.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class BaseCacheList<T> : List<T>
+    /// <typeparam name="TList">The type of the list implementation</typeparam>
+    public abstract class BaseCacheList<T,TList> : List<T>, IChanged<TList>, ICloneableListT<TList,T>, IEnumerator, IEnumerable<T> 
+        where T : ICloneableT<T>
+        where TList : IList<T>
     {
+        public new T this[int index]
+        {
+            get
+            {
+                return ((ICloneableT<T>) base[index]).Clone();
+            }
+            set
+            {
+                throw new SecurityException();
+            }
+        }
+
         /// <summary>
         /// Throws a security exception when used. Only allowed by the internal cache's implementation.
         /// </summary>
@@ -78,7 +95,7 @@ namespace AwManaged.Core
             throw new SecurityException();            
         }
 
-        public void InternalRemoveAt(int index)
+        internal void InternalRemoveAt(int index)
         {
             base.RemoveAt(index);
         }
@@ -93,7 +110,7 @@ namespace AwManaged.Core
             throw new SecurityException();            
         }
 
-        public void InternalRemoveRange(int index, int count)
+        internal void InternalRemoveRange(int index, int count)
         {
             base.RemoveRange(index, count);
         }
@@ -107,7 +124,7 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalClear()
+        internal void InternalClear()
         {
             base.Clear();
         }
@@ -121,7 +138,7 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalInsert(int index, T item)
+        internal void InternalInsert(int index, T item)
         {
             base.Insert(index, item);
         }
@@ -135,6 +152,11 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
+        internal void InternalInsertRange(int index, IEnumerable<T> collection)
+        {
+            base.InsertRange(index, collection);
+        }
+
         /// <summary>
         /// Throws a security exception when used. Only allowed by the internal cache's implementation.
         /// </summary>
@@ -144,7 +166,7 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalSort(Comparison<T> comparison)
+        internal void InternalSort(Comparison<T> comparison)
         {
             base.Sort(comparison);
         }
@@ -158,7 +180,7 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalSort(IComparer<T> comparer)
+        internal void InternalSort(IComparer<T> comparer)
         {
             base.Sort(comparer);
         }
@@ -173,7 +195,7 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalSort(int index, int count, IComparer<T> comparer)
+        internal void InternalSort(int index, int count, IComparer<T> comparer)
         {
             base.Sort(index, count, comparer);
         }
@@ -187,9 +209,64 @@ namespace AwManaged.Core
             throw new SecurityException();
         }
 
-        public void InternalReverse(int index, int count)
+        internal void InternalReverse(int index, int count)
         {
             base.Reverse(index, count);
         }
+
+        #region IEnumerable<T> Members
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return base.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return base.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerator Members
+
+        object IEnumerator.Current
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        bool IEnumerator.MoveNext()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IEnumerator.Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region ICloneableListT<TList,T> Members
+
+        public abstract TList Clone();
+
+        #endregion
+
+        #region IChanged<TList> Members
+
+        public event ChangedEventDelegate<TList> OnChanged;
+
+        #endregion
+
+        #region IChanged<TList> Members
+
+        public bool IsChanged{ get; internal set; }
+
+        #endregion
     }
 }

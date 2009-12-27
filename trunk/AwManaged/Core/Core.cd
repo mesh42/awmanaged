@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AwManaged.Core.BaseCacheList&lt;T, TList&gt;" Collapsed="true">
+    <Position X="4.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AWIAJEAAEQAQgCCACAAQBAAAAEAABBAAqAACAIBEAVA=</HashCode>
+      <FileName>Core\BaseCacheList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AwManaged.Core.ProtectedList&lt;T&gt;">
+    <Position X="1.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Core\ProtectedList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="AwManaged.Core.Interfaces.ICloneableT&lt;T&gt;">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Core\Interfaces\ICloneableT.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AwManaged.Core.Interfaces.IChanged&lt;T&gt;">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Interfaces\IChanged.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AwManaged.Core.Interfaces.ICloneableListT&lt;TList, TItem&gt;">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Core\Interfaces\ICloneableListT.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

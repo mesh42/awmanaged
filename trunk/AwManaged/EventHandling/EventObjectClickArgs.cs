@@ -1,23 +1,23 @@
-﻿using AwManaged.EventHandling.Interfaces;
-using AwManaged.SceneNodes.Interfaces;
+﻿using AwManaged.Core.Interfaces;
+using AwManaged.EventHandling.Interfaces;
+using AwManaged.SceneNodes;
 
-namespace Bot.Logic.AWManaged
+namespace AwManaged.EventHandling
 {
-    public class EventObjectClickArgs : IEventObjectClickArgs
+    public sealed class EventObjectClickArgs : IEventObjectClickArgs<Model,Avatar>
     {
-        /// <summary>
-        /// The object the user added.
-        /// </summary>
-        public IModel Object { get; set; }
-        /// <summary>
-        /// The user who added the object.
-        /// </summary>
-        public IAvatar Avatar { get; set; }
+        public Model Model { get; private set; }
+        public Avatar Avatar { get; private set; }
 
-        public EventObjectClickArgs(IModel o, IAvatar avatar)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventObjectClickArgs"/> class.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="avatar">The avatar.</param>
+        public EventObjectClickArgs(ICloneableT<Model> model, ICloneableT<Avatar> avatar)
         {
-            Object = o;
-            Avatar = avatar;
+            Model = model.Clone();
+            Avatar = avatar.Clone();
         }
     }
 }

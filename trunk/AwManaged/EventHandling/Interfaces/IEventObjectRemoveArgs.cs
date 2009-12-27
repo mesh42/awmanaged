@@ -2,15 +2,19 @@
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventObjectRemoveArgs
+    public interface IEventObjectRemoveArgs<TModel, TAvatar>
+        where TModel : IModel<TModel>
+        where TAvatar : IAvatar<TAvatar>
     {
         /// <summary>
         /// The object the user removed. (This is a cloned object of the original, as the actual object does not exist anymore with the AW SDK implementation).
         /// </summary>
-        IModel Object { get; set; }
+        /// <value>The object.</value>
+        TModel Model { get; }
         /// <summary>
         /// The user who removed the object.
         /// </summary>
-        IAvatar Avatar { get; set; }
+        /// <value>The avatar.</value>
+        TAvatar Avatar { get; }
     }
 }

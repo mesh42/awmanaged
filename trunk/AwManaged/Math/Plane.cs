@@ -128,12 +128,12 @@ namespace AwManaged.Math
 
         #endregion Methods
 
-        #region Object overrides
+        #region Model overrides
 
         /// <summary>
-        ///		Object method for testing equality.
+        ///		Model method for testing equality.
         /// </summary>
-        /// <param name="obj">Object to test.</param>
+        /// <param name="obj">Model to test.</param>
         /// <returns>True if the 2 planes are logically equal, false otherwise.</returns>
         public override bool Equals(object obj)
         {
