@@ -1,17 +1,16 @@
-﻿using AwManaged.EventHandling.Interfaces;
-using AwManaged.SceneNodes.Interfaces;
+﻿using AwManaged.Core.Interfaces;
+using AwManaged.EventHandling.Interfaces;
+using AwManaged.SceneNodes;
 
 namespace AwManaged.EventHandling
 {
-    public class EventAvatarRemoveArgs : IEventAvatarRemoveArgs
+    public sealed class EventAvatarRemoveArgs : IEventAvatarRemoveArgs<Avatar>
     {
-        private IAvatar _avatar;
+        public Avatar Avatar { get; private set; }
 
-        public IAvatar Avatar { get { return _avatar;} }
-
-        public EventAvatarRemoveArgs(IAvatar avatar)
+        public EventAvatarRemoveArgs(ICloneableT<Avatar> avatar)
         {
-            _avatar = avatar;
+            Avatar = avatar.Clone();
         }
     }
 }

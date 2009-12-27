@@ -2,15 +2,17 @@
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventObjectClickArgs
+    public interface IEventObjectClickArgs<TModel, TAvatar>
+        where TModel : IModel<TModel>
+        where TAvatar : IAvatar<TAvatar>
     {
         /// <summary>
         /// The object the user clicked on.
         /// </summary>
-        IModel Object { get; set; }
+        TModel Model { get; }
         /// <summary>
         /// The user who clicked the object.
         /// </summary>
-        IAvatar Avatar { get; set; }
+        TAvatar Avatar { get; }
     }
 }

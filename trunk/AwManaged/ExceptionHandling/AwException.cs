@@ -6,7 +6,7 @@ namespace AwManaged.ExceptionHandling
     /// <summary>
     /// AW SDK to native .NET Exception wrapper.
     /// </summary>
-    public class AwException : Exception
+    public sealed class AwException : Exception
     {
         /// <summary>
         /// Gets or sets the return code.

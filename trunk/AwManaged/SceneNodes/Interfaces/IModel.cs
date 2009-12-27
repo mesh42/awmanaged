@@ -4,7 +4,7 @@ using AwManaged.Math;
 
 namespace AwManaged.SceneNodes.Interfaces
 {
-    public interface IModel : ICloneable
+    public interface IModel<T> : ISceneNode<T>
     {
         int Id { get; set; }
         int Owner { get; set; }
@@ -15,7 +15,7 @@ namespace AwManaged.SceneNodes.Interfaces
         Vector3 Rotation { get; set; }
         string Description { get; set; }
         string Action { get; set; }
+        string Data { get; set; }
         int Number { get; set; }
-        new object Clone();
     }
 }

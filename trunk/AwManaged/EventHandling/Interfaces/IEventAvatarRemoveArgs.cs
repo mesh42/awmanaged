@@ -2,8 +2,8 @@
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventAvatarRemoveArgs
+    public interface IEventAvatarRemoveArgs<TAvatar> where TAvatar : IAvatar<TAvatar>
     {
-        IAvatar Avatar { get; }
+        TAvatar Avatar { get; }
     }
 }

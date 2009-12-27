@@ -86,8 +86,7 @@ namespace AwManaged.Configuration
         /// <param name="world">The world.</param>
         /// <param name="position">The position.</param>
         /// <param name="rotation">The rotation.</param>
-        public LoginConfiguration(Authorization authorization, string domain, int port, int owner,
-                                  string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
+        public LoginConfiguration(Authorization authorization, string domain, int port, int owner, string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
         {
             Authorization = authorization;
             Domain = domain;
@@ -115,15 +114,15 @@ namespace AwManaged.Configuration
         }
 
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoginConfiguration"/> class.
-        /// For new configurations.
-        /// </summary>
-        public LoginConfiguration()
-        {
-            Position = new Vector3(0,0,0);
-            Rotation = new Vector3(0,0,0);
-        }
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="LoginConfiguration"/> class.
+        ///// For new configurations.
+        ///// </summary>
+        //public LoginConfiguration()
+        //{
+        //    Position = new Vector3(0,0,0);
+        //    Rotation = new Vector3(0,0,0);
+        //}
 
         private void initialize(LoginConfiguration loginConfiguration)
         {

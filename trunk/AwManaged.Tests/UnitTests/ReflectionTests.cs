@@ -15,7 +15,7 @@ namespace AwManaged.Tests.UnitTests
         [Test]
         public void InterfaceEventReflectionTest()
         {
-            var t = typeof (IBaseBotEngine);
+            var t = typeof (BotEngine);
             foreach (var e in t.GetEvents())
             {
             }

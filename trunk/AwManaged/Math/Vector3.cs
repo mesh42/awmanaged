@@ -802,10 +802,10 @@ namespace AwManaged.Math
 
         #endregion
 
-        #region Object overloads
+        #region Model overloads
 
         /// <summary>
-        ///		Overrides the Object.ToString() method to provide a text representation of 
+        ///		Overrides the Model.ToString() method to provide a text representation of 
         ///		a Vector3.
         /// </summary>
         /// <returns>A string representation of a vector3.</returns>
@@ -821,7 +821,7 @@ namespace AwManaged.Math
 
 
         /// <summary>
-        ///		Overrides the Object.ToString() method to provide a text representation of 
+        ///		Overrides the Model.ToString() method to provide a text representation of 
         ///		a Vector3.
         /// </summary>
         /// <returns>A string representation of a vector3.</returns>
@@ -830,7 +830,7 @@ namespace AwManaged.Math
             return string.Format("({0}, {1}, {2})", (int)this.x, (int)this.y, (int)this.z);
         }
         /// <summary>
-        ///		Overrides the Object.ToString() method to provide a text representation of 
+        ///		Overrides the Model.ToString() method to provide a text representation of 
         ///		a Vector3.
         /// </summary>
         /// <returns>A string representation of a vector3.</returns>

@@ -321,9 +321,9 @@
         [AwException(Message = "Not allowed to encroach into another's property.")]
         RC_ENCROACHES = 300,
         /// <summary>
-        /// Object type invalid.
+        /// Model type invalid.
         /// </summary>
-        [AwException(Message = "Object type invalid.")]
+        [AwException(Message = "Model type invalid.")]
         RC_OBJECT_TYPE_INVALID = 301,
         /// <summary>
         /// Cell limit would be exceeded.

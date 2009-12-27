@@ -634,10 +634,10 @@ namespace AwManaged.Math
 
         #endregion
 
-        #region Object overloads
+        #region Model overloads
 
         /// <summary>
-        ///		Overrides the Object.ToString() method to provide a text representation of 
+        ///		Overrides the Model.ToString() method to provide a text representation of 
         ///		a Matrix4.
         /// </summary>
         /// <returns>A string representation of a vector3.</returns>

@@ -1,3 +1,12 @@
+Release 0.1.3 (unstable)
+* A lot of refactoring in the code.
+* Templating interfaces and adding type parameter restrictions for implementations.
+* Modifying bot example to perform in world unit tests.
+* Adding cloneable cache and scenenodes.
+* Adding unified object change, add and removes.
+* Securing the Scenenode Cache against pollution from custom scripts.
+* Adding some comments to code for future API documentation
+
 Release 0.1.2 (unstable)
 * Adding changelog text file
 * Adding Shared Assembly Info
@@ -5,6 +14,6 @@ Release 0.1.2 (unstable)
 * Protecting Cache objects which use List<T>, using security exceptions.
 * Auto Sensing Enter Global, or non Global (CareTaker capability) and adjusting object query type.
 * Extending delayed Say command with attributes.
-* Adding premature IDE voor script testing.
+* Adding premature IDE for script testing.
 * Adding X86 build target
-* Encapslating AW unmanaged SDK methods with try catch blocks to propagate Managed Exceptions.
+* Encapsulating AW unmanaged SDK methods with try catch blocks to propagate Managed Exceptions.

@@ -2,7 +2,7 @@
 
 namespace AwManaged.SceneNodes.Interfaces
 {
-    public interface IWorld
+    public interface IWorld<T> : ISceneNode<T>
     {
         string Name { get; set; }
         Guid Id { get; }

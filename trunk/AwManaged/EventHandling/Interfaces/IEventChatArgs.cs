@@ -2,10 +2,10 @@ using AwManaged.SceneNodes.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventChatArgs
+    public interface IEventChatArgs<TAvatar> where TAvatar : IAvatar<TAvatar>
     {
         ChatType ChatType { get; }
-        IAvatar Avatar { get; }
+        TAvatar Avatar { get; }
         string Message { get; }
     }
 }

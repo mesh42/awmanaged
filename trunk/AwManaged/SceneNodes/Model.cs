@@ -6,7 +6,7 @@ using AwManaged.SceneNodes.Interfaces;
 
 namespace AwManaged.SceneNodes
 {
-    public class Model : IModel
+    public sealed class Model : IModel<Model>
     {
         [XmlAttribute]
         public int Id { get; set; }
@@ -46,36 +46,21 @@ namespace AwManaged.SceneNodes
             Data = data;
         }
 
-        #region ICloneable Members
+        #region ICloneableT<IModel> Members
 
-        public object ClonePrecise()
+        public Model Clone()
         {
-            return new Model(Id, Owner, DateTime.Now, ObjectType.V3, ModelName, new Vector3(Position.x, Position.y, Position.z), new Vector3(Rotation.x, Rotation.y, Rotation.z), Description, Action, Number, Data);
+            return (Model) MemberwiseClone();
         }
 
-        public object Clone()
-        {
-            return new Model(0, 0, DateTime.Now, ObjectType.V3, ModelName, new Vector3(Position.x, Position.y, Position.z), new Vector3(Rotation.x, Rotation.y, Rotation.z), Description, Action, 0, Data);
-        }
+        #endregion
+
+        #region IChanged<Model> Members
+
+        public event AwManaged.Core.Interfaces.ChangedEventDelegate<Model> OnChanged;
+
+        public bool IsChanged{get; internal set;}
 
         #endregion
     }
 }
-
-//Argument attributes
-
-//AW_OBJECT_OWNER
-//AW_OBJECT_BUILD_TIMESTAMP
-//If set to 0 (zero) then the world will use its current local time.
-//AW_OBJECT_TYPE
-//AW_OBJECT_X
-//AW_OBJECT_Y
-//AW_OBJECT_Z
-//AW_OBJECT_YAW
-//AW_OBJECT_TILT
-//AW_OBJECT_ROLL
-//AW_OBJECT_DESCRIPTION
-//AW_OBJECT_ACTION
-//AW_OBJECT_MODEL
-//AW_OBJECT_DATA
-//AW_OBJECT_CALLBACK_REFERENCE

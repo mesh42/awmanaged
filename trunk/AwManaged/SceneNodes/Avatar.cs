@@ -1,11 +1,10 @@
 ﻿using System;
-using AwManaged.Interfaces;
 using AwManaged.Math;
 using AwManaged.SceneNodes.Interfaces;
 
 namespace AwManaged.SceneNodes
 {
-    public class Avatar : IAvatar
+    public sealed class Avatar : IAvatar<Avatar>
     {
         public int Session { get; set; }
         public string Name { get; set; }
@@ -22,17 +21,12 @@ namespace AwManaged.SceneNodes
 
         public Avatar()
         {
-            
         }
 
         public void ChangedPosition()
         {
             if (OnChangePosition != null)
                 OnChangePosition(this, null);
-            else
-            {
-                //
-            }
         }
 
         public Avatar(int session, string name, Vector3 position, Vector3 rotation, int gesture, int citizen, int privilege, int state)
@@ -47,10 +41,16 @@ namespace AwManaged.SceneNodes
             State = state;
         }
 
-        #region IAvatar Members
+        public Avatar Clone()
+        {
+            return (Avatar)MemberwiseClone();
+        }
 
+        #region IChanged<Avatar> Members
 
-        public IPropertyBag<IAvatar> Properties{get;set;}
+        public event AwManaged.Core.Interfaces.ChangedEventDelegate<Avatar> OnChanged;
+
+        public bool IsChanged{get; internal set;}
 
         #endregion
     }

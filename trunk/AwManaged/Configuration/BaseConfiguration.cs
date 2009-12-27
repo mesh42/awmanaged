@@ -9,7 +9,7 @@ using AwManaged.Configuration.Interfaces;
 namespace Aw.Common.Config
 {
     [Serializable]
-    public abstract class BaseConfiguration<T> : IConfiguration where T : IConfiguration, new()
+    public abstract class BaseConfiguration<T> : IConfiguration where T : IConfiguration
     {
         public static T GetConfiguration(string name)
         {

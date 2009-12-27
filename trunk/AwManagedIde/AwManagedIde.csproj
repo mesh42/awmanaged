@@ -140,7 +140,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Scripts\SimpleScript.cs" />
     <Compile Include="ToolWindows\ProjectToolWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +170,9 @@
       <Project>{5A015714-4A31-4054-B251-F705353CA91D}</Project>
       <Name>AwManaged</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

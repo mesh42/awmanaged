@@ -65,6 +65,9 @@
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Threading, Version=1.0.3058.34407, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -84,19 +87,30 @@
     <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
     <Compile Include="Configuration\LoginConfiguration.cs" />
     <Compile Include="Core\BaseCacheList.cs" />
+    <Compile Include="Core\CallbackStructT.cs" />
+    <Compile Include="Core\Delegates\Delegates.cs" />
+    <Compile Include="Core\Interfaces\ICallbackStructT.cs" />
+    <Compile Include="Core\Interfaces\IChanged.cs" />
+    <Compile Include="Core\Interfaces\ICloneableListT.cs" />
     <Compile Include="Core\ProtectedList.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
+    <Compile Include="EventHandling\EventObjectChange.cs" />
+    <Compile Include="EventHandling\EventObjectRemoveArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventObjectChangeArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventObjectScanEventArgs.cs" />
     <Compile Include="ExceptionHandling\AwException.cs" />
-    <Compile Include="Interfaces\IAvatarCommands.cs" />
+    <Compile Include="ExceptionHandling\IHandleExceptionManaged.cs" />
+    <Compile Include="SceneNodes\Interfaces\IAvatarCommands.cs" />
     <Compile Include="Interfaces\IBotEvents.cs" />
     <Compile Include="Interfaces\IChatCommands.cs" />
-    <Compile Include="Interfaces\ISceneNodeCommands.cs" />
-    <Compile Include="Interfaces\ISceneNodes.cs" />
+    <Compile Include="Core\Interfaces\ICloneableT.cs" />
+    <Compile Include="SceneNodes\Interfaces\ISceneNodeCommands.cs" />
+    <Compile Include="SceneNodes\Interfaces\ISceneNodes.cs" />
     <Compile Include="SceneNodes\Avatar.cs" />
-    <Compile Include="EventHandling\EventObjectScanEventArgs.cs" />
+    <Compile Include="EventHandling\EventObjectScanCompletedEventArgs.cs" />
     <Compile Include="EventHandling\EventChatArgs.cs" />
-    <Compile Include="Huds\HudBase.cs" />
-    <Compile Include="Huds\Interfaces\IHudBase.cs" />
+    <Compile Include="SceneNodes\HudBase.cs" />
+    <Compile Include="SceneNodes\Interfaces\IHudBase.cs" />
     <Compile Include="EventHandling\Interfaces\IEventChatArgs.cs" />
     <Compile Include="Interfaces\ICanLog.cs" />
     <Compile Include="Interfaces\IIdentifiable.cs" />
@@ -116,12 +130,16 @@
     <Compile Include="Math\Sphere.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
+    <Compile Include="SceneNodes\Camera.cs" />
+    <Compile Include="SceneNodes\Interfaces\ICamera.cs" />
+    <Compile Include="SceneNodes\Interfaces\IMover.cs" />
+    <Compile Include="SceneNodes\Interfaces\ISceneNode.cs" />
+    <Compile Include="SceneNodes\Interfaces\IZone.cs" />
+    <Compile Include="SceneNodes\Mover.cs" />
     <Compile Include="SceneNodes\SessionArgumentType.cs" />
-    <Compile Include="ScriptServices\BaseBotInteractionScript.cs" />
-    <Compile Include="ScriptServices\IBotInteractionScript.cs" />
+    <Compile Include="SceneNodes\Zone.cs" />
     <Compile Include="ScriptServices\IRunScript.cs">
     </Compile>
-    <Compile Include="ScriptServices\IScriptSceneNodes.cs" />
     <Compile Include="ScriptServices\ScriptInstance.cs" />
     <Compile Include="Serialization\FieldPropertyDescriptor.cs" />
     <Compile Include="Serialization\IParsable.cs" />
@@ -129,11 +147,9 @@
     <Compile Include="Serialization\TypeConverterBase.cs" />
     <Compile Include="SceneNodes\WorldAttributes.cs" />
     <Compile Include="ExceptionHandling\AwExceptionAttribute.cs" />
-    <Compile Include="SceneNodes\ZoneObject.cs" />
     <Compile Include="EventHandling\EventObjectClickArgs.cs" />
     <Compile Include="EventHandling\EventAvatarRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarRemoveArgs.cs" />
-    <Compile Include="SceneNodes\MoverObject.cs" />
     <Compile Include="EventHandling\EventAvatarAddArgs.cs" />
     <Compile Include="EventHandling\EventObjectAddArgs.cs" />
     <Compile Include="SceneNodes\Interfaces\IAvatar.cs" />
@@ -146,8 +162,8 @@
     <Compile Include="Interfaces\IPropertyBag.cs" />
     <Compile Include="SceneNodes\Model.cs" />
     <Compile Include="Security\Authorization.cs" />
-    <Compile Include="BaseBotEngine.cs" />
-    <Compile Include="Interfaces\IBaseBotEngine.cs" />
+    <Compile Include="BotEngine.cs" />
+    <Compile Include="Interfaces\IBotEngine.cs" />
     <Compile Include="Interfaces\IEngineReference.cs" />
     <Compile Include="SceneNodes\Interfaces\IWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -157,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\Core.cd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Reflection\" />
