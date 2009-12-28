@@ -1,0 +1,1 @@
+﻿To support a new storage provider, one must implement (Db4o)IObjectContainer along with the interfaces in the subdirectories.

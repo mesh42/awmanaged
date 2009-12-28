@@ -1,3 +1,11 @@
+Release 0.2.4 (unstable)
+* Minor Refactoring
+* Adding Premature Storage Client Provider (Db4o)
+* Adding Storage Server Provider (Db4o)
+* Updating BotEngine Example to unit test Storage Provider (Object Click Statistics)
+* Adding App Settings configuration option for Bot Universe Connection Strings and Storage Client/Server Connection strings.
+  Please read the instructions on codeplex on how to configure your app settings.
+
 Release 0.1.3 (unstable)
 * A lot of refactoring in the code.
 * Templating interfaces and adding type parameter restrictions for implementations.

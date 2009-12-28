@@ -1,12 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Data.Linq;
-using System.Linq;
 using AwManaged.Configuration.Interfaces;
 
 //using Aw.Data;
 
-namespace Aw.Common.Config
+namespace AwManaged.Configuration
 {
     [Serializable]
     public abstract class BaseConfiguration<T> : IConfiguration where T : IConfiguration

@@ -5,12 +5,5 @@ obj
 *.user
 *.aps
 *.eto
-</Value></Property><Property><Name>svn:ignore</Name><Value>[Bb]in
-obj
-[Dd]ebug
-[Rr]elease
-*.user
-*.aps
-*.eto
 App.config
-</Value></Property></Properties></ItemProperties>
+</Value></Property><Property><Name>svn:mime-type</Name><Value>application/octet-stream</Value></Property></Properties></ItemProperties>

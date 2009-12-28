@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AwManaged;
-using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.EventHandling;
 using AwManaged.Math;
 using AwManaged.SceneNodes;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Linq;
+using Db4objects.Db4o.Query;
+
 
 namespace AwManaged.Tests
 {
@@ -28,13 +33,15 @@ namespace AwManaged.Tests
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BotEngineExample"/> class.
+        /// 
+        /// You will have to have a valid app.Config settings file, please read documentation on codeplex.
         /// </summary>
-        /// <param name="loginConfiguration">The login configuration.</param>
-        public BotEngineExample(LoginConfiguration loginConfiguration) : base(loginConfiguration)
+        public BotEngineExample()
         {
             BotEventLoggedIn += HandleBotEventLoggedIn;
             BotEventEntersWorld += HandleBotEventEntersWorld;
             Console.WriteLine("AwManaged BotEngine Example");
+            Console.WriteLine("Storage server running.");
             try
             {
                 Console.WriteLine("Connecting to universe...");
@@ -46,6 +53,8 @@ namespace AwManaged.Tests
             }
         }
 
+
+
         /// <summary>
         /// Handles the object event click.
         /// </summary>
@@ -53,7 +62,19 @@ namespace AwManaged.Tests
         /// <param name="e">The e.</param>
         static void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs e)
         {
-            Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}.", e.Model.ModelName, e.Model.Id,e.Avatar.Name));
+            var db = sender.Storage.Db;
+
+            // store the number of clicks on this object in the storage provider.
+            ModelClickStatistics stat;
+            var query = from ModelClickStatistics p in db where p.ModelId == e.Model.Id select p;
+            if (query.Count() == 0)
+                stat = new ModelClickStatistics() { Clicks = 0, ModelId = e.Model.Id };
+            else
+                stat = query.Single();
+            stat.Clicks++;
+            db.Store(stat);
+            db.Commit();
+            Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.", e.Model.ModelName, e.Model.Id,e.Avatar.Name,stat.Clicks));
         }
 
         /// <summary>
@@ -96,7 +117,7 @@ namespace AwManaged.Tests
         static void HandleAvatarEventRemove(BotEngine sender, EventAvatarRemoveArgs e)
         {
             Console.WriteLine("Avatar {0} with session {1} has been removed.",e.Avatar.Name,e.Avatar.Session);
-            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.World));
+            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
         }
 
         /// <summary>
@@ -144,7 +165,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleBotEventLoggedIn(BotEngine sender, ILoginConfiguration e)
+        static void HandleBotEventLoggedIn(BotEngine sender, IUniverseConnectionProperties e)
         {
             Console.WriteLine(string.Format("Bot [{0}] logged into the {1} universe server on port {2}",e.LoginName, e.Domain,e.Port));
         }
@@ -154,7 +175,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleBotEventEntersWorld(BotEngine sender, ILoginConfiguration e)
+        static void HandleBotEventEntersWorld(BotEngine sender, IUniverseConnectionProperties e)
         {
             // start receiving avatar events.
             sender.AvatarEventAdd += HandleAvatarEventAdd;

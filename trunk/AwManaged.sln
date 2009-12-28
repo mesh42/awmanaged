@@ -25,7 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{353DD003-2CBC-434A-BD61-B9C1C5F45426}"
 	ProjectSection(SolutionItems) = preProject
 		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
-		ChangLog.txt = ChangLog.txt
+		ChangeLog.txt = ChangeLog.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManagedIde", "AwManagedIde\AwManagedIde.csproj", "{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}"
@@ -50,6 +50,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptControl", "ScriptCont
 		Dependencies\ScriptControl\SyntaxDocument.pdb = Dependencies\ScriptControl\SyntaxDocument.pdb
 		Dependencies\ScriptControl\SyntaxFiles.dll = Dependencies\ScriptControl\SyntaxFiles.dll
 		Dependencies\ScriptControl\SyntaxFiles.pdb = Dependencies\ScriptControl\SyntaxFiles.pdb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db4o", "db4o", "{EA4B30D5-5B3C-40E5-B924-5CD464A18A02}"
+	ProjectSection(SolutionItems) = preProject
+		Dependencies\db4o\db4o.license.html = Dependencies\db4o\db4o.license.html
+		Dependencies\db4o\Db4objects.Db4o.dll = Dependencies\db4o\Db4objects.Db4o.dll
+		Dependencies\db4o\Db4objects.Db4o.Linq.dll = Dependencies\db4o\Db4objects.Db4o.Linq.dll
 	EndProjectSection
 EndProject
 Global
@@ -93,6 +100,7 @@ Global
 		{474BE9B9-245D-4136-A704-39F4DA8E759A} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{02341E0F-3BB7-4C41-9CAE-2AF5329BC5E3} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{EA4B30D5-5B3C-40E5-B924-5CD464A18A02} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = 
