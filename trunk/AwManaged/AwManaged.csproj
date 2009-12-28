@@ -57,11 +57,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\activeworlds.com\AW.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Db4objects.Db4o, Version=7.4.58.11547, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\db4o\Db4objects.Db4o.dll</HintPath>
+    </Reference>
+    <Reference Include="Db4objects.Db4o.Linq, Version=7.4.58.11547, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -71,10 +80,6 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -82,16 +87,18 @@
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
     <Compile Include="Configuration\BaseConfiguration.cs" />
-    <Compile Include="Configuration\Interfaces\ILoginConfiguration.cs" />
+    <Compile Include="Configuration\Interfaces\IUniverseConnectionProperties.cs" />
     <Compile Include="Configuration\Interfaces\IConfigurable.cs" />
     <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
     <Compile Include="Configuration\LoginConfiguration.cs" />
+    <Compile Include="Configuration\UniverseConnectionProperties.cs" />
     <Compile Include="Core\BaseCacheList.cs" />
     <Compile Include="Core\CallbackStructT.cs" />
     <Compile Include="Core\Delegates\Delegates.cs" />
     <Compile Include="Core\Interfaces\ICallbackStructT.cs" />
     <Compile Include="Core\Interfaces\IChanged.cs" />
     <Compile Include="Core\Interfaces\ICloneableListT.cs" />
+    <Compile Include="Core\Interfaces\IService.cs" />
     <Compile Include="Core\ProtectedList.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
     <Compile Include="EventHandling\EventObjectChange.cs" />
@@ -170,9 +177,22 @@
     <Compile Include="ExceptionHandling\ReasonCodeReturnType.cs" />
     <Compile Include="Converters\AwConvert.cs" />
     <Compile Include="SceneNodes\World.cs" />
+    <Compile Include="Core\ConnectionStringHelper.cs" />
+    <Compile Include="Storage\Db4OConnection.cs" />
+    <Compile Include="Storage\Interfaces\IDb4OConnection.cs" />
+    <Compile Include="Storage\Db4OStorageClient.cs">
+    </Compile>
+    <Compile Include="Core\Interfaces\IConnectionProviderIdentity.cs" />
+    <Compile Include="Storage\Interfaces\IStorageClient.cs">
+    </Compile>
+    <Compile Include="Storage\Interfaces\IStorageServer.cs" />
+    <Compile Include="Core\Interfaces\IConnection.cs" />
+    <Compile Include="Storage\Db4OStorageServer.cs" />
+    <Compile Include="Storage\StorageConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt" />
+    <Content Include="Storage\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Core.cd" />

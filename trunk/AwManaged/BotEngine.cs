@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using AW;
@@ -7,6 +8,7 @@ using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Converters;
 using AwManaged.Core;
+using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling;
 using AwManaged.ExceptionHandling;
 using AwManaged.Interfaces;
@@ -14,6 +16,8 @@ using AwManaged.Logging;
 using AwManaged.Math;
 using AwManaged.SceneNodes;
 using AWManaged.Security;
+using AwManaged.Storage;
+using AwManaged.Storage.Interfaces;
 using Camera=AwManaged.SceneNodes.Camera;
 
 namespace AwManaged
@@ -21,7 +25,7 @@ namespace AwManaged
     public abstract class BotEngine : IBotEngine<Avatar,Model,SceneNodes.Camera,SceneNodes.Zone,SceneNodes.Mover,HudBase<Avatar>>
     {
         #region Fields
-        private LoginConfiguration _loginConfiguration;
+        private LoginConfiguration _universeConnection;
         private Instance aw { get; set; }
         private Timer _timer;
         private ProtectedList<SceneNodes.Model> _model = new ProtectedList<SceneNodes.Model>();
@@ -33,6 +37,8 @@ namespace AwManaged
         private ProtectedList<SceneNodes.HudBase<Avatar>> _huds = new ProtectedList<SceneNodes.HudBase<Avatar>>();
         private ProtectedList<SceneNodes.Avatar> _avatar = new ProtectedList<Avatar>();
 
+        private IStorageServer<Db4OConnection> _storageServer; // TODO: expose as interface in IBotEngine
+
         #endregion
 
         #region Properties
@@ -41,13 +47,16 @@ namespace AwManaged
         public ProtectedList<SceneNodes.Mover> Movers { get { lock (this){return _movers.Clone();} } }
         public ProtectedList<SceneNodes.Zone> Zones { get { lock (this){return _zones.Clone();} } }
         public ProtectedList<SceneNodes.HudBase<Avatar>> Huds { get { lock (this){return _huds.Clone();} } }
+
+        public IStorageClient<Db4OConnection> Storage { get; private set; } // TODO: expose as interface in IBotEngine.
+
         #endregion
 
         #region Delegates and Events
 
-        public delegate void BotEventLoggedInDelegate(BotEngine sender, ILoginConfiguration e);
+        public delegate void BotEventLoggedInDelegate(BotEngine sender, IUniverseConnectionProperties e);
         public event BotEventLoggedInDelegate BotEventLoggedIn;
-        public delegate void BotEventEntersWorldDelegate(BotEngine sender, ILoginConfiguration e);
+        public delegate void BotEventEntersWorldDelegate(BotEngine sender, IUniverseConnectionProperties e);
         public event BotEventEntersWorldDelegate BotEventEntersWorld;
         public delegate void AvatarEventAddDelegate(BotEngine sender, EventAvatarAddArgs e);
         public event AvatarEventAddDelegate AvatarEventAdd;
@@ -96,7 +105,7 @@ namespace AwManaged
                     throw new AwException(rc);
             } while ((!aw.GetBool(Attributes.QueryComplete)));
 
-            WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.World + ".");
+            WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.Connection.World + ".");
             _timer = new Timer(refresh, null, 0, 10);
 
             if (ObjectEventScanCompleted != null)
@@ -114,7 +123,7 @@ namespace AwManaged
             {
                 _model = new ProtectedList<Model>();
 
-                WriteLine("Scanning objects in world" + LoginConfiguration.World + ".");
+                WriteLine("Scanning objects in world" + LoginConfiguration.Connection.World + ".");
 
                 // TODO: Dirty override, please implement this properly.
                 if (!IsEnterGlobal)
@@ -131,7 +140,7 @@ namespace AwManaged
                     aw.CellNext();
                 } while (!aw.GetBool(Attributes.QueryComplete) && aw.GetInt(Attributes.CellIterator) != -1);
 
-                WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.World + ".");
+                WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.Connection.World + ".");
 
                 _timer = new Timer(refresh, null, 0, 10);
                 if (ObjectEventScanCompleted != null)
@@ -193,18 +202,18 @@ namespace AwManaged
             try
             {
                 int rc;
-                aw = new Instance(_loginConfiguration.Domain, _loginConfiguration.Port);
+                aw = new Instance(_universeConnection.Connection.Domain, _universeConnection.Connection.Port);
                 //greeter
                 //Set the login attributes and log the bot into the universe
-                aw.SetString(Attributes.LoginName, _loginConfiguration.LoginName);
-                aw.SetString(Attributes.LoginPrivilegePassword, _loginConfiguration.PrivilegePassword);
-                aw.SetInt(Attributes.LoginOwner, _loginConfiguration.Owner);
+                aw.SetString(Attributes.LoginName, _universeConnection.Connection.LoginName);
+                aw.SetString(Attributes.LoginPrivilegePassword, _universeConnection.Connection.PrivilegePassword);
+                aw.SetInt(Attributes.LoginOwner, _universeConnection.Connection.Owner);
                 rc = aw.Login();
                 if (rc != 0)
                     HandleExceptionManaged(rc);
 
                 if (BotEventLoggedIn!=null)
-                    BotEventLoggedIn(this,LoginConfiguration);
+                    BotEventLoggedIn(this,LoginConfiguration.Connection);
 
                 aw.EventAvatarAdd += aw_EventAvatarAdd;
                 aw.EventAvatarChange += aw_EventAvatarChange;
@@ -218,7 +227,7 @@ namespace AwManaged
                 if (aw.GetBool(Attributes.WorldCaretakerCapability))
                 {
                     aw.SetBool(Attributes.EnterGlobal, true);
-                    rc = aw.Enter(_loginConfiguration.World);
+                    rc = aw.Enter(_universeConnection.Connection.World);
                     IsEnterGlobal = true;
                     if (rc != 0)
                         HandleExceptionManaged(rc);
@@ -227,7 +236,7 @@ namespace AwManaged
                 {
                     aw.SetBool(Attributes.EnterGlobal, false);
                     IsEnterGlobal = false;
-                    rc = aw.Enter(_loginConfiguration.World);
+                    rc = aw.Enter(_universeConnection.Connection.World);
                     if (rc != 0)
                     {
                         HandleExceptionManaged(rc);
@@ -235,15 +244,15 @@ namespace AwManaged
                 }
 
                 if (BotEventEntersWorld != null)
-                    BotEventEntersWorld.Invoke(this, LoginConfiguration);
+                    BotEventEntersWorld.Invoke(this, LoginConfiguration.Connection);
 
                 //Have the bot change state to 0n 0w 0a
-                aw.SetInt(Attributes.MyX, (int)_loginConfiguration.Position.x); //X position of the bot (E/W)
-                aw.SetInt(Attributes.MyY, (int)_loginConfiguration.Position.y); //Y position of the bot (height)
-                aw.SetInt(Attributes.MyZ, (int)_loginConfiguration.Position.z); //Z position of the bot (N/S)
+                aw.SetInt(Attributes.MyX, (int)_universeConnection.Connection.Position.x); //X position of the bot (E/W)
+                aw.SetInt(Attributes.MyY, (int)_universeConnection.Connection.Position.y); //Y position of the bot (height)
+                aw.SetInt(Attributes.MyZ, (int)_universeConnection.Connection.Position.z); //Z position of the bot (N/S)
 
-                aw.SetInt(Attributes.MyPitch, (int)_loginConfiguration.Position.y);
-                aw.SetInt(Attributes.MyYaw, (int)_loginConfiguration.Position.z);
+                aw.SetInt(Attributes.MyPitch, (int)_universeConnection.Connection.Position.y);
+                aw.SetInt(Attributes.MyYaw, (int)_universeConnection.Connection.Position.z);
 
                 rc = aw.StateChange();
                 if (rc != 0)
@@ -260,21 +269,50 @@ namespace AwManaged
 
         #region Constructors
 
-        [Obsolete("Please use loginConfiguration database.")]
-        protected BotEngine(Authorization authorization, string domain, int port, int loginOwner, string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
-        {
-            _loginConfiguration = new LoginConfiguration(authorization, domain, port, loginOwner, privilegePassword, loginName, world, position, rotation);
-            aw = new Instance(_loginConfiguration.Domain, _loginConfiguration.Port);
-        }
+        //[Obsolete("Please use loginConfiguration database.")]
+        //protected BotEngine(Authorization authorization, string domain, int port, int loginOwner, string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
+        //{
+        //    _loginConfiguration = new LoginConfiguration(authorization, domain, port, loginOwner, privilegePassword, loginName, world, position, rotation);
+        //    aw = new Instance(_loginConfiguration.Domain, _loginConfiguration.Port);
+        //}
         
-        protected BotEngine(string configurationName)
+        ////protected BotEngine(string configurationName)
+        ////{
+        ////    var configuration = new LoginConfiguration(configurationName);
+        ////}
+
+        protected BotEngine(LoginConfiguration loginConfiguration, IConnection<Db4OConnection> storageConfiguration)
         {
-            var configuration = new LoginConfiguration(configurationName);
+            _universeConnection = loginConfiguration;
+            _storageServer = new Db4OStorageServer(storageConfiguration);
+            _storageServer.Start();
+            // start the database client.
+            Storage = new Db4OStorageClient(storageConfiguration);
+            Storage.OpenConnection();
         }
 
         protected BotEngine(LoginConfiguration loginConfiguration)
         {
-            this._loginConfiguration = loginConfiguration;
+            _universeConnection = loginConfiguration;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BotEngine"/> class.
+        /// Load the configuration from the App.Config
+        /// </summary>
+        protected BotEngine()
+        {
+            _universeConnection = new LoginConfiguration(ConfigurationManager.AppSettings["UniverseConnection"]);
+            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageServerConnection"]))
+            {
+                // only create a storage server if we have specified this in the config, otherwise we are using a remote server.
+                _storageServer =new Db4OStorageServer(new StorageConfiguration<Db4OConnection>(ConfigurationManager.AppSettings["StorageServerConnection"]));
+                if (!_storageServer.Start())
+                    throw new Exception("Can't start the storage server.");
+            }
+
+            Storage = new Db4OStorageClient(new StorageConfiguration<Db4OConnection>(ConfigurationManager.AppSettings["StorageClientConnection"]));
+            Storage.OpenConnection();
         }
 
         #endregion
@@ -437,7 +475,7 @@ namespace AwManaged
                 {
                     var avatar = GetAvatar(aw.GetInt(Attributes.AvatarSession));
                     // update the authorization matrix.
-                    _loginConfiguration.Authorization.Matrix.RemoveAll(
+                    _universeConnection.Connection.Authorization.Matrix.RemoveAll(
                         p => p.Role == RoleType.student && p.Citizen == aw.GetInt(Attributes.AvatarCitizen));
                     _avatar.InternalRemoveAll(p => p.Session == aw.GetInt(Attributes.AvatarSession));
 
@@ -631,6 +669,8 @@ namespace AwManaged
         {
             try
             {
+                _storageServer.Stop();
+                Storage.CloseConnection();
                 aw.Dispose();
                 _timer.Dispose();
             }
@@ -735,7 +775,7 @@ namespace AwManaged
 
         public LoginConfiguration LoginConfiguration
         {
-            get { return _loginConfiguration; }
+            get { return _universeConnection; }
         }
 
         #endregion
@@ -746,11 +786,11 @@ namespace AwManaged
         {
             get
             {
-                return _loginConfiguration;
+                return _universeConnection;
             }
             set
             {
-                _loginConfiguration = (LoginConfiguration)value;
+                _universeConnection = (LoginConfiguration)value;
             }
         }
 
@@ -889,7 +929,7 @@ namespace AwManaged
         {
             foreach (var a in from p in _avatar select p)
             {
-                if (_loginConfiguration.Authorization.IsInRole(role, a.Citizen))
+                if (_universeConnection.Connection.Authorization.IsInRole(role, a.Citizen))
                 {
                     aw.Whisper(a.Session, message);
                 }

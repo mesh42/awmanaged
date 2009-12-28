@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AwManaged.Configuration;
-using AwManaged.Math;
 using AwManaged.SceneNodes;
 using AWManaged.Security;
 using AwManaged.Tests;
@@ -16,9 +14,7 @@ namespace AwManaged.Tests
             authorization.Matrix.Add(new CitizenRole(RoleType.debugger,0));
 
             // TODO: update this with your own privileges.
-            var bot = new BotEngineExample(new LoginConfiguration(
-                                   authorization, "*********", 7100, 0, "************", "unittest", "***********", Vector3.Zero, new Vector3(45, 45, 45)));
-
+            var bot = new BotEngineExample();
             var buildStats = new List<BuildStat>();
 
 

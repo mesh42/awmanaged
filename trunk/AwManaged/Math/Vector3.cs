@@ -89,10 +89,10 @@ namespace AwManaged.Math
         {
         }
 
-        public Vector3(ParsedData data)
-            : this(data.Text)
+        public Vector3(ParsedData data) : this(data.Text)
         {
         }
+
         private Vector3(string parsableText)
         {
             if (parsableText == null)
