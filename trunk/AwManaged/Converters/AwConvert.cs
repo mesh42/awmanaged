@@ -3,7 +3,9 @@ using System.Text.RegularExpressions;
 using AW;
 using AwManaged.ExceptionHandling;
 using AwManaged.Math;
-using AwManaged.SceneNodes;
+using AwManaged.Scene;
+using Mover=AwManaged.Scene.Mover;
+using Zone=AwManaged.Scene.Zone;
 
 namespace AwManaged.Converters
 {
@@ -92,7 +94,7 @@ namespace AwManaged.Converters
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <returns></returns>
-        internal static SceneNodes.Avatar CastAvatarObject(Instance sender)
+        internal static Avatar CastAvatarObject(Instance sender)
         {
             lock (sender)
             {
@@ -134,7 +136,7 @@ namespace AwManaged.Converters
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <returns></returns>
-        internal static SceneNodes.Model CastModelObject(Instance sender)
+        internal static Model CastModelObject(Instance sender)
         {
             lock (sender)
             {
@@ -176,9 +178,9 @@ namespace AwManaged.Converters
         /// </summary>
         /// <param name="awMover">The aw mover.</param>
         /// <returns></returns>
-        internal static SceneNodes.Mover CastMoverObject(AW.Mover awMover)
+        internal static Mover CastMoverObject(AW.Mover awMover)
         {
-            return new SceneNodes.Mover()
+            return new Mover()
             {
                 AccelerationTiltX = awMover.AccelerationTiltX,
                 AccelerationTiltZ = awMover.AccelerationTiltZ,
@@ -206,9 +208,9 @@ namespace AwManaged.Converters
         /// </summary>
         /// <param name="awZone">The aw zone.</param>
         /// <returns></returns>
-        internal static SceneNodes.Zone CastZoneObject(AW.Zone awZone)
+        internal static Zone CastZoneObject(AW.Zone awZone)
         {
-            return new SceneNodes.Zone()
+            return new Zone()
             {
                 Ambient = awZone.Ambient,
                 CameraName = awZone.Camera,

@@ -8,17 +8,16 @@ using AWManaged.Security;
 namespace AwManaged.Configuration
 {
     /// <summary>
-    /// Build a new universe connection propertie object based on a connection string in the following format:
+    /// Build a new universe connection property object based on a connection string in the following format:
     /// 
-    /// provider=aw;domain=yourdomain;port=7001;login owner:0;privilege password:yourpassword;login name:testbot;world=yourworld;position=50,49,48;rotation=38,39,40
+    /// provider=aw;domain=yourdomain;port=7100;login owner:0;privilege password:yourpassword;login name:testbot;world=yourworld;position=50,49,48;rotation=38,39,40
     /// </summary>
     public sealed class LoginConfiguration :  IConnection<UniverseConnectionProperties>, IConfiguration
     {
         public LoginConfiguration(string connectionString)
         {
             ConnectionString = connectionString;
-            Connection = new UniverseConnectionProperties();
-            Connection.Authorization = new Authorization();
+            Connection = new UniverseConnectionProperties {Authorization = new Authorization()};
             foreach (var item in ConnectionStringHelper.GetNameValuePairs(ConnectionString, ProviderName))
             {
                 switch (item.Name.ToLower())

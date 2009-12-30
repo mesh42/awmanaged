@@ -1,10 +1,11 @@
-﻿using AwManaged.SceneNodes;
-using AwManaged.SceneNodes.Interfaces;
+﻿using System;
+using AwManaged.Scene;
+using AwManaged.Scene.Interfaces;
 using AWManaged.Security;
 
 namespace AwManaged.Interfaces
 {
-    public interface IChatCommands<TAvatar>  where TAvatar : IAvatar<TAvatar>
+    public interface IChatCommands<TAvatar> where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
     {
         /// <summary>
         /// Whispers a message to all user within a specified role.

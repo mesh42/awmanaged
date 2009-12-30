@@ -1,10 +1,11 @@
-﻿using AwManaged.SceneNodes.Interfaces;
+﻿using System;
+using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
     public interface IEventObjectClickArgs<TModel, TAvatar>
-        where TModel : IModel<TModel>
-        where TAvatar : IAvatar<TAvatar>
+        where TModel : MarshalByRefObject, IModel<TModel>
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
     {
         /// <summary>
         /// The object the user clicked on.

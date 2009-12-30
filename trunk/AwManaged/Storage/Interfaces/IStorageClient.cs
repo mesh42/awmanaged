@@ -6,7 +6,7 @@ namespace AwManaged.Storage.Interfaces
     /// <summary>
     /// Storage Client.
     /// </summary>
-    public interface IStorageClient<TConnectionInterface> : IConnection<TConnectionInterface>
+    public interface IStorageClient<TConnectionInterface> : IConnection<TConnectionInterface>, ICloneableT<IObjectContainer>
     {
         /// <summary>
         /// Gets the Linq queryable db.

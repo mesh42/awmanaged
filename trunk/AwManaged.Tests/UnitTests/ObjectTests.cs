@@ -6,14 +6,27 @@ using AW;
 using AwManaged.Converters;
 using AwManaged.Core;
 using AwManaged.Math;
-using AwManaged.SceneNodes;
+using AwManaged.Scene;
 using NUnit.Framework;
+using Zone=AwManaged.Scene.Zone;
 
-namespace AwManaged.Tests
+namespace AwManaged.Tests.UnitTests
 {
     [TestFixture]
     public class ObjectTests
     {
+
+
+
+        [Test]
+        public void SimpleDeltaTest()
+        {
+            var model1 = new Model() { Action = "hello world!", Description = "description" };
+            var model2 = new Model() { Action = "hello mars!", Description = "description" };
+
+            var diff = Differential.Properties(model1, model2);
+        }
+
         [Test]
         public void ReadOnlyCollection()
         {
@@ -27,12 +40,11 @@ namespace AwManaged.Tests
         [Test]
         public void ProtectedListTests()
         {
-            var a = new ProtectedList<Model> {new Model {Id = 5, Action = "hello"}};
+            var a = new ProtectedList<Model> {new Model {Description = "description", Action = "hello"}};
             var i = a.Count;
 
             foreach (var b in from p in a select p)
             {
-                
             }
         }
 
@@ -57,7 +69,7 @@ namespace AwManaged.Tests
             var model = new Model(1, 1, DateTime.Now, ObjectType.V3, "model1", new Vector3(10, 20, 30),
                                   new Vector3(40, 50, 60), "description", "action", 10, string.Empty);
 
-            var zoneV4 = new SceneNodes.Zone();
+            var zoneV4 = new Zone();
 
             Serialize(zoneV4, "ZoneObject.xml");
         }

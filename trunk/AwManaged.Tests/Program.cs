@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using AwManaged.SceneNodes;
+using AwManaged.Core;
+using AwManaged.Scene;
 using AWManaged.Security;
 using AwManaged.Tests;
 
@@ -18,7 +19,18 @@ namespace AwManaged.Tests
             var buildStats = new List<BuildStat>();
 
 
-            foreach (var model in bot.Model)
+            var sn1 = bot.SceneNodes;
+            var sn2 = bot.SceneNodes;
+            
+            var model1 = sn1.Models[0];
+            var model2 = sn2.Models[0];
+
+            model1.Action = "sdkfjdlfjsdklfdjldkfjs";
+            model2.Action = " dslkfjfkasdfjaklsdfjlksfj";
+            
+            var diff = Differential.Properties(model1,model2);
+
+            foreach (var model in bot.SceneNodes.Models)
             {
                 var buildStat = buildStats.Find(p => p.Avatar.Citizen == model.Owner);
                 if (buildStat == null)

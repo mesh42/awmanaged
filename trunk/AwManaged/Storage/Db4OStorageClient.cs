@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using AwManaged.Core;
 using AwManaged.Core.Interfaces;
-using AwManaged.SceneNodes;
 using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
 
@@ -56,29 +54,42 @@ namespace AwManaged.Storage
                 throw new ArgumentException("A port number has not been specified or should be a positive number.");
         }
 
-
+        private ThreadSafeObjectContainer<Db4OConnection> _safeObjectContainer;
+        /// <summary>
+        /// Opens the connection on the current thread by default.
+        /// </summary>
         public void OpenConnection()
         {
-            Db = Db4oFactory.OpenClient(Connection.HostAddress, Connection.HostPort,Connection.User, Connection.Password);
+            _safeObjectContainer = new ThreadSafeObjectContainer<Db4OConnection>(Connection);
         }
 
+        /// <summary>
+        /// Closes the connection on the current thread.
+        /// </summary>
+        /// <returns></returns>
         public bool CloseConnection()
         {
-            return Db.Close();
+            return _safeObjectContainer.RemoveInstance();
         }
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            Db.Close();
+            _safeObjectContainer.Dispose();
         }
 
         #endregion
 
         #region IStorageClient Members
 
-        public IObjectContainer Db { get; private set; }
+        // make thread safe, so we can spawn Atomic transactions over multiple threads.
+
+
+        public IObjectContainer Db
+        {
+            get { return _safeObjectContainer.GetInstance(); }
+        }
 
         #endregion
 
@@ -115,6 +126,16 @@ namespace AwManaged.Storage
         bool IStorageClient<Db4OConnection>.CloseConnection()
         {
             return Db.Close();
+        }
+
+        #endregion
+
+
+        #region ICloneableT<IObjectContainer> Members
+
+        IObjectContainer ICloneableT<IObjectContainer>.Clone()
+        {
+            return _safeObjectContainer.GetNewInstance();
         }
 
         #endregion
