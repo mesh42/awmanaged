@@ -1,14 +1,25 @@
-﻿using AwManaged.Core.Interfaces;
+﻿using System;
+using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Interfaces;
-using AwManaged.SceneNodes;
+using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling
 {
-    public sealed class EventAvatarRemoveArgs : IEventAvatarRemoveArgs<Avatar>
+    public delegate void AvatarEventRemoveDelegate<TSender,TAvatar>(TSender sender, EventAvatarRemoveArgs<TAvatar> e)
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>;
+    /// <summary>
+    /// This event gets fired when an avatar is removed from the world list.
+    /// </summary>
+    public sealed class EventAvatarRemoveArgs<TAvatar> : MarshalByRefObject, IEventAvatarRemoveArgs<TAvatar>
+        where TAvatar: MarshalByRefObject, IAvatar<TAvatar>
     {
-        public Avatar Avatar { get; private set; }
+        public TAvatar Avatar { get; private set; }
 
-        public EventAvatarRemoveArgs(ICloneableT<Avatar> avatar)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventAvatarRemoveArgs&lt;TAvatar&gt;"/> class.
+        /// </summary>
+        /// <param name="avatar">The avatar.</param>
+        public EventAvatarRemoveArgs(ICloneableT<TAvatar> avatar)
         {
             Avatar = avatar.Clone();
         }

@@ -29,6 +29,8 @@ namespace AwManaged.Core
         /// <returns></returns>
         public static List<NameValuePair> GetNameValuePairs(string connectionString, string providerName)
         {
+            if (connectionString == null)
+                throw new ArgumentException(string.Format("Connection string for provider {0} is null.",providerName));
             var ret = new List<NameValuePair>();
             var temp =connectionString.Split(';');
             foreach (var item in temp)

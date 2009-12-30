@@ -1,20 +1,25 @@
-﻿using AwManaged.Core.Interfaces;
+﻿using System;
+using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Interfaces;
-using AwManaged.SceneNodes;
+using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling
 {
-    public sealed class EventChatArgs : IEventChatArgs<Avatar>
+    public delegate void ChatEventDelegate<TSender, TAvatar>(TSender sender, EventChatArgs<TAvatar> e)
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>;
+
+    public sealed class EventChatArgs<TAvatar> : IEventChatArgs<TAvatar>
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
     {
-        public EventChatArgs(ICloneableT<Avatar> avatar, ChatType chatType, string message)
+        public EventChatArgs(ICloneableT<TAvatar> avatar, ChatType chatType, string message)
         {
-            this.Avatar = avatar.Clone();
-            this.ChatType = chatType;
-            this.Message = message;
+            Avatar = avatar.Clone();
+            ChatType = chatType;
+            Message = message;
         }
 
         public string Message{get; private set;}
         public ChatType ChatType {get;private set;}
-        public Avatar Avatar { get; private set;}
+        public TAvatar Avatar { get; private set;}
     }
 }

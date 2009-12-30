@@ -1,5 +1,4 @@
-﻿using AwManaged.Interfaces;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests
 {

@@ -1,8 +1,10 @@
-﻿using AwManaged.SceneNodes.Interfaces;
+﻿using System;
+using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    public interface IEventAvatarRemoveArgs<TAvatar> where TAvatar : IAvatar<TAvatar>
+    public interface IEventAvatarRemoveArgs<TAvatar>
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
     {
         TAvatar Avatar { get; }
     }

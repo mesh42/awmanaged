@@ -1,4 +1,20 @@
-Release 0.2.4 (unstable)
+Release 0.3.5 (unstable) maintenance & feature release
+* Adding backup provider support classes
+* Changed struct ModelClickedStatistics to class, object reference problem in db4o storage.
+* Adding thread safe context to StorageClient provider.
+* Adding cloneable context to StorageClient provider for long running db processes.
+* Further restricting access to property members which implement interface ISceneNode.
+* Adding some support classes for the world backup provider.
+* Adding V4 object support (premature not tested).
+* Renaming AwManaged.SceneNodes name space to AwManaged.Scene (conflict name resolution in SceneNodes Class).
+* Demonstrating some backup storage faccility in the Bot Example.
+* Adding some core design pattern ideas for future development amongst: Differential and DependendObject.
+* Adding constraints on type parameters in interfaces, MarshalByRefObject for remoting services..
+* type parameters templating on event handlers.
+* Seperating events in interface groups by their category.
+* Adding License notifcation to all projects, they are copied to the bin output directory.
+
+Release 0.2.4 (unstable) maintenance & feature release
 * Minor Refactoring
 * Adding Premature Storage Client Provider (Db4o)
 * Adding Storage Server Provider (Db4o)
@@ -6,7 +22,7 @@ Release 0.2.4 (unstable)
 * Adding App Settings configuration option for Bot Universe Connection Strings and Storage Client/Server Connection strings.
   Please read the instructions on codeplex on how to configure your app settings.
 
-Release 0.1.3 (unstable)
+Release 0.1.3 (unstable) maintencance release.
 * A lot of refactoring in the code.
 * Templating interfaces and adding type parameter restrictions for implementations.
 * Modifying bot example to perform in world unit tests.
@@ -15,7 +31,7 @@ Release 0.1.3 (unstable)
 * Securing the Scenenode Cache against pollution from custom scripts.
 * Adding some comments to code for future API documentation
 
-Release 0.1.2 (unstable)
+Release 0.1.2 (unstable) maintenance release.
 * Adding changelog text file
 * Adding Shared Assembly Info
 * Internalizing several unmanaged methods

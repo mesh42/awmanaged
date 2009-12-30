@@ -76,6 +76,9 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Threading, Version=1.0.3058.34407, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -86,6 +89,16 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="EventHandling\EventBotEntersWorldArgs.cs" />
+    <Compile Include="EventHandling\EventAvatarChangeArgs.cs" />
+    <Compile Include="EventHandling\EventBotLoggedInArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IBotEvents.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventBotEntersWorldArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IChatEvents.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventAvatarChangeArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IEventBotLoggedInArgs.cs" />
+    <Compile Include="EventHandling\Interfaces\IObjectEvents.cs" />
+    <Compile Include="Storage\BackupProvider\BackupRecord.cs" />
     <Compile Include="Configuration\BaseConfiguration.cs" />
     <Compile Include="Configuration\Interfaces\IUniverseConnectionProperties.cs" />
     <Compile Include="Configuration\Interfaces\IConfigurable.cs" />
@@ -95,6 +108,10 @@
     <Compile Include="Core\BaseCacheList.cs" />
     <Compile Include="Core\CallbackStructT.cs" />
     <Compile Include="Core\Delegates\Delegates.cs" />
+    <Compile Include="Core\Differential.cs">
+    </Compile>
+    <Compile Include="Core\DependendObject.cs">
+    </Compile>
     <Compile Include="Core\Interfaces\ICallbackStructT.cs" />
     <Compile Include="Core\Interfaces\IChanged.cs" />
     <Compile Include="Core\Interfaces\ICloneableListT.cs" />
@@ -107,17 +124,17 @@
     <Compile Include="EventHandling\Interfaces\IEventObjectScanEventArgs.cs" />
     <Compile Include="ExceptionHandling\AwException.cs" />
     <Compile Include="ExceptionHandling\IHandleExceptionManaged.cs" />
-    <Compile Include="SceneNodes\Interfaces\IAvatarCommands.cs" />
-    <Compile Include="Interfaces\IBotEvents.cs" />
+    <Compile Include="Scene\Interfaces\IAvatarCommands.cs" />
+    <Compile Include="EventHandling\Interfaces\IAvatarEvents.cs" />
     <Compile Include="Interfaces\IChatCommands.cs" />
     <Compile Include="Core\Interfaces\ICloneableT.cs" />
-    <Compile Include="SceneNodes\Interfaces\ISceneNodeCommands.cs" />
-    <Compile Include="SceneNodes\Interfaces\ISceneNodes.cs" />
-    <Compile Include="SceneNodes\Avatar.cs" />
+    <Compile Include="Scene\Interfaces\ISceneNodeCommands.cs" />
+    <Compile Include="Scene\Interfaces\ISceneNodes.cs" />
+    <Compile Include="Scene\Avatar.cs" />
     <Compile Include="EventHandling\EventObjectScanCompletedEventArgs.cs" />
     <Compile Include="EventHandling\EventChatArgs.cs" />
-    <Compile Include="SceneNodes\HudBase.cs" />
-    <Compile Include="SceneNodes\Interfaces\IHudBase.cs" />
+    <Compile Include="Scene\HudBase.cs" />
+    <Compile Include="Scene\Interfaces\IHudBase.cs" />
     <Compile Include="EventHandling\Interfaces\IEventChatArgs.cs" />
     <Compile Include="Interfaces\ICanLog.cs" />
     <Compile Include="Interfaces\IIdentifiable.cs" />
@@ -137,14 +154,15 @@
     <Compile Include="Math\Sphere.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="SceneNodes\Camera.cs" />
-    <Compile Include="SceneNodes\Interfaces\ICamera.cs" />
-    <Compile Include="SceneNodes\Interfaces\IMover.cs" />
-    <Compile Include="SceneNodes\Interfaces\ISceneNode.cs" />
-    <Compile Include="SceneNodes\Interfaces\IZone.cs" />
-    <Compile Include="SceneNodes\Mover.cs" />
-    <Compile Include="SceneNodes\SessionArgumentType.cs" />
-    <Compile Include="SceneNodes\Zone.cs" />
+    <Compile Include="Scene\Camera.cs" />
+    <Compile Include="Scene\Interfaces\ICamera.cs" />
+    <Compile Include="Scene\Interfaces\IMover.cs" />
+    <Compile Include="Scene\Interfaces\ISceneNode.cs" />
+    <Compile Include="Scene\Interfaces\IZone.cs" />
+    <Compile Include="Scene\Mover.cs" />
+    <Compile Include="Scene\SceneNodes.cs" />
+    <Compile Include="Scene\SessionArgumentType.cs" />
+    <Compile Include="Scene\Zone.cs" />
     <Compile Include="ScriptServices\IRunScript.cs">
     </Compile>
     <Compile Include="ScriptServices\ScriptInstance.cs" />
@@ -152,31 +170,31 @@
     <Compile Include="Serialization\IParsable.cs" />
     <Compile Include="Serialization\ParsedData.cs" />
     <Compile Include="Serialization\TypeConverterBase.cs" />
-    <Compile Include="SceneNodes\WorldAttributes.cs" />
+    <Compile Include="Scene\WorldAttributes.cs" />
     <Compile Include="ExceptionHandling\AwExceptionAttribute.cs" />
     <Compile Include="EventHandling\EventObjectClickArgs.cs" />
     <Compile Include="EventHandling\EventAvatarRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarRemoveArgs.cs" />
     <Compile Include="EventHandling\EventAvatarAddArgs.cs" />
     <Compile Include="EventHandling\EventObjectAddArgs.cs" />
-    <Compile Include="SceneNodes\Interfaces\IAvatar.cs" />
+    <Compile Include="Scene\Interfaces\IAvatar.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectAddArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectClickArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarClickArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarAddArgs.cs" />
-    <Compile Include="SceneNodes\Interfaces\IModel.cs" />
+    <Compile Include="Scene\Interfaces\IModel.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
-    <Compile Include="SceneNodes\Model.cs" />
+    <Compile Include="Scene\Model.cs" />
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="BotEngine.cs" />
     <Compile Include="Interfaces\IBotEngine.cs" />
     <Compile Include="Interfaces\IEngineReference.cs" />
-    <Compile Include="SceneNodes\Interfaces\IWorld.cs" />
+    <Compile Include="Scene\Interfaces\IWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExceptionHandling\ReasonCodeReturnType.cs" />
     <Compile Include="Converters\AwConvert.cs" />
-    <Compile Include="SceneNodes\World.cs" />
+    <Compile Include="Scene\World.cs" />
     <Compile Include="Core\ConnectionStringHelper.cs" />
     <Compile Include="Storage\Db4OConnection.cs" />
     <Compile Include="Storage\Interfaces\IDb4OConnection.cs" />
@@ -189,16 +207,19 @@
     <Compile Include="Core\Interfaces\IConnection.cs" />
     <Compile Include="Storage\Db4OStorageServer.cs" />
     <Compile Include="Storage\StorageConfiguration.cs" />
+    <Compile Include="Storage\ThreadSafeObjectContainer.cs" />
+    <Compile Include="RemoteServices\Interfaces\IRemoteBotService.cs" />
+    <Compile Include="RemoteServices\RemoteBotService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="License.txt" />
+    <Content Include="License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Storage\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Core.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Reflection\" />
+    <Folder Include="Storage\BackupProvider\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

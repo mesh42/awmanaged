@@ -1,4 +1,5 @@
-﻿using AwManaged.SceneNodes.Interfaces;
+﻿using System;
+using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
@@ -6,7 +7,8 @@ namespace AwManaged.EventHandling.Interfaces
     /// Event Avatar Clicked Argments.
     /// </summary>
     /// <typeparam name="TAvatar">The type of the avatar.</typeparam>
-    public interface IEventAvatarClickArgs<TAvatar> where TAvatar : IAvatar<TAvatar>
+    public interface IEventAvatarClickArgs<TAvatar>
+        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
     {
         TAvatar Avatar { get; }
     }

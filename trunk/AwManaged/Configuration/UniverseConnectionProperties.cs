@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Math;
 using AWManaged.Security;
 
 namespace AwManaged.Configuration
 {
-    public class UniverseConnectionProperties : IUniverseConnectionProperties
+    public class UniverseConnectionProperties : MarshalByRefObject, IUniverseConnectionProperties<UniverseConnectionProperties>
     {
         /// <summary>
         /// Gets or sets the authorization.
@@ -71,5 +72,63 @@ namespace AwManaged.Configuration
         [Category("Positioning")]
         public Vector3 Rotation { get; internal set; }
 
+
+        #region IUniverseConnectionProperties<UniverseConnectionProperties> Members
+
+        Authorization IUniverseConnectionProperties<UniverseConnectionProperties>.Authorization
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        string IUniverseConnectionProperties<UniverseConnectionProperties>.Domain
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        int IUniverseConnectionProperties<UniverseConnectionProperties>.Port
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        int IUniverseConnectionProperties<UniverseConnectionProperties>.Owner
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        string IUniverseConnectionProperties<UniverseConnectionProperties>.PrivilegePassword
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        string IUniverseConnectionProperties<UniverseConnectionProperties>.LoginName
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        string IUniverseConnectionProperties<UniverseConnectionProperties>.World
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        Vector3 IUniverseConnectionProperties<UniverseConnectionProperties>.Position
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        Vector3 IUniverseConnectionProperties<UniverseConnectionProperties>.Rotation
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        #endregion
+
+        #region ICloneableT<UniverseConnectionProperties> Members
+
+        UniverseConnectionProperties AwManaged.Core.Interfaces.ICloneableT<UniverseConnectionProperties>.Clone()
+        {
+            return (UniverseConnectionProperties) MemberwiseClone();
+        }
+
+        #endregion
     }
 }

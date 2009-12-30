@@ -1,13 +1,9 @@
-﻿using AwManaged.Core;
-using AwManaged.SceneNodes.Interfaces;
+﻿using AwManaged.Core.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
-    interface IEventObjectScanEventArgs<TModel> where TModel : IModel<TModel>
+    interface IEventObjectScanEventArgs<TSceneNodes> where TSceneNodes : ICloneableT<TSceneNodes>
     {
-        /// <summary>
-        /// Gets a shallow memberwise cloned copy of the model cache.
-        /// </summary>
-        ProtectedList<TModel> Model { get; set; }
+        TSceneNodes SceneNodes { get; }
     }
 }

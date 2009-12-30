@@ -14,68 +14,81 @@ using AwManaged.ExceptionHandling;
 using AwManaged.Interfaces;
 using AwManaged.Logging;
 using AwManaged.Math;
-using AwManaged.SceneNodes;
+using AwManaged.Scene;
 using AWManaged.Security;
 using AwManaged.Storage;
 using AwManaged.Storage.Interfaces;
-using Camera=AwManaged.SceneNodes.Camera;
+using Camera=AwManaged.Scene.Camera;
+using Mover=AwManaged.Scene.Mover;
+using Zone=AwManaged.Scene.Zone;
 
 namespace AwManaged
 {
-    public abstract class BotEngine : IBotEngine<Avatar,Model,SceneNodes.Camera,SceneNodes.Zone,SceneNodes.Mover,HudBase<Avatar>>
+    /// <summary>
+    /// Exact abstract type implementation of an active worlds "master" bot.
+    /// </summary>
+    public abstract class BotEngine : IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>>
     {
         #region Fields
         private LoginConfiguration _universeConnection;
         private Instance aw { get; set; }
         private Timer _timer;
-        private ProtectedList<SceneNodes.Model> _model = new ProtectedList<SceneNodes.Model>();
-        private SceneNodes.Model _modelRemoved;
+        //private ProtectedList<Model> _model = new ProtectedList<Model>();
+        private Model _modelRemoved;
 
-        private ProtectedList<SceneNodes.Camera> _cameras = new ProtectedList<SceneNodes.Camera>();
-        private ProtectedList<SceneNodes.Mover> _movers = new ProtectedList<SceneNodes.Mover>();
-        private ProtectedList<SceneNodes.Zone> _zones = new ProtectedList<SceneNodes.Zone>();
-        private ProtectedList<SceneNodes.HudBase<Avatar>> _huds = new ProtectedList<SceneNodes.HudBase<Avatar>>();
-        private ProtectedList<SceneNodes.Avatar> _avatar = new ProtectedList<Avatar>();
+        //private ProtectedList<Camera> _cameras = new ProtectedList<Camera>();
+        //private ProtectedList<Mover> _movers = new ProtectedList<Mover>();
+        //private ProtectedList<Zone> _zones = new ProtectedList<Zone>();
+        //private ProtectedList<HudBase<Avatar>> _huds = new ProtectedList<HudBase<Avatar>>();
+        //private ProtectedList<Avatar> _avatar = new ProtectedList<Avatar>();
 
         private IStorageServer<Db4OConnection> _storageServer; // TODO: expose as interface in IBotEngine
-
+        private SceneNodes _sceneNodes = new SceneNodes();
         #endregion
 
-        #region Properties
-        public ProtectedList<SceneNodes.Model> Model { get { lock (this){return _model.Clone();} } }
-        public ProtectedList<SceneNodes.Camera> Cameras { get { lock(this){ return _cameras.Clone();} } }
-        public ProtectedList<SceneNodes.Mover> Movers { get { lock (this){return _movers.Clone();} } }
-        public ProtectedList<SceneNodes.Zone> Zones { get { lock (this){return _zones.Clone();} } }
-        public ProtectedList<SceneNodes.HudBase<Avatar>> Huds { get { lock (this){return _huds.Clone();} } }
+        #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>> Members
 
-        public IStorageClient<Db4OConnection> Storage { get; private set; } // TODO: expose as interface in IBotEngine.
+        /// <summary>
+        /// Gets a cloned version of the scene nodes. Avoid using this as it is both time and memory consuming.
+        /// </summary>
+        /// <value>The scene nodes.</value>
+        public AwManaged.Scene.Interfaces.ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar> SceneNodes
+        {
+            get { lock (this){return _sceneNodes.Clone();}}
+        }
+
+        #region Properties
+
+////        public SceneNodes.SceneNodes SceneNodes{get{lock (this){return _sceneNodes.Clone();}}}
+//        public ProtectedList<Model> Models { get { lock (this){return _model.Clone();} } }
+//        public ProtectedList<Camera> Cameras { get { lock(this){ return _cameras.Clone();} } }
+//        public ProtectedList<Mover> Movers { get { lock (this){return _movers.Clone();} } }
+//        public ProtectedList<Zone> Zones { get { lock (this){return _zones.Clone();} } }
+//        public ProtectedList<HudBase<Avatar>> Huds { get { lock (this){return _huds.Clone();} } }
+
+        private List<IStorageClient<Db4OConnection>> _storage = new List<IStorageClient<Db4OConnection>>();
+
+        public IStorageClient<Db4OConnection> Storage
+        {
+            get;
+            private set;
+        } // TODO: expose as interface in IBotEngine.
 
         #endregion
 
         #region Delegates and Events
 
-        public delegate void BotEventLoggedInDelegate(BotEngine sender, IUniverseConnectionProperties e);
-        public event BotEventLoggedInDelegate BotEventLoggedIn;
-        public delegate void BotEventEntersWorldDelegate(BotEngine sender, IUniverseConnectionProperties e);
-        public event BotEventEntersWorldDelegate BotEventEntersWorld;
-        public delegate void AvatarEventAddDelegate(BotEngine sender, EventAvatarAddArgs e);
-        public event AvatarEventAddDelegate AvatarEventAdd;
-        public delegate void AvatarEventChangeDelegate(BotEngine sender, EventAvatarAddArgs e);
-        public event AvatarEventChangeDelegate AvatarEventChange;
-        public delegate void AvatarEventRemoveDelegate(BotEngine sender, EventAvatarRemoveArgs e);
-        public event AvatarEventRemoveDelegate AvatarEventRemove;
-        public delegate void ObjectEventClickDelegate(BotEngine sender, EventObjectClickArgs e);
-        public event ObjectEventClickDelegate ObjectEventClick;
-        public delegate void ObjectEventAddDelegate(BotEngine sender, EventObjectAddArgs e);
-        public event ObjectEventAddDelegate ObjectEventAdd;
-        public delegate void ObjectEventRemoveDelegate(BotEngine sender, EventObjectRemoveArgs e);
-        public event ObjectEventRemoveDelegate ObjectEventRemove;
-        public delegate void ObjectEventScanCompletedDelegate(BotEngine sender, EventObjectScanCompletedEventArgs e);
-        public event ObjectEventScanCompletedDelegate ObjectEventScanCompleted;
-        public delegate void ChatEventDelegate(BotEngine sender, EventChatArgs e);
-        public event ChatEventDelegate ChatEvent;
-        public delegate void ObjectEventChangeDelegate(BotEngine sender, EventObjectChangeArgs e);
-        public event ObjectEventChangeDelegate ObjectEventChange;
+        public event BotEventLoggedInDelegate<BotEngine,UniverseConnectionProperties> BotEventLoggedIn;
+        public event BotEventEntersWorldDelegate<BotEngine,UniverseConnectionProperties> BotEventEntersWorld;
+        public event AvatarEventAddDelegate<BotEngine,Avatar> AvatarEventAdd;
+        public event AvatarEventChangeDelegate<BotEngine,Avatar> AvatarEventChange;
+        public event AvatarEventRemoveDelegate<BotEngine,Avatar> AvatarEventRemove;
+        public event ObjectEventClickDelegate<BotEngine,Avatar,Model> ObjectEventClick;
+        public event ObjectEventAddDelegate<BotEngine,Avatar,Model> ObjectEventAdd;
+        public event ObjectEventRemoveDelegate<BotEngine,Avatar,Model> ObjectEventRemove;
+        public event ObjectEventScanCompletedDelegate<BotEngine,SceneNodes> ObjectEventScanCompleted;
+        public event ChatEventDelegate<BotEngine,Avatar> ChatEvent;
+        public event ObjectEventChangeDelegate<BotEngine,Avatar,Model> ObjectEventChange;
 
         #endregion
 
@@ -105,11 +118,11 @@ namespace AwManaged
                     throw new AwException(rc);
             } while ((!aw.GetBool(Attributes.QueryComplete)));
 
-            WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.Connection.World + ".");
+            WriteLine("Scan completed, found " + _sceneNodes.Models.Count + " objects in " + LoginConfiguration.Connection.World + ".");
             _timer = new Timer(refresh, null, 0, 10);
 
             if (ObjectEventScanCompleted != null)
-                ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs(Model));
+                ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs<SceneNodes>(_sceneNodes));
 
         }
 
@@ -121,7 +134,7 @@ namespace AwManaged
         {
             try
             {
-                _model = new ProtectedList<Model>();
+                _sceneNodes.Models = new ProtectedList<Model>();
 
                 WriteLine("Scanning objects in world" + LoginConfiguration.Connection.World + ".");
 
@@ -140,11 +153,11 @@ namespace AwManaged
                     aw.CellNext();
                 } while (!aw.GetBool(Attributes.QueryComplete) && aw.GetInt(Attributes.CellIterator) != -1);
 
-                WriteLine("Scan completed, found " + _model.Count + " objects in " + LoginConfiguration.Connection.World + ".");
+                WriteLine("Scan completed, found " + _sceneNodes.Models.Count + " objects in " + LoginConfiguration.Connection.World + ".");
 
                 _timer = new Timer(refresh, null, 0, 10);
                 if (ObjectEventScanCompleted != null)
-                    ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs(Model));
+                    ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs<SceneNodes>(_sceneNodes));
             }
             catch (InstanceException ex)
             {
@@ -213,7 +226,7 @@ namespace AwManaged
                     HandleExceptionManaged(rc);
 
                 if (BotEventLoggedIn!=null)
-                    BotEventLoggedIn(this,LoginConfiguration.Connection);
+                    BotEventLoggedIn(this, new EventBotLoggedInArgs<UniverseConnectionProperties>(LoginConfiguration.Connection));
 
                 aw.EventAvatarAdd += aw_EventAvatarAdd;
                 aw.EventAvatarChange += aw_EventAvatarChange;
@@ -244,7 +257,7 @@ namespace AwManaged
                 }
 
                 if (BotEventEntersWorld != null)
-                    BotEventEntersWorld.Invoke(this, LoginConfiguration.Connection);
+                    BotEventEntersWorld.Invoke(this, new EventBotEntersWorldArgs<UniverseConnectionProperties>(LoginConfiguration.Connection));
 
                 //Have the bot change state to 0n 0w 0a
                 aw.SetInt(Attributes.MyX, (int)_universeConnection.Connection.Position.x); //X position of the bot (E/W)
@@ -343,10 +356,10 @@ namespace AwManaged
                     try
                     {
                         var a = AwConvert.CastAvatarObject(sender);
-                        _avatar.InternalAdd(a);
+                        _sceneNodes.Avatars.InternalAdd(a);
                         Whisper(RoleType.debugger, "Added :" + a.Name);
                         if (AvatarEventAdd != null)
-                            AvatarEventAdd.Invoke(this, new EventAvatarAddArgs(a));
+                            AvatarEventAdd.Invoke(this, new EventAvatarAddArgs<Avatar>(a));
                     }
                     catch (InstanceException ex)
                     {
@@ -361,25 +374,39 @@ namespace AwManaged
         {
             lock (this)
             {
+                switch (aw.GetInt(Attributes.ObjectType))
+                {
+                    case (int)AW.ObjectType.Camera:
+                        AddCameraObject(sender);
+                        return;
+                    case (int)AW.ObjectType.Mover:
+                        AddMoverObject(sender);
+                        return;
+                    case (int)AW.ObjectType.Zone:
+                        aw_addZoneObject(sender);
+                        return;
+                }
                 Model o = null;
+
+
                 lock (sender)
                 {
                     try
                     {
                         // check if the object exists in the cache, this will indicat a change to the object rather than an add.
-                        var result = _model.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
+                        var result = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
                         if (result == null)
                         {
                             // new object.
                             o = AwConvert.CastModelObject(sender);
-                            _model.InternalAdd(o);
+                            _sceneNodes.Models.InternalAdd(o);
                             if (ObjectEventAdd != null)
-                                ObjectEventAdd(this, new EventObjectAddArgs(o, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
+                                ObjectEventAdd(this, new EventObjectAddArgs<Avatar,Model>(o, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
                         }
                         else
                         {
                             // existing model, add the update, aw_remove should remove the old object by its old number.
-                            _model.InternalAdd(AwConvert.CastModelObject(sender));
+                            SceneNodes.Models.InternalAdd(AwConvert.CastModelObject(sender));
                         }
                     }
                     catch (InstanceException ex)
@@ -404,11 +431,11 @@ namespace AwManaged
                     {
                         try
                         {
-                                var remove = _model.FindAll(p => p.Id == sender.GetInt(Attributes.ObjectId));
+                                var remove = _sceneNodes.Models.FindAll(p => p.Id == sender.GetInt(Attributes.ObjectId));
                                 if (remove.Count == 2)
                                 {
                                     // this was an object update. remove index[0];
-                                    _model.InternalRemove(remove[0]);
+                                    _sceneNodes.Models.InternalRemove(remove[0]);
                                     if (ObjectEventChange != null)
                                     {
                                         if (changedModel != null && changedModel.Id == remove[1].Id)
@@ -420,7 +447,7 @@ namespace AwManaged
                                         }
                                         else
                                         {
-                                            var args = new EventObjectChangeArgs(remove[1], remove[0],
+                                            var args = new EventObjectChangeArgs<Avatar,Model>(remove[1], remove[0],
                                                                                  GetAvatar(
                                                                                      sender.GetInt(
                                                                                          Attributes.AvatarSession)));
@@ -430,9 +457,9 @@ namespace AwManaged
                                 }
                                 else if (remove.Count == 1)
                                 {
-                                    _model.InternalRemove(remove[0]);
+                                    _sceneNodes.Models.InternalRemove(remove[0]);
                                     if (ObjectEventRemove != null)
-                                        ObjectEventRemove(this, new EventObjectRemoveArgs(remove[0], GetAvatar(sender.GetInt(Attributes.AvatarSession))));
+                                        ObjectEventRemove(this, new EventObjectRemoveArgs<Avatar,Model>(remove[0], GetAvatar(sender.GetInt(Attributes.AvatarSession))));
 
                                 }
                         }
@@ -456,16 +483,17 @@ namespace AwManaged
             {
                 try
                 {
-                    var o = from p in _model where p.Id == sender.GetInt(Attributes.ObjectId) select p;
-                    var avatar = from p in _avatar where p.Session == sender.GetInt(Attributes.AvatarSession) select p;
+                    var o = from p in _sceneNodes.Models where p.Id == sender.GetInt(Attributes.ObjectId) select p;
+                    var avatar = from p in _sceneNodes.Avatars where p.Session == sender.GetInt(Attributes.AvatarSession) select p;
                     if (ObjectEventClick != null)
-                        ObjectEventClick.Invoke(this, new EventObjectClickArgs(o.ElementAt(0), avatar.ElementAt(0)));
+                        ObjectEventClick.Invoke(this, new EventObjectClickArgs<Avatar,Model>(o.ElementAt(0), avatar.ElementAt(0)));
                 }
                 catch (InstanceException ex)
                 {
                     HandleExceptionManaged(ex);
                 }
             }
+            Utility.Wait(0);
         }
         void aw_EventAvatarDelete(Instance sender)
         {
@@ -477,10 +505,10 @@ namespace AwManaged
                     // update the authorization matrix.
                     _universeConnection.Connection.Authorization.Matrix.RemoveAll(
                         p => p.Role == RoleType.student && p.Citizen == aw.GetInt(Attributes.AvatarCitizen));
-                    _avatar.InternalRemoveAll(p => p.Session == aw.GetInt(Attributes.AvatarSession));
+                    _sceneNodes.Avatars.InternalRemoveAll(p => p.Session == aw.GetInt(Attributes.AvatarSession));
 
                     if (AvatarEventRemove != null)
-                        AvatarEventRemove.Invoke(this, new EventAvatarRemoveArgs(avatar));
+                        AvatarEventRemove.Invoke(this, new EventAvatarRemoveArgs<Avatar>(avatar));
                 }
                 catch (InstanceException ex)
                 {
@@ -497,11 +525,11 @@ namespace AwManaged
 
                     if (ChatEvent != null)
                     {
-                        var avatar = from p in _avatar where (p.Session == aw.GetInt(Attributes.ChatSession)) select p;
+                        var avatar = from p in _sceneNodes.Avatars where (p.Session == aw.GetInt(Attributes.ChatSession)) select p;
                         int type = aw.GetInt(Attributes.ChatType);
                         string text = aw.GetString(Attributes.ChatMessage);
                         var ct = (ChatType) type;
-                        ChatEvent.Invoke(this, new EventChatArgs(avatar.ElementAt(0), ct, text));
+                        ChatEvent.Invoke(this, new EventChatArgs<Avatar>(avatar.ElementAt(0), ct, text));
                     }
                 }
                 catch (InstanceException ex)
@@ -523,7 +551,7 @@ namespace AwManaged
                         AddMoverObject(sender);
                         return;
                     case (int)AW.ObjectType.Zone:
-                        AddZoneObject(sender);
+                        aw_addZoneObject(sender);
                         return;
                 }
 
@@ -553,7 +581,7 @@ namespace AwManaged
                                         aw.GetString(Attributes.ObjectAction), aw.GetInt(Attributes.ObjectNumber),
                                         aw.GetString(Attributes.ObjectData));
 
-                    _model.InternalAdd(o);
+                    _sceneNodes.Models.InternalAdd(o);
                     //if (ObjectEventAdd != null)
                     //    ObjectEventAdd(this, new EventObjectAddArgs(o, this.GetAvatar(aw.GetInt(Attributes.AvatarSession))));
                 }
@@ -570,7 +598,7 @@ namespace AwManaged
         {
             lock (this)
             {
-                var avatar = from p in _avatar where p.Session == aw.GetInt(Attributes.AvatarSession) select p;
+                var avatar = from p in _sceneNodes.Avatars where p.Session == aw.GetInt(Attributes.AvatarSession) select p;
 
                 if (avatar.Count() == 0)
                     return;
@@ -613,7 +641,7 @@ namespace AwManaged
                 AW.Camera ret;
                 sender.GetV4Object(out ret);
                 var camera = new Camera() {Flags = ret.Flags, Name = ret.Name, Zoom = ret.Zoom};
-                Cameras.InternalAdd(camera);
+                _sceneNodes.Cameras.InternalAdd(camera);
             }
             catch (InstanceException ex)
             {
@@ -626,21 +654,23 @@ namespace AwManaged
             {
                 AW.Mover ret;
                 sender.GetV4Object(out ret);
-                Movers.InternalAdd(AwConvert.CastMoverObject(ret));
+                _sceneNodes.Movers.InternalAdd(AwConvert.CastMoverObject(ret));
             }
             catch (InstanceException ex)
             {
                 HandleExceptionManaged(ex);
             }
         }
-        void AddZoneObject(Instance sender)
+        void aw_addZoneObject(Instance sender)
         {
             try
             {
                 AW.Zone ret;
-                var o = AwConvert.CastModelObject(sender);
                 sender.GetV4Object(out ret);
-                Zones.InternalAdd(AwConvert.CastZoneObject(ret));
+                var zone = AwConvert.CastZoneObject(ret);
+                zone.Model = AwConvert.CastModelObject(sender);
+                _sceneNodes.Models.InternalAdd(zone.Model);
+                _sceneNodes.Zones.InternalAdd(zone);
             }
             catch (InstanceException ex)
             {
@@ -837,7 +867,7 @@ namespace AwManaged
         /// <returns></returns>
         public Avatar GetAvatar(int session)
         {
-            var avatar = from p in _avatar where (p.Session == session) select p;
+            var avatar = from p in _sceneNodes.Avatars where (p.Session == session) select p;
             if (avatar.Count() == 1)
                 return avatar.ElementAt(0);
             return null;
@@ -865,7 +895,7 @@ namespace AwManaged
             if (citizen == 0)
                 return "root";
 
-            var avatar = _avatar.Find(p => p.Citizen == citizen);
+            var avatar = _sceneNodes.Avatars.Find(p => p.Citizen == citizen);
             int rc = 0;
             if (avatar != null)
                 return avatar.Name;
@@ -927,7 +957,7 @@ namespace AwManaged
 
         public void Whisper(RoleType role, string message)
         {
-            foreach (var a in from p in _avatar select p)
+            foreach (var a in from p in _sceneNodes.Avatars select p)
             {
                 if (_universeConnection.Connection.Authorization.IsInRole(role, a.Citizen))
                 {
@@ -968,7 +998,7 @@ namespace AwManaged
         private void SayCallback(object state)
         {
             var result = (CallbackStructT<Avatar>) state;
-            var exists = _avatar.Exists(p => p.Session == result.Clone.Session);
+            var exists = _sceneNodes.Avatars.Exists(p => p.Session == result.Clone.Session);
             switch ((SessionArgumentType)result.Param[1])
             {
                 // only send a message if the session is stil available.
@@ -985,5 +1015,7 @@ namespace AwManaged
         }
 
         #endregion
+
+ #endregion
     }
 }
