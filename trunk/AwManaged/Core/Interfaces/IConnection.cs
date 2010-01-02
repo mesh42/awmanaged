@@ -2,9 +2,8 @@
 
 namespace AwManaged.Core.Interfaces
 {
-    public interface IConnection<TConnectionInterface> : IConnectionProviderIdentity
+    public interface IConnection<TConnectionInterface>
     {
         string ConnectionString { get; }
-        TConnectionInterface Connection { get; }
     }
 }

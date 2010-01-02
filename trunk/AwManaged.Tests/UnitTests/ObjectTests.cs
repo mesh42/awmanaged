@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Xml.Serialization;
 using AW;
 using AwManaged.Converters;
@@ -40,12 +41,16 @@ namespace AwManaged.Tests.UnitTests
         [Test]
         public void ProtectedListTests()
         {
-            var a = new ProtectedList<Model> {new Model {Description = "description", Action = "hello"}};
-            var i = a.Count;
-
-            foreach (var b in from p in a select p)
+            try
             {
+                var a = new ProtectedList<Model> {new Model {Description = "description", Action = "hello"}};
+                var i = a.Count;
+
+                foreach (var b in from p in a select p)
+                {
+                }
             }
+            catch (SecurityException ex) { }
         }
 
         [Test]

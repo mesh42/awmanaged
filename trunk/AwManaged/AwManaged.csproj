@@ -12,6 +12,8 @@
     <AssemblyName>AwManaged</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -76,6 +78,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -89,15 +92,119 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="EventHandling\EventBotEntersWorldArgs.cs" />
-    <Compile Include="EventHandling\EventAvatarChangeArgs.cs" />
-    <Compile Include="EventHandling\EventBotLoggedInArgs.cs" />
+    <Compile Include="Core\Interfaces\IConnectionProperties.cs" />
+    <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
+    <Compile Include="EventHandling\BotEngine\Interfaces\IBotEngineEvents.cs" />
+    <Compile Include="EventHandling\ChatTypes.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventBotEntersWorldArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventAvatarAddArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventAvatarChangeArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventAvatarRemoveArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventBotLoggedInArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventChatArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventObjectAddArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventObjectChange.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventObjectClickArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventObjectRemoveArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\EventObjectScanCompletedEventArgs.cs" />
+    <Compile Include="EventHandling\RemotingBotEngine\Interfaces\IRemotingBotEngineEvents.cs" />
+    <Compile Include="EventHandling\Templated\EventBotEntersWorldArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventAvatarChangeArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventBotLoggedInArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IBotEvents.cs" />
     <Compile Include="EventHandling\Interfaces\IEventBotEntersWorldArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IChatEvents.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarChangeArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventBotLoggedInArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IObjectEvents.cs" />
+    <Compile Include="EventHandling\BotEngine\EventAvatarAddArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventAvatarChangeArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventAvatarRemoveArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventBotEntersWorldArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventBotLoggedInArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventChatArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventObjectAddArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventObjectChange.cs" />
+    <Compile Include="EventHandling\BotEngine\EventObjectClickArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventObjectRemoveArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventObjectScanCompletedEventArgs.cs" />
+    <Compile Include="RemoteServices\Interfaces\IRemotingServer.cs" />
+    <Compile Include="RemoteServices\RemotingBotClient.cs" />
+    <Compile Include="RemoteServices\RemotingBotEngine.cs" />
+    <Compile Include="RemoteServices\RemotingProtocol.cs" />
+    <Compile Include="RemoteServices\RemotingServerConnection.cs" />
+    <Compile Include="RemoteServices\RemotingConnectionProperties.cs" />
+    <Compile Include="RemoteServices\RemotingServer.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACAnimate.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACAStart.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACAStop.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACCamera.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACColor.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACCorona.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACCursor.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACEnvi.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACExamine.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACFrame.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACGroup.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACLight.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACLink.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACLock.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACMatFx.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACMedia.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACMidi.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACMove.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACName.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACNoise.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACPicture.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACRotate.cs" />
+    <Compile Include="Scene\ActionInterpreter\ActionCommands.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACSay.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACScale.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACSeq.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACShadow.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACSolid.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACTag.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACTeleport.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACTexture.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACUrl.cs" />
+    <Compile Include="Scene\ActionInterpreter\ActionCommandWarp.cs" />
+    <Compile Include="Scene\ActionInterpreter\ActionCommandWeb.cs" />
+    <Compile Include="Scene\ActionInterpreter\AnimationFlagType.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATActivate.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATAdone.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATBump.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATCreate.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATEnterZone.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATExitZone.cs" />
+    <Compile Include="Scene\ActionInterpreter\ATSDone.cs" />
+    <Compile Include="Scene\ActionInterpreter\CursorType.cs" />
+    <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
+    <Compile Include="Scene\ActionInterpreter\Interface\IActionInterpreter.cs" />
+    <Compile Include="Scene\ActionInterpreter\ACTeleportX.cs" />
+    <Compile Include="Scene\ActionInterpreter\LightFxType.cs" />
+    <Compile Include="Scene\ActionInterpreter\LightType.cs" />
+    <Compile Include="Scene\ActionInterpreter\MatFxType.cs" />
+    <Compile Include="Scene\ActionInterpreter\MediaPlayType.cs" />
+    <Compile Include="Scene\ActionInterpreter\MediaSoundFx.cs" />
+    <Compile Include="Scene\ActionInterpreter\ResType.cs" />
+    <Compile Include="Scene\ActionInterpreter\TextureBlendType.cs" />
+    <Compile Include="Scene\ActionInterpreter\TriggerCommands.cs" />
+    <Compile Include="Scene\Interfaces\IParticle.cs" />
+    <Compile Include="Scene\Interfaces\IParticleFlags.cs" />
+    <Compile Include="Scene\Particle.cs" />
+    <Compile Include="Scene\ParticleDrawStyle.cs" />
+    <Compile Include="Scene\ParticleFlags.cs" />
+    <Compile Include="Scene\ParticleType.cs" />
+    <Compile Include="Security\RemoteBotEngine\Authorization.cs" />
+    <Compile Include="Security\RemoteBotEngine\Group.cs" />
+    <Compile Include="Security\RemoteBotEngine\Interfaces\IAuthorization.cs" />
+    <Compile Include="Security\RemoteBotEngine\IdmClient.cs" />
+    <Compile Include="Security\RemoteBotEngine\Interfaces\IHaveAuthorization.cs" />
+    <Compile Include="Security\RemoteBotEngine\Interfaces\IIdentityManagementClient.cs" />
+    <Compile Include="Security\RemoteBotEngine\Interfaces\IUser.cs" />
+    <Compile Include="Security\RemoteBotEngine\RegistrationResult.cs" />
+    <Compile Include="Security\RemoteBotEngine\AuthorizationRole.cs" />
+    <Compile Include="Security\RemoteBotEngine\User.cs" />
     <Compile Include="Storage\BackupProvider\BackupRecord.cs" />
     <Compile Include="Configuration\BaseConfiguration.cs" />
     <Compile Include="Configuration\Interfaces\IUniverseConnectionProperties.cs" />
@@ -117,9 +224,8 @@
     <Compile Include="Core\Interfaces\ICloneableListT.cs" />
     <Compile Include="Core\Interfaces\IService.cs" />
     <Compile Include="Core\ProtectedList.cs" />
-    <Compile Include="EventHandling\ChatTypes.cs" />
-    <Compile Include="EventHandling\EventObjectChange.cs" />
-    <Compile Include="EventHandling\EventObjectRemoveArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventObjectChange.cs" />
+    <Compile Include="EventHandling\Templated\EventObjectRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectChangeArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectScanEventArgs.cs" />
     <Compile Include="ExceptionHandling\AwException.cs" />
@@ -131,8 +237,8 @@
     <Compile Include="Scene\Interfaces\ISceneNodeCommands.cs" />
     <Compile Include="Scene\Interfaces\ISceneNodes.cs" />
     <Compile Include="Scene\Avatar.cs" />
-    <Compile Include="EventHandling\EventObjectScanCompletedEventArgs.cs" />
-    <Compile Include="EventHandling\EventChatArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventObjectScanCompletedEventArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventChatArgs.cs" />
     <Compile Include="Scene\HudBase.cs" />
     <Compile Include="Scene\Interfaces\IHudBase.cs" />
     <Compile Include="EventHandling\Interfaces\IEventChatArgs.cs" />
@@ -172,11 +278,11 @@
     <Compile Include="Serialization\TypeConverterBase.cs" />
     <Compile Include="Scene\WorldAttributes.cs" />
     <Compile Include="ExceptionHandling\AwExceptionAttribute.cs" />
-    <Compile Include="EventHandling\EventObjectClickArgs.cs" />
-    <Compile Include="EventHandling\EventAvatarRemoveArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventObjectClickArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventAvatarRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventAvatarRemoveArgs.cs" />
-    <Compile Include="EventHandling\EventAvatarAddArgs.cs" />
-    <Compile Include="EventHandling\EventObjectAddArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventAvatarAddArgs.cs" />
+    <Compile Include="EventHandling\Templated\EventObjectAddArgs.cs" />
     <Compile Include="Scene\Interfaces\IAvatar.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectAddArgs.cs" />
@@ -209,13 +315,16 @@
     <Compile Include="Storage\StorageConfiguration.cs" />
     <Compile Include="Storage\ThreadSafeObjectContainer.cs" />
     <Compile Include="RemoteServices\Interfaces\IRemoteBotService.cs" />
-    <Compile Include="RemoteServices\RemoteBotService.cs" />
+    <Compile Include="RemoteServices\RemotingBotService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Storage\Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AwManagedSignature.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Reflection\" />

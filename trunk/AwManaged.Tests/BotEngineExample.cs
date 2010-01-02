@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using AwManaged;
-using AwManaged.Configuration;
-using AwManaged.EventHandling;
+using AwManaged.Core;
+using AwManaged.Core.Interfaces;
+using AwManaged.EventHandling.BotEngine;
 using AwManaged.Math;
 using AwManaged.Scene;
 using Db4objects.Db4o.Linq;
@@ -13,7 +13,7 @@ namespace AwManaged.Tests
     /// <summary>
     /// Managed Bot Engine Example for testing purposes. Currently only supports V3 objects. Expect updates on V4Object interaction soon.
     /// This bot logs in to a designated world, then sets to receive avatar events and performs a world object scan.
-    /// after the scan the bot will receive upates on objects.
+    /// after the scan the bot will make a backup of the world and receive upates on objects.
     /// 
     /// The bot will also transport users that enter the world, and will greet them.
     /// 
@@ -26,7 +26,7 @@ namespace AwManaged.Tests
     /// The main purpose for this is to unit test massive updates in the world, currently tests are being done with
     /// 40 objects simultaniously with good results.
     /// </summary>
-    public class BotEngineExample : BotEngine, IDisposable
+    public class BotEngineExample : BotEngine, IHaveToCleanUpMyShit
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BotEngineExample"/> class.
@@ -55,9 +55,11 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs<Avatar,Model> e)
+        void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs e)
         {
-            using (var dbClone = sender.Storage.Clone())
+            var dep = new DependendObject<Avatar,Model>(e.Avatar, e.Model);
+            DoClick();
+            using (var dbClone= sender.Storage.Db)
             {
                 // store the number of clicks on this object in the storage provider.
                 ModelClickStatistics stat;
@@ -77,7 +79,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleObjectEventRemove(BotEngine sender, EventObjectRemoveArgs<Avatar,Model> e)
+        static void HandleObjectEventRemove(BotEngine sender, EventObjectRemoveArgs e)
         {
             Console.WriteLine(string.Format("object {0} with id {1} removed.", e.Model.ModelName, e.Model.Id));
         }
@@ -86,19 +88,19 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleObjectEventAdd(BotEngine sender, EventObjectAddArgs<Avatar,Model> e)
+        static void HandleObjectEventAdd(BotEngine sender, EventObjectAddArgs e)
         {
             Console.WriteLine(string.Format("object {0} with id {1} added.", e.Model.ModelName,e.Model.Id));
-
-            // perform some unit tests, these are invoked by the objct description.
-            switch (e.Model.Description)
+            // perform some unit tests, these are invoked by the object description.
+            switch (e.Model.Action)
             {
                 case "@remove" :
                     sender.DeleteObject(e.Model);
                     break;
                 case "@change" :
-                    e.Model.Description = DateTime.Now.ToLongTimeString();
-                    sender.ChangeObject(e.Model);
+                    var model = e.Model;
+                    model.Description = DateTime.Now.ToLongTimeString();
+                    sender.ChangeObject(model);
                     break;
             }
         }
@@ -107,7 +109,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleAvatarEventRemove(BotEngine sender, EventAvatarRemoveArgs<Avatar> e)
+        static void HandleAvatarEventRemove(BotEngine sender, EventAvatarRemoveArgs e)
         {
             Console.WriteLine("Avatar {0} with session {1} has been removed.",e.Avatar.Name,e.Avatar.Session);
             sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
@@ -117,25 +119,34 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleAvatarEventAdd(BotEngine sender, EventAvatarAddArgs<Avatar> e)
+        static void HandleAvatarEventAdd(BotEngine sender, EventAvatarAddArgs e)
         {
             Console.WriteLine("Avatar {0} with session {1} has been added.", e.Avatar.Name, e.Avatar.Session);
-            // transport the avatar to a certain location.
-            var teleport = new Vector3(500,500,500);
-            sender.Teleport(e.Avatar, 500, 500, 500, 45);
-            // send a message that the user has entered the world and has been teleported to a certain location (with a time delay).
-            var message = string.Format("Teleported {0} to location {1},{2},{3}",
-                          new[] {e.Avatar.Name, teleport.x.ToString(), teleport.y.ToString(), teleport.z.ToString()});
-            sender.Say(5000,SessionArgumentType.AvatarSessionMustExist, e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
-            sender.Say(6000,SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
+            
+            // don't perform actions when the bot has been logged in shorter than 10 seconds (prevent greeting flood).
+            if (sender.ElapsedMilliseconds > 10000)
+            {
+                // transport the avatar to a certain location.
+                var teleport = new Vector3(500, 500, 500);
+                sender.Teleport(e.Avatar, 500, 500, 500, 45);
+                // send a message that the user has entered the world and has been teleported to a certain location (with a time delay).
+                var message = string.Format("Teleported {0} to location {1},{2},{3}",
+                                            new[]
+                                                {
+                                                    e.Avatar.Name, teleport.x.ToString(), teleport.y.ToString(),
+                                                    teleport.z.ToString()
+                                                });
+                sender.Say(5000, SessionArgumentType.AvatarSessionMustExist, e.Avatar,
+                           string.Format("{0} enters.", e.Avatar.Name));
+                sender.Say(6000, SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
+            }
         }
-
         /// <summary>
         /// Handles the object event scan completed.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="AwManaged.EventHandling.EventObjectScanCompletedEventArgs&lt;SceneNodes&gt;"/> instance containing the event data.</param>
-        static void HandleObjectEventScanCompleted(BotEngine sender, EventObjectScanCompletedEventArgs<SceneNodes> e)
+        /// <param name="e">The <see cref="AwManaged.EventHandling.BotEngine.EventObjectScanCompletedEventArgs"/> instance containing the event data.</param>
+        void HandleObjectEventScanCompleted(BotEngine sender, EventObjectScanCompletedEventArgs e)
         {
             Console.WriteLine(string.Format("Found {0} objects.", e.SceneNodes.Models.Count));
             // start receiving object events.
@@ -147,6 +158,11 @@ namespace AwManaged.Tests
             Console.WriteLine(string.Format("Found {0} zones.", e.SceneNodes.Zones.Count));
             Console.WriteLine(string.Format("Found {0} cameras.", e.SceneNodes.Cameras.Count));
             Console.WriteLine(string.Format("Found {0} movers.", e.SceneNodes.Movers.Count));
+            Console.WriteLine(string.Format("Found {0} particle emitters.", e.SceneNodes.Particles.Count));
+            string actionContains = "light";
+            Console.WriteLine(string.Format("object query test, testing object actions which contain {0}",actionContains));
+            var b = from Model p in e.SceneNodes.Models where p.Action.Contains(actionContains) select p;
+            Console.WriteLine(string.Format("found {0} objects which contain action {1}",b.Count(), actionContains));
             Console.Write("Performing main backup...");
             var sw = new Stopwatch();
             sw.Start();
@@ -158,9 +174,10 @@ namespace AwManaged.Tests
             db.Commit();
             
             Console.WriteLine("Done!" + sw.ElapsedMilliseconds + " ms.");
+
         }
 
-        static void HandleObjectEventChange(BotEngine sender, EventObjectChangeArgs<Avatar,Model> e)
+        static void HandleObjectEventChange(BotEngine sender, EventObjectChangeArgs e)
         {
             Console.WriteLine(
                 string.Format("object {0} with id {1} changed. old number {2}, new number {3}", 
@@ -172,7 +189,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleBotEventLoggedIn(BotEngine sender, EventBotLoggedInArgs<UniverseConnectionProperties> e)
+        static void HandleBotEventLoggedIn(BotEngine sender, EventBotLoggedInArgs e)
         {
             Console.WriteLine(string.Format("Bot [{0}] logged into the {1} universe server on port {2}",
                 e.ConnectionProperties.LoginName, e.ConnectionProperties.Domain,e.ConnectionProperties.Port));
@@ -183,7 +200,7 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleBotEventEntersWorld(BotEngine sender, EventBotEntersWorldArgs<UniverseConnectionProperties> e)
+        void HandleBotEventEntersWorld(BotEngine sender, EventBotEntersWorldArgs e)
         {
             // start receiving avatar events.
             sender.AvatarEventAdd += HandleAvatarEventAdd;

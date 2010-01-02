@@ -5,6 +5,7 @@ using AwManaged.ExceptionHandling;
 using AwManaged.Math;
 using AwManaged.Scene;
 using Mover=AwManaged.Scene.Mover;
+using Particle=AwManaged.Scene.Particle;
 using Zone=AwManaged.Scene.Zone;
 
 namespace AwManaged.Converters
@@ -45,6 +46,7 @@ namespace AwManaged.Converters
 
         /// <summary>
         /// Converts vector and yaw to a coordinate string.
+        /// TODO: finish and test this.
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="yaw">The yaw.</param>
@@ -88,6 +90,50 @@ namespace AwManaged.Converters
         #endregion
 
         #region Scene Node Castings
+
+        internal static Particle CastParticleObject(AW.Particle ret)
+        {
+            return new Scene.Particle
+            {
+                AccelerationMaximum = new Vector3(ret.Acceleration.Maximum.XMagnitude, ret.Acceleration.Maximum.YMagnitude, ret.Acceleration.Maximum.ZMagnitude),
+                AccelerationMinimum = new Vector3(ret.Acceleration.Minimum.XMagnitude, ret.Acceleration.Minimum.YMagnitude, ret.Acceleration.Minimum.ZMagnitude),
+                AngleMaximum = new Vector3(ret.Angle.Maximum.XMagnitude, ret.Angle.Maximum.YMagnitude, ret.Angle.Maximum.ZMagnitude),
+                AngleMinimum = new Vector3(ret.Angle.Minimum.XMagnitude, ret.Angle.Minimum.YMagnitude, ret.Angle.Minimum.ZMagnitude),
+                AssetList = ret.AssetList,
+                ColorEnd = AwConvert.CastColor(ret.ColorEnd),
+                ColorStart = AwConvert.CastColor(ret.ColorStart),
+                EmitterLifespan = ret.EmitterLifespan,
+                FadeIn = ret.FadeIn,
+                FadeOut = ret.FadeOut,
+                Flags = new Scene.ParticleFlags()
+                {
+                    CameraEmit = ret.Flags.CameraEmit,
+                    DrawInFront = ret.Flags.DrawInFront,
+                    Gravity = ret.Flags.Gravity,
+                    Interpolate = ret.Flags.Interpolate,
+                    LinkToMover = ret.Flags.LinkToMover,
+                    ZoneCollision = ret.Flags.ZoneCollision,
+                    ZoneExclusive = ret.Flags.ZoneExclusive
+                },
+                Lifespan = ret.Lifespan,
+                Name = ret.Name,
+                Opacity = ret.Opacity,
+                ReleaseMaximum = ret.ReleaseMaximum,
+                ReleaseMinimum = ret.ReleaseMinimum,
+                ReleaseSize = ret.ReleaseSize,
+                RenderStyle = (Scene.ParticleDrawStyle)ret.RenderStyle,
+                SizeMaximum = new Vector3(ret.Size.Maximum.XMagnitude, ret.Size.Maximum.YMagnitude, ret.Size.Maximum.ZMagnitude),
+                SizeMinimum = new Vector3(ret.Size.Minimum.XMagnitude, ret.Size.Minimum.YMagnitude, ret.Size.Minimum.ZMagnitude),
+                SpeedMaximum = new Vector3(ret.Speed.Maximum.XMagnitude, ret.Speed.Maximum.YMagnitude, ret.Speed.Maximum.ZMagnitude),
+                SpeedMinimum = new Vector3(ret.Speed.Minimum.XMagnitude, ret.Speed.Minimum.YMagnitude, ret.Speed.Minimum.ZMagnitude),
+                SpinMaximum = new Vector3(ret.Spin.Maximum.XMagnitude, ret.Spin.Maximum.YMagnitude, ret.Spin.Maximum.ZMagnitude),
+                SpinMinimum = new Vector3(ret.Spin.Minimum.XMagnitude, ret.Spin.Minimum.YMagnitude, ret.Spin.Minimum.ZMagnitude),
+                Style = (Scene.ParticleType)ret.Style,
+                VolumeMaximum = new Vector3(ret.Volume.Maximum.XMagnitude, ret.Volume.Maximum.YMagnitude, ret.Volume.Maximum.ZMagnitude),
+                VolumeMinimum = new Vector3(ret.Volume.Minimum.XMagnitude, ret.Volume.Minimum.YMagnitude, ret.Volume.Minimum.ZMagnitude),
+            };
+
+        }
 
         /// <summary>
         /// Casts the avatar object.

@@ -12,7 +12,7 @@ namespace AwManaged.Interfaces
         [Description("Displayed name of the object for user interface purposes.")]
         [Category("Identification")]
         [ReadOnly(true)]
-        string DisplayName { get; set; }
+        string DisplayName { get; }
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -20,6 +20,6 @@ namespace AwManaged.Interfaces
         [Description("Globally unique identification of the object.")]
         [Category("Identifiaction")]
         [ReadOnly(true)]
-        Guid Id { get; set; }
+        Guid Id { get; }
     }
 }

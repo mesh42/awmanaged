@@ -39,6 +39,8 @@ namespace AWManaged.Security
             Matrix = new List<CitizenRole>();            
         }
 
+
+
         public bool IsInRole(RoleType role, int citizen)
         {
             var citizenRole =  from p in Matrix where (p.Role == role && p.Citizen == citizen) select p;

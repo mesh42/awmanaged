@@ -1,4 +1,5 @@
 ﻿using System;
+using AwManaged.EventHandling.Templated;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using AwManaged.Core.Interfaces;
 using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
 
@@ -10,7 +10,7 @@ namespace AwManaged.Storage
     /// This results in a minimal connection pool, while retaining multi threaded performance.
     /// </summary>
     /// <typeparam name="TConnection">The type of the connection.</typeparam>
-    public class ThreadSafeObjectContainer<TConnection> : IDisposable
+    public class ThreadSafeObjectContainer<TConnection> : IHaveToCleanUpMyShit
     {
         private class ObjectContainerThread
         {
@@ -66,7 +66,7 @@ namespace AwManaged.Storage
             return ret;
         }
 
-        #region IDisposable Members
+        #region IHaveToCleanUpMyShit Members
 
         public void Dispose()
         {
