@@ -42,6 +42,7 @@ namespace AwManaged.Storage
                 }
             }
             EvaluateConnectionProperties();
+            OpenConnection();
         }
 
         private void EvaluateConnectionProperties()
@@ -72,7 +73,7 @@ namespace AwManaged.Storage
             return _safeObjectContainer.RemoveInstance();
         }
 
-        #region IDisposable Members
+        #region IHaveToCleanUpMyShit Members
 
         public void Dispose()
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AwManaged.Core;
 using AwManaged.Scene;
 using AWManaged.Security;
-using AwManaged.Tests;
 
 namespace AwManaged.Tests
 {

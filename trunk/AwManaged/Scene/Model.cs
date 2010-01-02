@@ -3,31 +3,67 @@ using System.Xml.Serialization;
 using AW;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
+using Db4objects.Db4o.Config.Attributes;
 
 namespace AwManaged.Scene
 {
     public sealed class Model : MarshalByRefObject, IModel<Model>
     {
+        [Indexed]
+        private int _id;
+        [Indexed]
+        private int _owner;
+        [Indexed]
+        private DateTime _timestamp;
+        [Indexed]
+        private ObjectType _type;
+        [Indexed]
+        private string _modelName;
+        [Indexed]
+        private Vector3 _position;
+        [Indexed]
+        private Vector3 _rotation;
+        [Indexed]
+        private string _description;
+        [Indexed]
+        private string _action;
+        [Indexed]
+        private int _number;
+        [Indexed]
+        private string _data;
+
+        //private int _id;
+        //private int _owner;
+        //private DateTime _timestamp;
+        //private ObjectType _type;
+        //private string _modelName;
+        //private Vector3 _position;
+        //private Vector3 _rotation;
+        //private string _description;
+        //private string _action;
+        //private int _number;
+        //private string _data;
+
         [XmlAttribute]
-        public int Id { get; internal set; }
+        public int Id { get { return _id; } internal set{ _id = value;} }
         [XmlAttribute]
-        public int Owner { get; set; }
+        public int Owner { get { return _owner; } set { _owner = value;} }
         [XmlAttribute]
-        public DateTime Timestamp { get; internal set; }
+        public DateTime Timestamp { get { return _timestamp;} internal set { _timestamp = value;} }
         [XmlAttribute]
-        public ObjectType Type { get; internal set; }
+        public ObjectType Type { get { return _type;} internal set { _type = value;} }
         [XmlAttribute]
-        public string ModelName { get; set; }
-        public Vector3 Position { get; set; }
-        public Vector3 Rotation { get; set; }
+        public string ModelName { get { return _modelName; } set { _modelName = value;} }
+        public Vector3 Position { get { return _position; } set { _position = value;} }
+        public Vector3 Rotation { get { return _rotation; } set { _rotation = value;} }
         [XmlAttribute]
-        public string Description { get; set; }
+        public string Description { get { return _description; } set { _description = value;} }
         [XmlAttribute]
-        public string Action { get; set; }
+        public string Action { get{ return _action;} set { _action = value;} }
         [XmlAttribute]
-        public int Number { get; internal set; }
+        public int Number { get { return _number;} internal set { _number = Number;} }
         [XmlAttribute]
-        public string Data { get; set; }
+        public string Data { get { return _data;} set { _data = value;}  }
 
         public Model(){}
 

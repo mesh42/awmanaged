@@ -8,22 +8,17 @@ namespace AwManaged.Scene
     /// <summary>
     /// Exact implementation of scene nodes for active worlds scene objects.
     /// </summary>
-    public sealed class SceneNodes : MarshalByRefObject, ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar>, ICloneableT<SceneNodes>
+    public sealed class SceneNodes : MarshalByRefObject, ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar,Particle,ParticleFlags>, ICloneableT<SceneNodes>
     {
         #region ISceneNodes<Model,Camera,Mover,Zone,HudBase<Avatar>,Avatar> Members
 
-        public ProtectedList<Avatar> Avatars
-        { get; set; }
-        public ProtectedList<Model> Models
-        { get; set; }
-        public ProtectedList<Camera> Cameras
-        { get; set; }
-        public ProtectedList<Mover> Movers
-        { get; set; }
-        public ProtectedList<Zone> Zones
-        { get; set; }
-        public ProtectedList<HudBase<Avatar>> Huds
-        { get; set; }
+        public ProtectedList<Avatar> Avatars{ get; set; }
+        public ProtectedList<Model> Models{ get; set; }
+        public ProtectedList<Camera> Cameras{ get; set; }
+        public ProtectedList<Mover> Movers{ get; set; }
+        public ProtectedList<Zone> Zones{ get; set; }
+        public ProtectedList<HudBase<Avatar>> Huds{ get; set; }
+        public ProtectedList<Particle> Particles{ get; set; }
 
         #endregion
 
@@ -37,6 +32,7 @@ namespace AwManaged.Scene
             Zones = new ProtectedList<Zone>();
             Huds = new ProtectedList<HudBase<Avatar>>();
             Avatars = new ProtectedList<Avatar>();
+            Particles = new ProtectedList<Particle>();
         }
 
         #region ICloneableT<SceneNodes> Members

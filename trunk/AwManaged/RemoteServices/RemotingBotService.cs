@@ -1,0 +1,51 @@
+﻿using System;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Http;
+using AwManaged.EventHandling.RemotingBotEngine;
+using AwManaged.RemoteServices.Interfaces;
+using System.Runtime.Remoting.Channels.Tcp;
+
+namespace AwManaged.RemoteServices
+{
+    public sealed class RemotingBotService : MarshalByRefObject, IRemoteBotService
+    {
+        #region Delegates and Events
+
+        public event BotEventLoggedInDelegate BotEventLoggedIn;
+        public event BotEventEntersWorldDelegate BotEventEntersWorld;
+        public event AvatarEventAddDelegate AvatarEventAdd;
+        public event AvatarEventChangeDelegate AvatarEventChange;
+        public event AvatarEventRemoveDelegate AvatarEventRemove;
+        public event ObjectEventClickDelegate ObjectEventClick;
+        public event ObjectEventAddDelegate ObjectEventAdd;
+        public event ObjectEventRemoveDelegate ObjectEventRemove;
+        public event ObjectEventScanCompletedDelegate ObjectEventScanCompleted;
+        public event ChatEventDelegate ChatEvent;
+        public event ObjectEventChangeDelegate ObjectEventChange;
+
+        #endregion
+
+        public RemotingBotService()
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemotingBotService"/> class.
+        /// </summary>
+        /// <param name="engine">The bot engine which is to be exposed over TCP.</param>
+        /// <param name="port">The port.</param>
+        public RemotingBotService(BotEngine engine, int port)
+        {
+            //ChannelServices.RegisterChannel(new HttpChannel(port),false);
+            //ObjRef ref1 = RemotingServices.Marshal(engine, "http://localhost:9000/RemotingBotEngine");
+            //RemotingConfiguration.RegisterWellKnownServiceType(typeof(BotEngine), "RemotingBotEngine", WellKnownObjectMode.SingleCall);
+        }
+
+        public RemotingBotEngine GetRemotingBotInstance()
+        {
+            return new RemotingBotEngine();
+        }
+    }
+}

@@ -11,11 +11,10 @@ namespace AwManaged.Interfaces
     /// The interface is build up as such, that a bot implementation can use different types of implementations 
     /// in order to support a factory pattern.
     /// </summary>
-    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase> : 
+    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags> : 
         IHandleExceptionManaged,
         ISceneNodeCommands<TModel,TAvatar,THudBase>,
         IChatCommands<TAvatar>,
-        /*ISceneNodes<TModel,TCamera,TMover,TZone,THudBase,TAvatar>,*/
         IAvatarCommands<TAvatar>, IConfigurable
         where TModel : MarshalByRefObject, IModel<TModel>
         where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
@@ -23,12 +22,14 @@ namespace AwManaged.Interfaces
         where TMover : MarshalByRefObject, IMover<TMover>
         where TZone : MarshalByRefObject, IZone<TZone, TModel, TCamera>
         where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
+        where TParticle : MarshalByRefObject, IParticle<TParticle,TParticleFlags>
+        where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
     {
         /// <summary>
         /// Gets the scene nodes.
         /// </summary>
         /// <value>The scene nodes.</value>
-        ISceneNodes<TModel, TCamera, TMover, TZone, THudBase, TAvatar> SceneNodes { get;}
+        ISceneNodes<TModel, TCamera, TMover, TZone, THudBase, TAvatar, TParticle, TParticleFlags> SceneNodes { get;}
 
         LoginConfiguration LoginConfiguration { get; }
         /// <summary>

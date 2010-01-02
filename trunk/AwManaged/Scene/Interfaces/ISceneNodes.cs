@@ -1,6 +1,5 @@
 ﻿using System;
 using AwManaged.Core;
-using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene.Interfaces
 {
@@ -13,13 +12,17 @@ namespace AwManaged.Scene.Interfaces
     /// <typeparam name="TZone">The type of the zone.</typeparam>
     /// <typeparam name="THudBase">The type of the hud base.</typeparam>
     /// <typeparam name="TAvatar">The type of the avatar.</typeparam>
-    public interface ISceneNodes<TModel,TCamera,TMover, TZone, THudBase,TAvatar>
+    /// <typeparam name="TParticle">The type of the particle.</typeparam>
+    /// <typeparam name="TParticleFlags">The type of the particle flags.</typeparam>
+    public interface ISceneNodes<TModel, TCamera, TMover, TZone, THudBase, TAvatar, TParticle, TParticleFlags>
         where TModel : MarshalByRefObject, IModel<TModel>
         where TCamera : MarshalByRefObject, ICamera<TCamera>
         where TMover : MarshalByRefObject, IMover<TMover>
         where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
         where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
         where TZone : MarshalByRefObject, IZone<TZone, TModel, TCamera>
+        where TParticle : MarshalByRefObject, IParticle<TParticle, TParticleFlags>
+        where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
     {
         /// <summary>
         /// Gets the avatars.
@@ -51,5 +54,10 @@ namespace AwManaged.Scene.Interfaces
         /// </summary>
         /// <value>The huds.</value>
         ProtectedList<THudBase> Huds { get; }
+        /// <summary>
+        /// Gets a shallow memberwise clone of the particles cache.
+        /// </summary>
+        /// <value>The huds.</value>
+        ProtectedList<TParticle> Particles { get; }
     }
 }
