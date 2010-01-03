@@ -2,26 +2,57 @@
 using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Serialization.Formatters;
 using AwManaged.Core;
-using AwManaged.RemoteServices.Interfaces;
+using AwManaged.Core.Interfaces;
+using AwManaged.Security.RemoteBotEngine;
+using AwManaged.Security.RemoteBotEngine.Interfaces;
 
-namespace AwManaged.RemoteServices
+namespace AwManaged.RemoteServices.Server
 {
-    public class RemotingServer<TRemotingBotEngine> : IRemotingServer<RemotingServerConnection>
+    public class RemotingServer<TRemotingBotEngine> : IConnectedServiceDevice<RemotingServerConnection>
     {
         private BinaryClientFormatterSinkProvider clientProvider;
         private BinaryServerFormatterSinkProvider serverProvider;
         private TcpChannel channelTcp;
         private HttpChannel channelHttp;
+        private IpcChannel channelIpc;
+
+        private IIdentityManagementObjects _idmService;
+
+        public string ProviderName
+        {
+            get { return "awmremoting"; }
+        }
+
         IDictionary props = new Hashtable();
 
-        public RemotingServer(string connectionString)
+        public RemotingBotEngine GetRemoteBotInstance()
         {
-            Connection = new RemotingServerConnection {ConnectionString = connectionString};
-            foreach (var item in ConnectionStringHelper.GetNameValuePairs(Connection.ConnectionString, Connection.ProviderName))
+            return null;            
+        }
+
+        public RemoteServices.RemotingBotEngine Login(User user)
+        {
+            if (user.IsAuthenticated(_idmService.Db))
+                return GetRemoteBotInstance();
+            return null; // no access to services.
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemotingServer&lt;TRemotingBotEngine&gt;"/> class.
+        /// </summary>
+        /// <param name="remotingConnection">The remoting connection.</param>
+        /// <param name="idmManagement">The idm management.</param>
+        public RemotingServer(string remotingConnection, IIdentityManagementObjects idmManagement)
+        {
+            _idmService = idmManagement;
+                //throw new Exception("The remoting server needs an authentication / authorization manegement object to operate.");
+            Connection = new RemotingServerConnection {ConnectionString = remotingConnection};
+            foreach (var item in ConnectionStringHelper.GetNameValuePairs(Connection.ConnectionString, ProviderName))
             {
                 switch(item.Name.ToLower())
                 {
@@ -30,11 +61,14 @@ namespace AwManaged.RemoteServices
                     case "protocol":
                         switch (item.Value.ToLower().ToLower())
                         {
+                            case "ipc":
+                                Connection.Protocol = RemotingProtocol.Ipc;
+                                break;
                             case "tcp":
-                                Connection.Protocol  = RemotingProtocol.tcp;
+                                Connection.Protocol  = RemotingProtocol.Tcp;
                                 break;
                             case "http":
-                                Connection.Protocol = RemotingProtocol.http;
+                                Connection.Protocol = RemotingProtocol.Http;
                                 break;
                             default:
                                 throw new Exception(string.Format("Protocol '{0}' is not supported.",item.Value));
@@ -54,10 +88,10 @@ namespace AwManaged.RemoteServices
 
         private void EvaluateConnectionProperties()
         {
-                if (Connection.Protocol == RemotingProtocol.unspecified)
-                    throw new ArgumentException("Connection string does not contain mandatory protocol type.");
-                if (Connection.Port <= 0)
-                    throw new ArgumentException("A port number has not been specified or should be a positive number.");
+            if (Connection.Protocol == RemotingProtocol.Unspecified)
+                throw new ArgumentException("Connection string does not contain mandatory protocol type.");
+            if (Connection.Port <= 0)
+                throw new ArgumentException("A port number has not been specified or should be a positive number.");
         }
 
         static void ThrowIncorrectConnectionStringException()
@@ -70,14 +104,18 @@ namespace AwManaged.RemoteServices
         public bool Stop()
         {
             if (!IsRunning)
-                throw new ArgumentException("Remoting Server could not be stopped as it not running.");
+                throw new ArgumentException("Remoting Server could not be stopped as it is not running.");
             switch (Connection.Protocol)
             {
-                case RemotingProtocol.tcp:
+                case RemotingProtocol.Ipc:
+                    channelIpc.StopListening(null);
+                    ChannelServices.UnregisterChannel(channelTcp);
+                    break;
+                case RemotingProtocol.Tcp:
                     channelTcp.StopListening(null);
                     ChannelServices.UnregisterChannel(channelTcp);
                     break;
-                case RemotingProtocol.http:
+                case RemotingProtocol.Http:
                     channelHttp.StopListening(null);
                     ChannelServices.UnregisterChannel(channelHttp);
                     break;
@@ -94,11 +132,15 @@ namespace AwManaged.RemoteServices
             props["typeFilterLevel"] = TypeFilterLevel.Full;
             switch (Connection.Protocol)
             {
-                case RemotingProtocol.tcp:
+                case RemotingProtocol.Ipc:
+                    channelIpc = new IpcChannel(props, clientProvider, serverProvider);
+                    ChannelServices.RegisterChannel(channelTcp, false);
+                    break;
+                case RemotingProtocol.Tcp:
                     channelTcp = new TcpChannel(props, clientProvider, serverProvider);
                     ChannelServices.RegisterChannel(channelTcp,false);
                     break;
-                case RemotingProtocol.http:
+                case RemotingProtocol.Http:
                     channelHttp = new HttpChannel(props, clientProvider, serverProvider);
                     ChannelServices.RegisterChannel(channelHttp,false);
                     break;
@@ -121,6 +163,30 @@ namespace AwManaged.RemoteServices
         public RemotingServerConnection Connection
         {
             get; private set;
+        }
+
+        #endregion
+
+        public string DisplayName
+        {
+            get { return "Remoting Server"; }
+        }
+
+        public Guid Id
+        {
+            get; internal set;
+        }
+
+        public string TechnicalName
+        {
+            get; internal set;
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            // TODO: Cleanup.
         }
 
         #endregion

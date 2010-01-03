@@ -1,3 +1,15 @@
+Release 0.3.7 (unstable) maintenance release
+* Generalizing Storage and Remoting Client/Server Services into Core.Interfaces.IConnectedServiceDevice.cs
+* Adding a service manager.
+* Solution wide Cleaning up of code and commenting for future technical documentation
+* Make code more compliant to core interface designs.
+* Adding client delegate/events wrapper for callbacks over .NET remoting.
+* Splitting up IIdentityManagementClient into IdentityManagementObjects who's implementation doesn't need to know about the storage connection interface.
+* Introducing service manager to BotEngine.
+* Adding a timeout on Instance(_universeConnection.Connection.Domain, _universeConnection.Connection.Port) appearantly Instance waits indefinatly on byteMr's implementation.
+* Workng on some unit tests for the action interpreter.
+* Adding the Action Commands to a type cache in the unit tests, for quick intrepetration.
+
 Release 0.3.6 (unstable) maintenance release
 * Adding Signing to assemblies,awmanaged can now be registered in the GAC.
 * Adding user database for remote bot engine users.
@@ -8,7 +20,7 @@ Release 0.3.6 (unstable) maintenance release
 * Adding Particle Object V4 support.
 * Adding some Action Command Set classes for preparation in intepreting action object strings.
 * Adding some query example on action strings in the Bot Engin Example.
-* Intruducing e.SceneNodes als argument.
+* Introducing e.SceneNodes als event argument.
 * Splitting up Events into templated, local and remote event args.
 * Reintroducing non templated event types into botengine for keeping syntax unified between remotingbots and localbots.
 

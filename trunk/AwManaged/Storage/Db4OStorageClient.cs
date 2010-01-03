@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using AwManaged.Core;
 using AwManaged.Core.Interfaces;
 using AwManaged.Storage.Interfaces;
@@ -11,11 +22,10 @@ namespace AwManaged.Storage
     /// </summary>
     public class Db4OStorageClient : IStorageClient<Db4OConnection>
     {
-        public Db4OStorageClient(IConnection<Db4OConnection> storageConfiguration)
+        public Db4OStorageClient(string connectionString)
         {
-            ConnectionString = storageConfiguration.ConnectionString;
-            Connection = new Db4OConnection();
-            foreach (var item in ConnectionStringHelper.GetNameValuePairs(ConnectionString, ProviderName))
+            Connection = new Db4OConnection {ConnectionString = connectionString};
+            foreach (var item in ConnectionStringHelper.GetNameValuePairs(Connection.ConnectionString, ProviderName))
             {
                 switch (item.Name.ToLower())
                 {
@@ -34,15 +44,14 @@ namespace AwManaged.Storage
                         break;
                     case "port":
                         try { Connection.HostPort = int.Parse(item.Value.Trim()); }
-                        catch { ConnectionStringHelper.ThrowIncorrectConnectionString(ConnectionString); }
+                        catch { ConnectionStringHelper.ThrowIncorrectConnectionString(Connection.ConnectionString); }
                         break;
                     default:
-                        ConnectionStringHelper.ThrowIncorrectConnectionString(ConnectionString);
+                        ConnectionStringHelper.ThrowIncorrectConnectionString(Connection.ConnectionString);
                         break;
                 }
             }
             EvaluateConnectionProperties();
-            OpenConnection();
         }
 
         private void EvaluateConnectionProperties()
@@ -56,22 +65,6 @@ namespace AwManaged.Storage
         }
 
         private ThreadSafeObjectContainer<Db4OConnection> _safeObjectContainer;
-        /// <summary>
-        /// Opens the connection on the current thread by default.
-        /// </summary>
-        public void OpenConnection()
-        {
-            _safeObjectContainer = new ThreadSafeObjectContainer<Db4OConnection>(Connection);
-        }
-
-        /// <summary>
-        /// Closes the connection on the current thread.
-        /// </summary>
-        /// <returns></returns>
-        public bool CloseConnection()
-        {
-            return _safeObjectContainer.RemoveInstance();
-        }
 
         #region IHaveToCleanUpMyShit Members
 
@@ -103,15 +96,6 @@ namespace AwManaged.Storage
 
         #endregion
 
-        #region IStorageConfiguration Members
-
-        public string ConnectionString
-        {
-            get; private set;
-        }
-
-        #endregion
-
         #region IStorageConfiguration<IDb4OConnection> Members
 
         public Db4OConnection Connection
@@ -121,22 +105,47 @@ namespace AwManaged.Storage
 
         #endregion
 
-        #region IStorageClient<Db4OConnection> Members
-
-
-        bool IStorageClient<Db4OConnection>.CloseConnection()
+        IObjectContainer ICloneableT<IObjectContainer>.Clone()
         {
-            return Db.Close();
+            return _safeObjectContainer.GetNewInstance();
+        }
+
+        #region IService Members
+
+        public bool Stop()
+        {
+            _safeObjectContainer.Dispose();
+            return true;
+        }
+
+        public bool Start()
+        {
+            _safeObjectContainer = new ThreadSafeObjectContainer<Db4OConnection>(Connection);
+            return true;
+        }
+
+        public bool IsRunning
+        {
+            get { return _safeObjectContainer != null; }
         }
 
         #endregion
 
+        #region IIdentifiable Members
 
-        #region ICloneableT<IObjectContainer> Members
-
-        IObjectContainer ICloneableT<IObjectContainer>.Clone()
+        public string DisplayName
         {
-            return _safeObjectContainer.GetNewInstance();
+            get; internal set;
+        }
+
+        public Guid Id
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string TechnicalName
+        {
+            get; set;
         }
 
         #endregion

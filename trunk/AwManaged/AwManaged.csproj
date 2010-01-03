@@ -94,6 +94,8 @@
     </Compile>
     <Compile Include="Core\Interfaces\IConnectionProperties.cs" />
     <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
+    <Compile Include="Core\Interfaces\IServicesManager.cs" />
+    <Compile Include="Core\ServicesManager.cs" />
     <Compile Include="EventHandling\BotEngine\Interfaces\IBotEngineEvents.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
     <Compile Include="EventHandling\RemotingBotEngine\EventBotEntersWorldArgs.cs" />
@@ -128,13 +130,16 @@
     <Compile Include="EventHandling\BotEngine\EventObjectClickArgs.cs" />
     <Compile Include="EventHandling\BotEngine\EventObjectRemoveArgs.cs" />
     <Compile Include="EventHandling\BotEngine\EventObjectScanCompletedEventArgs.cs" />
-    <Compile Include="RemoteServices\Interfaces\IRemotingServer.cs" />
+    <Compile Include="Core\Interfaces\IConnectedServiceDevice.cs" />
+    <Compile Include="ExceptionHandling\NetworkException.cs" />
     <Compile Include="RemoteServices\RemotingBotClient.cs" />
     <Compile Include="RemoteServices\RemotingBotEngine.cs" />
-    <Compile Include="RemoteServices\RemotingProtocol.cs" />
-    <Compile Include="RemoteServices\RemotingServerConnection.cs" />
+    <Compile Include="RemoteServices\Client\RemotingClient.cs" />
+    <Compile Include="RemoteServices\Client\RemotingClientConnection.cs" />
     <Compile Include="RemoteServices\RemotingConnectionProperties.cs" />
-    <Compile Include="RemoteServices\RemotingServer.cs" />
+    <Compile Include="RemoteServices\RemotingProtocol.cs" />
+    <Compile Include="RemoteServices\Server\RemotingServerConnection.cs" />
+    <Compile Include="RemoteServices\Server\RemotingServer.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAnimate.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAStart.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAStop.cs" />
@@ -166,6 +171,7 @@
     <Compile Include="Scene\ActionInterpreter\ACTag.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleport.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTexture.cs" />
+    <Compile Include="Scene\ActionInterpreter\ActionInterpreterService.cs" />
     <Compile Include="Scene\ActionInterpreter\ACUrl.cs" />
     <Compile Include="Scene\ActionInterpreter\ActionCommandWarp.cs" />
     <Compile Include="Scene\ActionInterpreter\ActionCommandWeb.cs" />
@@ -181,6 +187,7 @@
     <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\IActionInterpreter.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleportX.cs" />
+    <Compile Include="Scene\ActionInterpreter\Interface\ITrigger.cs" />
     <Compile Include="Scene\ActionInterpreter\LightFxType.cs" />
     <Compile Include="Scene\ActionInterpreter\LightType.cs" />
     <Compile Include="Scene\ActionInterpreter\MatFxType.cs" />
@@ -201,12 +208,12 @@
     <Compile Include="Security\RemoteBotEngine\IdmClient.cs" />
     <Compile Include="Security\RemoteBotEngine\Interfaces\IHaveAuthorization.cs" />
     <Compile Include="Security\RemoteBotEngine\Interfaces\IIdentityManagementClient.cs" />
+    <Compile Include="Security\RemoteBotEngine\Interfaces\IIdentityManagementObjects.cs" />
     <Compile Include="Security\RemoteBotEngine\Interfaces\IUser.cs" />
     <Compile Include="Security\RemoteBotEngine\RegistrationResult.cs" />
     <Compile Include="Security\RemoteBotEngine\AuthorizationRole.cs" />
     <Compile Include="Security\RemoteBotEngine\User.cs" />
     <Compile Include="Storage\BackupProvider\BackupRecord.cs" />
-    <Compile Include="Configuration\BaseConfiguration.cs" />
     <Compile Include="Configuration\Interfaces\IUniverseConnectionProperties.cs" />
     <Compile Include="Configuration\Interfaces\IConfigurable.cs" />
     <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
@@ -214,7 +221,6 @@
     <Compile Include="Configuration\UniverseConnectionProperties.cs" />
     <Compile Include="Core\BaseCacheList.cs" />
     <Compile Include="Core\CallbackStructT.cs" />
-    <Compile Include="Core\Delegates\Delegates.cs" />
     <Compile Include="Core\Differential.cs">
     </Compile>
     <Compile Include="Core\DependendObject.cs">
@@ -243,7 +249,7 @@
     <Compile Include="Scene\Interfaces\IHudBase.cs" />
     <Compile Include="EventHandling\Interfaces\IEventChatArgs.cs" />
     <Compile Include="Interfaces\ICanLog.cs" />
-    <Compile Include="Interfaces\IIdentifiable.cs" />
+    <Compile Include="Core\Interfaces\IIdentifiable.cs" />
     <Compile Include="Interfaces\IInitialize.cs" />
     <Compile Include="Interfaces\IPersistable.cs" />
     <Compile Include="Logging\ILogger.cs" />

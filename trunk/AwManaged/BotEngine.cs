@@ -1,13 +1,27 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using AW;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Converters;
 using AwManaged.Core;
+using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling;
 using AwManaged.EventHandling.BotEngine; /* Use event handlers for exact implementation of the botengine */
 using AwManaged.ExceptionHandling;
@@ -15,10 +29,12 @@ using AwManaged.Interfaces;
 using AwManaged.Logging;
 using AwManaged.Math;
 using AwManaged.RemoteServices;
+using AwManaged.RemoteServices.Server;
 using AwManaged.Scene;
 using AWManaged.Security;
+using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
-using AwManaged.Storage.Interfaces;
+using Db4objects.Db4o.Foundation;
 using Camera=AwManaged.Scene.Camera;
 using Mover=AwManaged.Scene.Mover;
 using Zone=AwManaged.Scene.Zone;
@@ -28,7 +44,7 @@ namespace AwManaged
     /// <summary>
     /// Exact abstract type implementation of an active worlds "master" bot.
     /// </summary>
-    public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags>
+    public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection>
     {
         private long _tickStart;
 
@@ -51,15 +67,16 @@ namespace AwManaged
         private Timer _timer;
         //private ProtectedList<Model> _model = new ProtectedList<Model>();
         private Model _modelRemoved;
-
-        //private ProtectedList<Camera> _cameras = new ProtectedList<Camera>();
-        //private ProtectedList<Mover> _movers = new ProtectedList<Mover>();
-        //private ProtectedList<Zone> _zones = new ProtectedList<Zone>();
-        //private ProtectedList<HudBase<Avatar>> _huds = new ProtectedList<HudBase<Avatar>>();
-        //private ProtectedList<Avatar> _avatar = new ProtectedList<Avatar>();
-
-        private IStorageServer<Db4OConnection> _storageServer; // TODO: expose as interface in IBotEngine
         private SceneNodes _sceneNodes = new SceneNodes();
+
+
+        private Db4OStorageClient _storageClient;
+        private Db4OStorageClient _authStorageClient;
+        private Db4OStorageServer _storageServer;
+        private Db4OStorageServer _authStorageServer;
+
+        public Db4OStorageClient Storage { get { return _storageClient; }}
+
         #endregion
 
         #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>> Members
@@ -72,23 +89,6 @@ namespace AwManaged
         {
             get { lock (this){return _sceneNodes.Clone();}}
         }
-
-        #region Properties
-
-////        public SceneNodes.SceneNodes SceneNodes{get{lock (this){return _sceneNodes.Clone();}}}
-//        public ProtectedList<Model> Models { get { lock (this){return _model.Clone();} } }
-//        public ProtectedList<Camera> Cameras { get { lock(this){ return _cameras.Clone();} } }
-//        public ProtectedList<Mover> Movers { get { lock (this){return _movers.Clone();} } }
-//        public ProtectedList<Zone> Zones { get { lock (this){return _zones.Clone();} } }
-//        public ProtectedList<HudBase<Avatar>> Huds { get { lock (this){return _huds.Clone();} } }
-
-        private List<IStorageClient<Db4OConnection>> _storage = new List<IStorageClient<Db4OConnection>>();
-
-        public IStorageClient<Db4OConnection> AuthStorage { get; private set; } // TODO: expose as interface in IBotEngine.
-
-        public IStorageClient<Db4OConnection> Storage{get;private set; } // TODO: expose as interface in IBotEngine.
-
-        #endregion
 
         #region Delegates and Events
 
@@ -144,7 +144,7 @@ namespace AwManaged
 
         #region ScanObjects Global
 
-        public virtual void ScanObjects()
+        public void ScanObjects()
         {
             try
             {
@@ -233,13 +233,32 @@ namespace AwManaged
             }
         }
 
-        public virtual void Start()
+        private void clientConnectAttempt()
+        {
+            aw = new Instance(_universeConnection.Connection.Domain, _universeConnection.Connection.Port);
+        }
+
+        public void Start()
         {
             try
             {
                 _tickStart = DateTime.Now.Ticks;
                 int rc;
-                aw = new Instance(_universeConnection.Connection.Domain, _universeConnection.Connection.Port);
+
+                Thread t = new Thread(clientConnectAttempt);
+                t.Start();
+                System.Diagnostics.Stopwatch sw = new Stopwatch();
+                sw.Start();
+                while (aw == null)
+                {
+                    if (sw.ElapsedMilliseconds > 5000)
+                    {
+                        t.Abort();
+                        throw new NetworkException("Universe connection timed out.");
+                    }
+                    Thread.Sleep(10);
+                }
+                
                 //greeter
                 //Set the login attributes and log the bot into the universe
                 aw.SetString(Attributes.LoginName, _universeConnection.Connection.LoginName);
@@ -331,24 +350,39 @@ namespace AwManaged
                 throw new Exception("No universe connection specified in your app.config.");
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageClientConnection"]))
                 throw new Exception("No storage client connection specified in your app.config.");
-            if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageClientConnection"]))
-                throw new Exception("No authorization storage client connection specified in your app.config.");
 
             _universeConnection = new LoginConfiguration(ConfigurationManager.AppSettings["UniverseConnection"]);
+            ServicesManager = new ServicesManager();
+            
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageServerConnection"]))
             {
-                // only create a storage server if we have specified this in the config, otherwise we are using a remote server.
-                _storageServer =new Db4OStorageServer(new StorageConfiguration<Db4OConnection>(ConfigurationManager.AppSettings["StorageServerConnection"]));
-                if (!_storageServer.Start())
-                    throw new Exception("Can't start the storage server.");
+                _storageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["StorageServerConnection"]){TechnicalName = "StorageServerConnection"};
+                ServicesManager.AddService(_storageServer);
+            }
+
+            _storageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["StorageClientConnection"]) { TechnicalName = "StorageClientConnection" };
+            ServicesManager.AddService(_storageClient);
+
+
+            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageServerConnection"]))
+            {
+                _authStorageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["AuthStorageServerConnection"]){TechnicalName = "AuthStorageServerConnection"};
+                ServicesManager.AddService(_authStorageServer);
+            }
+
+            if (!String.IsNullOrEmpty("AuthStorageClientConnection"))
+            {
+                _authStorageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["AuthStorageClientConnection"]){TechnicalName = "AuthStorageClientConnection"};
+                ServicesManager.AddService(_authStorageClient);
             }
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["RemotingServerConnection"]))
             {
-                _remotingServer = new RemotingServer<RemotingBotEngine>(ConfigurationManager.AppSettings["RemotingServerConnection"]);
+                if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageClientConnection"]))
+                    throw new Exception("To successfully run a remoting server connection, there must be an authentication storage client connection available.");
+                var _idm = new IdmClient<Db4OConnection>(_authStorageClient);
+                _remotingServer = new RemotingServer<RemotingBotEngine>(ConfigurationManager.AppSettings["RemotingServerConnection"],_idm) { TechnicalName = "RemotingServerConnection" };
+                ServicesManager.AddService(_remotingServer);
             }
-            _remotingServer.Start();
-
-            Storage = new Db4OStorageClient(new StorageConfiguration<Db4OConnection>(ConfigurationManager.AppSettings["StorageClientConnection"]));
         }
 
         private RemotingServer<RemotingBotEngine> _remotingServer;
@@ -746,7 +780,6 @@ namespace AwManaged
             try
             {
                 _storageServer.Stop();
-                Storage.CloseConnection();
                 aw.Dispose();
                 _timer.Dispose();
             }
@@ -1063,5 +1096,14 @@ namespace AwManaged
         #endregion
 
  #endregion
+
+        #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Particle,ParticleFlags,Db4OConnection> Members
+
+        public IServicesManager ServicesManager
+        {
+            get; internal set;
+        }
+
+        #endregion
     }
 }

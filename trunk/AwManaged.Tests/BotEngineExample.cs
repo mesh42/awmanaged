@@ -1,4 +1,15 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using System.Diagnostics;
 using System.Linq;
 using AwManaged.Core;
@@ -39,15 +50,10 @@ namespace AwManaged.Tests
             BotEventEntersWorld += HandleBotEventEntersWorld;
             Console.WriteLine("AwManaged BotEngine Example");
             Console.WriteLine("Storage server running.");
-            try
-            {
-                Console.WriteLine("Connecting to universe...");
-                Start();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
+            // ensure creation of remote client test account for the AwManaged.RemotingTests console application.
+            Console.WriteLine("Connecting to universe...");
+            Start();
         }
 
         /// <summary>

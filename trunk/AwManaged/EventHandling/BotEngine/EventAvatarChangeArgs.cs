@@ -4,6 +4,7 @@ using AwManaged.Scene;
 
 namespace AwManaged.EventHandling.BotEngine
 {
+    [Serializable]
     public delegate void AvatarEventChangeDelegate(AwManaged.BotEngine sender, EventAvatarChangeArgs e);
 
     public class EventAvatarChangeArgs : MarshalByRefObject
