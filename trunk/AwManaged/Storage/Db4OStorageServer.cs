@@ -1,7 +1,17 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using AwManaged.Core;
 using AwManaged.Core.Interfaces;
-using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
 
 namespace AwManaged.Storage
@@ -11,16 +21,15 @@ namespace AwManaged.Storage
     /// 
     /// "provider=db4o;user=awmanaged;password=awmanaged;port=4571;file=awmanaged.dat"
     /// </summary>
-    public sealed class Db4OStorageServer : IStorageServer<Db4OConnection>
+    public sealed class Db4OStorageServer : IConnectedServiceDevice<Db4OConnection>
     {
         private IObjectServer _server;
         public string ProviderName { get { return "db4o"; } }
 
-        public Db4OStorageServer(IConnection<Db4OConnection> configuration)
+        public Db4OStorageServer(string connectionString)
         {
-            ConnectionString = configuration.ConnectionString;
-            Connection = new Db4OConnection();
-            foreach (var item in ConnectionStringHelper.GetNameValuePairs(ConnectionString, ProviderName))
+            Connection = new Db4OConnection {ConnectionString = connectionString};
+            foreach (var item in ConnectionStringHelper.GetNameValuePairs(Connection.ConnectionString, ProviderName))
             {
                 switch(item.Name.ToLower())
                 {
@@ -88,17 +97,39 @@ namespace AwManaged.Storage
 
         #endregion
 
-        #region IStorageConfiguration Members
-
-        public string ConnectionString {get; private set;}
-
-        #endregion
-
         #region IStorageConfiguration<Db4OConnection> Members
 
         public Db4OConnection Connection
         {
             get; internal set;
+        }
+
+        #endregion
+
+        #region IIdentifiable Members
+
+        public string DisplayName
+        {
+            get; internal set;
+        }
+
+        public Guid Id
+        {
+            get; internal set;
+        }
+
+        public string TechnicalName
+        {
+            get; set;
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _server.Close();
         }
 
         #endregion

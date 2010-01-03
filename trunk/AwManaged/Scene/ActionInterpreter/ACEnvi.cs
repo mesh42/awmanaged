@@ -1,4 +1,15 @@
-﻿namespace AwManaged.Scene.ActionInterpreter
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// With Environmental Subrendering (envi), the current scene from an object's camera perspective is rendered onto any surface of a geometry within the environment. In the future, this will allow us to implement picture in picture rendering as well as rendering in an external popup window, where the rendered content of the subview may differ from the main window, for upcoming features. The browser offers an action command to control subrendering. This technique can be used, for example, to render mirrors or to render environment maps onto an object's surface of any shape.

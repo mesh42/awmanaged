@@ -1,4 +1,16 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
+using AwManaged.Core.Interfaces;
 using AwManaged.Storage.Interfaces;
 using AwManaged.Scene;
 using Db4objects.Db4o.Config.Attributes;
@@ -112,6 +124,7 @@ namespace AwManaged.Storage.BackupProvider
         /// <param name="storageClient">The storage client.</param>
         /// <param name="backupRecord">The backup record.</param>
         public static void Backup<TClient>(IStorageClient<TClient> storageClient, BackupRecord backupRecord)
+            where TClient : IConnection<TClient>
         {
             // long running process, use an isolated db connection.
             using (var db = storageClient.Clone())

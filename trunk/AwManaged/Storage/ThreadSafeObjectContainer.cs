@@ -1,6 +1,16 @@
-﻿using System.Collections.Generic;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System.Collections.Generic;
 using AwManaged.Core.Interfaces;
-using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
 
 namespace AwManaged.Storage
@@ -40,9 +50,9 @@ namespace AwManaged.Storage
             }
         }
 
-        public IDb4OConnection Connection { get; private set;}
+        public Db4OConnection Connection { get; private set;}
 
-        public ThreadSafeObjectContainer(IDb4OConnection connection)
+        public ThreadSafeObjectContainer(Db4OConnection connection)
         {
             Connection = connection;
             _containers = new List<ObjectContainerThread>();
@@ -73,9 +83,9 @@ namespace AwManaged.Storage
             foreach (var item in _containers)
             {
                 item.Db.Close();
-                _containers.Remove(item);
                 item.Db.Dispose();
             }
+            _containers.Clear();
             _containers = null;
         }
 

@@ -1,4 +1,15 @@
-﻿namespace AwManaged.Scene.ActionInterpreter
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// The astart command starts an animation that has been set up using the animate command and sets it in either looping or non-looping mode. The default is for the astart command to start the animation in non-looping mode. 

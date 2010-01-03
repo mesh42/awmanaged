@@ -1,6 +1,18 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using AwManaged.Core.Interfaces;
 using AwManaged.Security.RemoteBotEngine.Interfaces;
 using AwManaged.Storage;
 using AwManaged.Storage.Interfaces;
@@ -53,7 +65,9 @@ namespace AwManaged.Security.RemoteBotEngine
             _db.Commit();
         }
 
-        public static List<string> GetAuthorizations<TObject,TConnectionInterface>(IStorageClient<TConnectionInterface> storage, TObject authorizable) where TObject : IHaveAuthorization
+        public static List<string> GetAuthorizations<TObject,TConnectionInterface>(IStorageClient<TConnectionInterface> storage, TObject authorizable)
+            where TObject : IHaveAuthorization
+            where TConnectionInterface : IConnection<TConnectionInterface>
         {
             var roles = new List<string>();
             var records = from AuthorizableWrapper p in storage.Db where (p.Authorizable.Id == authorizable.Id) select p;
@@ -68,7 +82,6 @@ namespace AwManaged.Security.RemoteBotEngine
         {
             var record = from AuthorizableWrapper p in _db where (p.Role == _role && p.Authorizable.Id == _authorizable.Id) select p;
             return (record.Count() == 1);
-
         }
 
         /// <summary>

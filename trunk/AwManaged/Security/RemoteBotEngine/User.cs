@@ -1,7 +1,18 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using System.Linq;
 using AwManaged.Security.RemoteBotEngine.Interfaces;
-using AwManaged.Storage.Interfaces;
+using Db4objects.Db4o;
 using Db4objects.Db4o.Config.Attributes;
 using Db4objects.Db4o.Linq;
 
@@ -73,9 +84,9 @@ namespace AwManaged.Security.RemoteBotEngine
         /// Registers the user using the specified storage client.
         /// </summary>
         /// <returns></returns>
-        public RegistrationResult RegisterUser<TConnectionInterface>(IStorageClient<TConnectionInterface> storage)
+        public RegistrationResult RegisterUser(IObjectContainer storage)
         {
-            var records = from User p in storage.Db where (p.NameToLower == NameToLower || p.EmailToLower == EmailToLower) select p;
+            var records = from User p in storage where (p.NameToLower == NameToLower || p.EmailToLower == EmailToLower) select p;
             if (records.Count() == 1)
             {
                 var u = records.Single();
@@ -85,8 +96,8 @@ namespace AwManaged.Security.RemoteBotEngine
                     return RegistrationResult.EmailExists;
             }
             _id = Guid.NewGuid();
-            storage.Db.Store(this);
-            storage.Db.Commit();
+            storage.Store(this);
+            storage.Commit();
             return RegistrationResult.Success;
         }
 
@@ -107,36 +118,29 @@ namespace AwManaged.Security.RemoteBotEngine
             _nameToLower = name.ToLower();
         }
 
-        public bool IsAuthenticated<TConnectionInterface>(IStorageClient<TConnectionInterface> storage)
+        public bool IsAuthenticated(IObjectContainer storage)
         {
-            var records = from User p in storage.Db where (p.Password == _password && p.NameToLower == _nameToLower) select p;
+            var records = from User p in storage where (p.Password == _password && p.NameToLower == _nameToLower) select p;
             return records.Count() == 1;
         }
 
-        static public bool LockoutUser<TConnectionInterface>(IStorageClient<TConnectionInterface> storage, string name)
+        static public bool LockoutUser(IObjectContainer storage, string name)
         {
-            var records = from User p in storage.Db where (p.NameToLower == name.ToLower()) select p;
+            var records = from User p in storage where (p.NameToLower == name.ToLower()) select p;
             if (records.Count() == 1)
             {
                 var user = records.Single();
                 user._isLockedOut = true;
-                storage.Db.Store(user);
-                storage.Db.Commit();
+                storage.Store(user);
+                storage.Commit();
                 return true;
             }
             return false;
         }
 
+        #region IHaveAuthorization Members
 
-
-        #region IIdentifiable Members
-
-        string AwManaged.Interfaces.IIdentifiable.DisplayName
-        {
-            get { return Name; }
-        }
-
-        System.Guid AwManaged.Interfaces.IIdentifiable.Id
+        public Guid Id
         {
             get { return _id; }
         }

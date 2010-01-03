@@ -1,8 +1,21 @@
-﻿using System;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using System;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
+using AwManaged.Core.Interfaces;
 using AwManaged.ExceptionHandling;
 using AwManaged.Scene.Interfaces;
+using AwManaged.Storage.Interfaces;
 
 namespace AwManaged.Interfaces
 {
@@ -11,7 +24,7 @@ namespace AwManaged.Interfaces
     /// The interface is build up as such, that a bot implementation can use different types of implementations 
     /// in order to support a factory pattern.
     /// </summary>
-    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags> : 
+    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags,TConnectionInterface> : 
         IHandleExceptionManaged,
         ISceneNodeCommands<TModel,TAvatar,THudBase>,
         IChatCommands<TAvatar>,
@@ -24,13 +37,14 @@ namespace AwManaged.Interfaces
         where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
         where TParticle : MarshalByRefObject, IParticle<TParticle,TParticleFlags>
         where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
+        where TConnectionInterface : IConnection<TConnectionInterface>
     {
+        IServicesManager ServicesManager { get; }
         /// <summary>
         /// Gets the scene nodes.
         /// </summary>
         /// <value>The scene nodes.</value>
         ISceneNodes<TModel, TCamera, TMover, TZone, THudBase, TAvatar, TParticle, TParticleFlags> SceneNodes { get;}
-
         LoginConfiguration LoginConfiguration { get; }
         /// <summary>
         /// Indicates if the privileged user account is logged on in global mode (Caretaker capable).

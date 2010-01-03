@@ -97,6 +97,8 @@
     <Compile Include="ModelClickStatistics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\ActionInterpreterTests.cs">
+    </Compile>
     <Compile Include="UnitTests\AuthorizationTests.cs">
     </Compile>
     <Compile Include="UnitTests\ObjectTests.cs" />
