@@ -9,12 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// The astart command starts an animation that has been set up using the animate command and sets it in either looping or non-looping mode. The default is for the astart command to start the animation in non-looping mode. 
     /// </summary>
-    public class ACAStart
+    public sealed class ACAStart : IActionCommand
     {
         private string _name;
         private bool _isGlobal;
@@ -31,6 +33,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _isGlobal = isGlobal;
             _flag = flag;
         }
+
+        public ACAStart(){}
 
         /// <summary>
         /// The flag argument specifies whether or not the animation will run "looping." flag can be either "on", "true", or "yes" to make the animation looping, and either "off", "false", or "no" to make it non-looping. A looping animation repeats endlessly, while a non-looping animation stops when it reaches the last frame and causes an Adone condition to be triggered for the object when the animation completes.
@@ -61,5 +65,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _name; }
             set { _name = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "astart"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

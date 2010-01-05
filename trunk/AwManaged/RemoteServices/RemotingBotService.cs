@@ -10,12 +10,8 @@
  *
  * **********************************************************************************/
 using System;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
 using AwManaged.EventHandling.RemotingBotEngine;
 using AwManaged.RemoteServices.Interfaces;
-using System.Runtime.Remoting.Channels.Tcp;
 
 namespace AwManaged.RemoteServices
 {

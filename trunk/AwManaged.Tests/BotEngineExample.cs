@@ -65,20 +65,18 @@ namespace AwManaged.Tests
         {
             var dep = new DependendObject<Avatar,Model>(e.Avatar, e.Model);
             DoClick();
-            using (var dbClone= sender.Storage.Db)
-            {
-                // store the number of clicks on this object in the storage provider.
-                ModelClickStatistics stat;
-                var query = from ModelClickStatistics p in dbClone where p.ModelId == e.Model.Id select p;
-                if (query.Count() == 0)
-                    stat = new ModelClickStatistics() {Clicks = 0, ModelId = e.Model.Id};
-                else
-                    stat = query.Single();
-                stat.Clicks++;
-                dbClone.Store(stat);
-                dbClone.Commit();
-                Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.",e.Model.ModelName, e.Model.Id, e.Avatar.Name, stat.Clicks));
-            }
+            var db = sender.Storage.Db;
+            // store the number of clicks on this object in the storage provider.
+            ModelClickStatistics stat;
+            var query = from ModelClickStatistics p in db where p.ModelId == e.Model.Id select p;
+            if (query.Count() == 0)
+                stat = new ModelClickStatistics() {Clicks = 0, ModelId = e.Model.Id};
+            else
+                stat = query.Single();
+            stat.Clicks++;
+            db.Store(stat);
+            db.Commit();
+            Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.",e.Model.ModelName, e.Model.Id, e.Avatar.Name, stat.Clicks));
         }
         /// <summary>
         /// Handles the object event remove.

@@ -11,8 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public class ACMidi
+    public sealed class ACMidi
     {
-
+        public ACMidi(){}
     }
 }

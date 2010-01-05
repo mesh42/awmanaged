@@ -9,12 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// The astop command stops a running animation.
     /// </summary>
-    class ACAStop
+    public sealed class ACAStop : IActionCommand
     {
         private string _name;
         private bool _isGlobal;
@@ -29,6 +31,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _name = name;
             _isGlobal = isGlobal;
         }
+
+        public ACAStop(){}
 
         /// <summary>
         /// The optional global argument will cause triggers to initiate the command for all users have the object in view. Without it, the command will be triggered exclusively for the user who activates the trigger (bump, activate, adone). By default, commands are not global.
@@ -49,5 +53,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _name; }
             set { _name = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "astop"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

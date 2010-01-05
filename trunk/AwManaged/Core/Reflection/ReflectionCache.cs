@@ -9,14 +9,23 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace AwManaged.Scene.ActionInterpreter
+namespace AwManaged.Core.Reflection
 {
-    class ActionCommandWarp
+    public sealed class ReflectionCache
     {
+        private readonly List<ReflectionEnumCache> _enumCache;
+
+        public ReflectionCache(List<ReflectionEnumCache> enumCache)
+        {
+            _enumCache = enumCache;
+        }
+
+        public List<ReflectionEnumCache> EnumCache1
+        {
+            get { return _enumCache; }
+        }
+
     }
 }

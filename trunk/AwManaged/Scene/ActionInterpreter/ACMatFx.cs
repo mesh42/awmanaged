@@ -9,12 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// Material effects (matfx) are visual effects that can be applied to object surfaces. Different types of material effects are available.
     /// </summary>
-    public class ACMatFx
+    public sealed class ACMatFx : IActionCommand
     {
         private MatFxType _type;
         private string _texture;
@@ -47,6 +49,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _name = name;
             _isGlobal = isGlobal;
         }
+
+        public ACMatFx(){}
 
         /// <summary>
         /// The tag argument specifies the tag number of the surface to render on. Any tag that exists on the used object can be used, including tags of jointed avatars. A value of 0 (zero), also the default value, means to apply the material effect onto all surfaces of the geometry.
@@ -127,5 +131,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _type; }
             set { _type = value; }
         }
+
+        public string LiteralPart { get; set; }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "matfx"; }
+        }
+
+        #endregion
     }
 }

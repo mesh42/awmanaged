@@ -9,20 +9,35 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Collections.Generic;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public class ATBump : ITrigger
+    public sealed class ATBump : IActionTrigger
     {
 
         #region ITrigger Members
 
-        public string LiteralCommand
+        public string LiteralAction
         {
             get { return "bump"; }
         }
 
         #endregion
+
+
+        #region IActionTrigger Members
+
+        public List<IActionCommand> Commands
+        {
+            get;
+            set;
+        }
+
+        #endregion
+
+        public string LiteralPart { get; set; }
+
     }
 }

@@ -9,13 +9,15 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// With Environmental Subrendering (envi), the current scene from an object's camera perspective is rendered onto any surface of a geometry within the environment. In the future, this will allow us to implement picture in picture rendering as well as rendering in an external popup window, where the rendered content of the subview may differ from the main window, for upcoming features. The browser offers an action command to control subrendering. This technique can be used, for example, to render mirrors or to render environment maps onto an object's surface of any shape.
     /// All arguments to the envi action command are optional.
     /// </summary>
-    public class ACEnvi
+    public sealed class ACEnvi : IActionCommand
     {
         private EnviType _type;
         private ResType _res;
@@ -57,6 +59,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _name = name;
             _isGlobal = isGlobal;
         }
+
+        public ACEnvi(){}
 
         /// <summary>
         /// The global argument will cause triggers to initiate the command for all users have the object in view. Without it, the command will be triggered exclusively for the user who activates the trigger (bump, activate, adone). By default, commands are not global.
@@ -167,5 +171,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _type; }
             set { _type = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "envi"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

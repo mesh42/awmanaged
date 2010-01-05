@@ -9,14 +9,10 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class ACSeq
+    public sealed class ACSeq
     {
+        public ACSeq(){}
     }
 }

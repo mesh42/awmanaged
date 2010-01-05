@@ -9,6 +9,8 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
@@ -17,7 +19,7 @@ namespace AwManaged.Scene.ActionInterpreter
     /// In order for the command to work correctly, the Mover must have "Linking Enabled" checked in the Mover options. There must also be a Name specified in the Mover, matching the movername specified in the link command.
     /// Note that the linked object and the mover must be built using the same object owner.
     /// </summary>
-    public class ACLink
+    public sealed class ACLink : IActionCommand
     {
         private string _moverName;
 
@@ -30,6 +32,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _moverName = moverName;
         }
 
+        public ACLink(){}
+
         /// <summary>
         /// Gets or sets the name of the mover to link to object to.
         /// </summary>
@@ -39,5 +43,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _moverName; }
             set { _moverName = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "link"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

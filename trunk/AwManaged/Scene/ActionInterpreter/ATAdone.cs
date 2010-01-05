@@ -9,19 +9,37 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Collections.Generic;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public class ATAdone : ITrigger
+    public sealed class ATAdone : IActionTrigger
     {
         #region ITrigger Members
 
-        public string LiteralCommand
+        public string LiteralAction
         {
             get { return "adone"; }
         }
 
         #endregion
+
+        #region IActionTrigger Members
+
+        public string LiteralCommands
+        {
+            get; set;
+        }
+
+        public List<IActionCommand> Commands
+        {
+            get;
+            set;
+        }
+
+        #endregion
+
+        public string LiteralPart { get; set; }
     }
 }

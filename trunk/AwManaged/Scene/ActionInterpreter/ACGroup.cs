@@ -9,12 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// The group command is used to load an Object Group from the object path.
     /// </summary>
-    class ACGroup
+    public sealed class ACGroup : IActionCommand
     {
         private string _name;
 
@@ -27,6 +29,8 @@ namespace AwManaged.Scene.ActionInterpreter
             _name = name;
         }
 
+        public ACGroup(){}
+
         /// <summary>
         /// The name argument is the filename of a zipped AWG file located on the object path in the groups subfolder. Note that no encroachment will be determined for the group's children, nor do these children objects increase the cell data limit.
         /// </summary>
@@ -36,5 +40,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _name; }
             set { _name = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "group"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }
