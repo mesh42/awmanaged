@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading;
 using AW;
 using AwManaged.Configuration;
@@ -34,7 +33,6 @@ using AwManaged.Scene;
 using AWManaged.Security;
 using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
-using Db4objects.Db4o.Foundation;
 using Camera=AwManaged.Scene.Camera;
 using Mover=AwManaged.Scene.Mover;
 using Zone=AwManaged.Scene.Zone;
@@ -383,6 +381,8 @@ namespace AwManaged
                 _remotingServer = new RemotingServer<RemotingBotEngine>(ConfigurationManager.AppSettings["RemotingServerConnection"],_idm) { TechnicalName = "RemotingServerConnection" };
                 ServicesManager.AddService(_remotingServer);
             }
+
+            ServicesManager.Start();
         }
 
         private RemotingServer<RemotingBotEngine> _remotingServer;

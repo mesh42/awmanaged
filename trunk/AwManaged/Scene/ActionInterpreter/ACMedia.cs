@@ -11,6 +11,7 @@
  * **********************************************************************************/
 using System;
 using System.Drawing;
+using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
@@ -19,7 +20,7 @@ namespace AwManaged.Scene.ActionInterpreter
     /// Note: Windows Media Player 9 is recommended for best performance. Some media content cannot be displayed correctly on older players, due to missing format decompression support
     /// The create trigger only works with the media command, if "Disable create url" is not checked in the world features settings. Other options that affect the media command are in the General tab and in the Downloads tab of the browser option settings.
     /// </summary>
-    public class ACMedia
+    public sealed class ACMedia : IActionCommand
     {
         private string _url;
         private string _infoText;
@@ -36,6 +37,8 @@ namespace AwManaged.Scene.ActionInterpreter
         private bool _osd;
         private bool _ext;
         private bool _nostop;
+
+        public ACMedia(){}
 
         public ACMedia(string url, string infoText, string name, MediaPlayType playType,  Color color, ResType res, MediaSoundFx fx, bool set, float radius, float radof, byte vol, int loop, bool osd, bool ext, bool nostop)
         {
@@ -207,5 +210,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _url; }
             set { _url = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "media"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

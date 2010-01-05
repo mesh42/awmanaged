@@ -10,7 +10,6 @@
  *
  * **********************************************************************************/
 using System;
-using AwManaged.ExceptionHandling;
 
 namespace AwManaged.ExceptionHandling
 {

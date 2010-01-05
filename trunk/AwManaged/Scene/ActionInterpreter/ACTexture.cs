@@ -11,7 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class ACTexture
+    public sealed class ACTexture
     {
+        public ACTexture(){}
     }
 }

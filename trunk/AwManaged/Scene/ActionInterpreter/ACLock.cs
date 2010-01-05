@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
@@ -21,7 +22,7 @@ namespace AwManaged.Scene.ActionInterpreter
     /// Actions listed before the lock statement are executed for everyone. All actions after the lock statement are only executed for the allowed citizens or privilege used by a citizen.
     /// Only object owners and citizens listed can execute the action command global, even if the global statement is listed before the lock statement.
     /// </summary>
-    public class ACLock
+    public sealed class ACLock : IActionCommand
     {
         private List<int> _owners;
 
@@ -29,6 +30,8 @@ namespace AwManaged.Scene.ActionInterpreter
         {
             _owners = owners;
         }
+
+        public ACLock(){}
 
         /// <summary>
         /// The owners argument allows the user to define a list of citizen numbers (separated by colons) that will be able to use the following command.
@@ -39,5 +42,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _owners; }
             set { _owners = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "lock"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

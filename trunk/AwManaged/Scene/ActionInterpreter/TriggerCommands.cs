@@ -11,8 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class TriggerCommands
+    public class TriggerCommands
     {
-        
+
     }
 }

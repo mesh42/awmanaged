@@ -11,7 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class ACPicture
+    public sealed class ACPicture
     {
+        public ACPicture(){}
     }
 }

@@ -11,7 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class ACSay
+    public sealed class ACSay
     {
+        public ACSay(){}
     }
 }

@@ -9,12 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Interface;
+
 namespace AwManaged.Scene.ActionInterpreter
 {
     /// <summary>
     /// The frame command sets the current frame of an animation that has been set up using the animate command.
     /// </summary>
-    public class ACFrame
+    public sealed class ACFrame : IActionCommand
     {
         private string _name;
         private int _number;
@@ -29,6 +31,9 @@ namespace AwManaged.Scene.ActionInterpreter
             _name = name;
             _number = number;
         }
+
+        public ACFrame(){}
+
         /// <summary>
         /// The number argument specifies the new frame number. It can either be an absolute frame number, or a relative frame number with a + or - in front to move the animation forward or backwards by a given number of frames.
         /// </summary>
@@ -47,5 +52,16 @@ namespace AwManaged.Scene.ActionInterpreter
             get { return _name; }
             set { _name = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "frame"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

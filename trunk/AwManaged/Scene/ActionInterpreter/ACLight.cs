@@ -10,10 +10,12 @@
  *
  * **********************************************************************************/
 using System.Drawing;
+using AwManaged.Scene.ActionInterpreter.Attributes;
+using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public class ACLight
+    public sealed class ACLight : IActionCommand
     {
         private LightType _type;
         private Color _color;
@@ -23,6 +25,12 @@ namespace AwManaged.Scene.ActionInterpreter
         private float _time;
         private float _angle;
         private string _name;
+
+        public ACLight()
+        {
+                
+        }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionCommandLight"/> class.
@@ -54,6 +62,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Each object may have only one light source applied to it at a time.
         /// </summary>
         /// <value>The name.</value>
+        [ACItemBinding("name",CommandInterpretType.NameValuePairs)]
         public string Name
         {
             get { return _name; }
@@ -64,6 +73,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The angle and pitch arguments control "spot" light sources. The angle specifies how wide (in degrees) a cone of light emits from the spot; the default is 45 degrees. The pitch specifies the angle up from straight down that the spot light points. The default pitch is 0, meaning spot light point straight down by default.
         /// </summary>
         /// <value>The angle.</value>
+        [ACItemBinding("angle", CommandInterpretType.NameValuePairs)]
         public float Angle
         {
             get { return _angle; }
@@ -74,6 +84,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The fx argument specifies one of several optional lighting "effects" that can be applied to the light source. All of the effects cause the brightness of the object to vary over time.
         /// </summary>
         /// <value>The fx.</value>
+        [ACItemBinding("fx", CommandInterpretType.NameValuePairs)]
         public LightFxType Fx
         {
             get { return _fx; }
@@ -84,6 +95,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The time argument specifies the interval in seconds for the blink, pulse, fadein, and fadeout effects. It has no effect for the other effects. The default time is 1 second.
         /// </summary>
         /// <value>The time.</value>
+        [ACItemBinding("time", CommandInterpretType.NameValuePairs)]
         public float Time
         {
             get { return _time; }
@@ -94,6 +106,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The radius specifies the maximum distance away the light shines, in meters. Objects beyond this distance from the light will receive no illumination from the light. The default radius is 10 meters. The radius is particularly useful for preventing lights from shining outside the room in which they are placed; since Active Worlds does not currently support shadows, walls and other objects do not stop lights from shining into adjacent rooms or buildings. Note that the radius is subject to a maximum value as set in the world features for each world.
         /// </summary>
         /// <value>The radius.</value>
+        [ACItemBinding("radius", CommandInterpretType.NameValuePairs)]
         public float Radius
         {
             get { return _radius; }
@@ -104,6 +117,7 @@ namespace AwManaged.Scene.ActionInterpreter
         ///The brightness specifies how brightly the light source shines. Brightness is specified as a positive floating-point value. The default brightness is 0.5.
         /// </summary>
         /// <value>The brightness.</value>
+        [ACItemBinding("brightness", CommandInterpretType.NameValuePairs)]
         public float Brightness
         {
             get { return _brightness; }
@@ -114,6 +128,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The color argument specifies the color of the light source and can either be specified as one of many preset word values or as a "raw" hexadecimal value giving the red/green/blue component values (the same format as used for the "BGCOLOR=" tag in HTML).
         /// </summary>
         /// <value>The color.</value>
+        [ACItemBinding("color", CommandInterpretType.NameValuePairs)]
         public Color Color
         {
             get { return _color; }
@@ -124,10 +139,22 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The type specifies the type of light source, which can be either "point" or "spot". "Point" light sources shine equally in all directions, and are the default if no type is specified. "Spot" light sources shine a "cone" of light in a particular direction.
         /// </summary>
         /// <value>The type.</value>
+        [ACItemBinding("type", CommandInterpretType.NameValuePairs)]
         public LightType Type
         {
             get { return _type; }
             set { _type = value; }
         }
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "light"; }
+        }
+
+        public string LiteralPart { get; set; }
+
+        #endregion
     }
 }

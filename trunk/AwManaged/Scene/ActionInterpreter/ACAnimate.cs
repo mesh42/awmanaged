@@ -23,7 +23,7 @@ namespace AwManaged.Scene.ActionInterpreter
     /// Applying a sequence of textures
     /// Using the animate command as a timer
     /// </summary>
-    public class ACAnimate : IActionInterpreter<ACAnimate>
+    public sealed class ACAnimate : IActionCommand
     {
         private readonly string _tag;
         private readonly string _mask;
@@ -34,6 +34,8 @@ namespace AwManaged.Scene.ActionInterpreter
         private readonly long _frameDelay;
         private readonly List<int> _frameList;
         private readonly bool _isGLobal;
+
+
 
         /// <summary>
         /// The optional tag argument specifies the tag number of the polygon on the object to which the animation is applied.
@@ -160,6 +162,7 @@ namespace AwManaged.Scene.ActionInterpreter
             _isGLobal = isGLobal;
         }
 
+        public ACAnimate(){}
 
         #region IActionInterpreter<ActionAnimate> Members
 
@@ -167,6 +170,17 @@ namespace AwManaged.Scene.ActionInterpreter
         {
             throw new NotImplementedException();
         }
+
+        #endregion
+
+        #region ILiteralAction Members
+
+        public string LiteralAction
+        {
+            get { return "animate"; }
+        }
+
+        public string LiteralPart { get; set; }
 
         #endregion
     }

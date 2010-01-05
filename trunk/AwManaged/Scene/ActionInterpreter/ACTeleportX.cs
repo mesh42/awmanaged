@@ -11,7 +11,8 @@
  * **********************************************************************************/
 namespace AwManaged.Scene.ActionInterpreter
 {
-    class ACTeleportX
+    public sealed class ACTeleportX
     {
+        public ACTeleportX(){}
     }
 }

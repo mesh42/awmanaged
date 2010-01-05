@@ -1,3 +1,10 @@
+Release 0.3.8 (unstable) maintenance release
+* Adding reflection tools and unit tests for IActionCommand and IActionTrigger
+* Adding command item attributes, which indicate how to bind to action string command elements.
+* Adding a reflection cache for quick reflection on primarily the action string interpreter.
+* Adding Action reflection attributes for property, enum and enum type binding.
+* [Bug] ServicesManager did not start up services in the BotEngine.
+
 Release 0.3.7 (unstable) maintenance release
 * Generalizing Storage and Remoting Client/Server Services into Core.Interfaces.IConnectedServiceDevice.cs
 * Adding a service manager.

@@ -9,9 +9,10 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-namespace AwManaged.Scene.ActionInterpreter
+namespace AwManaged.Scene.ActionInterpreter.Interface
 {
-    public class ActionCommandWeb
+    public interface IACLiteralNames
     {
+        string[] LiteralNames { get; set; }
     }
 }
