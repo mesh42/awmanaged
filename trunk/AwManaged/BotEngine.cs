@@ -12,8 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using AW;
 using AwManaged.Configuration;
@@ -30,11 +30,14 @@ using AwManaged.Math;
 using AwManaged.RemoteServices;
 using AwManaged.RemoteServices.Server;
 using AwManaged.Scene;
+using AwManaged.Scene.ActionInterpreter;
+using AwManaged.Scene.ActionInterpreter.Interface;
 using AWManaged.Security;
 using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
 using Camera=AwManaged.Scene.Camera;
 using Mover=AwManaged.Scene.Mover;
+using Particle=AwManaged.Scene.Particle;
 using Zone=AwManaged.Scene.Zone;
 
 namespace AwManaged
@@ -44,21 +47,6 @@ namespace AwManaged
     /// </summary>
     public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection>
     {
-        private long _tickStart;
-
-        // remoting event translations (removes Templated types);
-        public delegate void TestClick(BotEngine sender, EventArgs e);
-        public event TestClick OnClick;
-
-        public void DoClick()
-        {
-            if (OnClick != null)
-            {
-                OnClick(this, null);
-            }
-        }
-
- 
         #region Fields
         private LoginConfiguration _universeConnection;
         private Instance aw { get; set; }
@@ -67,13 +55,17 @@ namespace AwManaged
         private Model _modelRemoved;
         private SceneNodes _sceneNodes = new SceneNodes();
 
-
         private Db4OStorageClient _storageClient;
         private Db4OStorageClient _authStorageClient;
         private Db4OStorageServer _storageServer;
         private Db4OStorageServer _authStorageServer;
+        private ActionInterpreterService _actionInterpreter;
 
         public Db4OStorageClient Storage { get { return _storageClient; }}
+
+        private int Nodes = 0;
+        private int CurrentNode;
+        private List<BotNode<UniverseConnectionProperties, Model>> BotNodes = new List<BotNode<UniverseConnectionProperties, Model>>();
 
         #endregion
 
@@ -90,6 +82,7 @@ namespace AwManaged
 
         #region Delegates and Events
 
+        public event BotEventSlaveStarted BotEventSlaveStarted;
         public event BotEventLoggedInDelegate BotEventLoggedIn;
         public event BotEventEntersWorldDelegate BotEventEntersWorld;
         public event AvatarEventAddDelegate AvatarEventAdd;
@@ -112,36 +105,67 @@ namespace AwManaged
         int _queryX;
         int _queryZ;
 
+        public Version Version()
+        {
+            Assembly asm = Assembly.GetAssembly(typeof(BotEngine));
+            string fullVersionSpec = asm.FullName.Split(',')[1];
+            return new Version(fullVersionSpec.Substring(fullVersionSpec.IndexOf('=') + 1));
+        }
+
+
         /// <summary>
         /// Scans the objects non global. incase the bot is not running under Care Taker authorization.
         /// </summary>
         private void ScanObjectsNonGlobal()
         {
-            aw.EventCellBegin += new Instance.Event(handle_cell_begin);
-            aw.EventCellObject += aw_EventCellObject;
-
-            _queryX = Utility.SectorFromCell(0);
-            _queryZ = Utility.SectorFromCell(0);
-
-            do
+            lock (this)
             {
-                var rc = aw.Query(_queryX, _queryZ, _sequence);
-                if (rc != 0)
-                    throw new AwException(rc);
-            } while ((!aw.GetBool(Attributes.QueryComplete)));
+                aw.EventCellBegin += new Instance.Event(handle_cell_begin);
+                aw.EventCellObject += aw_EventCellObject;
 
-            WriteLine("Scan completed, found " + _sceneNodes.Models.Count + " objects in " + LoginConfiguration.Connection.World + ".");
-            _timer = new Timer(refresh, null, 0, 10);
+                _queryX = Utility.SectorFromCell(0);
+                _queryZ = Utility.SectorFromCell(0);
 
-            if (ObjectEventScanCompleted != null)
-                ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs(_sceneNodes));
+                do
+                {
+                    var rc = aw.Query(_queryX, _queryZ, _sequence);
+                    if (rc != 0)
+                        throw new AwException(rc);
+                } while ((!aw.GetBool(Attributes.QueryComplete)));
 
+                WriteLine("Scan completed, found " + _sceneNodes.Models.Count + " objects in " +
+                          LoginConfiguration.Connection.World + ".");
+                Scancompleted();
+            }
         }
 
         #endregion
 
+        private void Scancompleted()
+        {
+            lock (this)
+            {
+                _timer = new Timer(refresh, null, 0, 10);
+                if (ObjectEventScanCompleted != null)
+                    ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs(_sceneNodes));
+
+                for (int node = 0; node < Nodes; node++)
+                {
+                    var botnode = new BotNode<UniverseConnectionProperties, Model>(_universeConnection.Connection, node);
+                    botnode.Connect();
+                    botnode.Login();
+                    BotNodes.Add(botnode);
+                    if (BotEventSlaveStarted != null)
+                        BotEventSlaveStarted(this, new EventBotSlaveStartedArgs(botnode.Connection,node));
+                }
+            }
+        }
+
         #region ScanObjects Global
 
+        /// <summary>
+        /// Scan's objects in either global or non global mode. (auto sensing mode)
+        /// </summary>
         public void ScanObjects()
         {
             try
@@ -149,15 +173,12 @@ namespace AwManaged
                 _sceneNodes.Models = new ProtectedList<Model>();
 
                 WriteLine("Scanning objects in world" + LoginConfiguration.Connection.World + ".");
-
-                // TODO: Dirty override, please implement this properly.
                 if (!IsEnterGlobal)
                 {
                     ScanObjectsNonGlobal();
                     return;
                 }
                 aw.EventCellObject += new Instance.Event(this.aw_EventCellObject);
-
                 aw.SetBool(Attributes.CellCombine, true);
                 aw.SetInt(Attributes.CellIterator, 0);
                 do
@@ -166,10 +187,7 @@ namespace AwManaged
                 } while (!aw.GetBool(Attributes.QueryComplete) && aw.GetInt(Attributes.CellIterator) != -1);
 
                 WriteLine("Scan completed, found " + _sceneNodes.Models.Count + " objects in " + LoginConfiguration.Connection.World + ".");
-
-                _timer = new Timer(refresh, null, 0, 10);
-                if (ObjectEventScanCompleted != null)
-                    ObjectEventScanCompleted.Invoke(this, new EventObjectScanCompletedEventArgs(_sceneNodes));
+                Scancompleted();
             }
             catch (InstanceException ex)
             {
@@ -222,52 +240,21 @@ namespace AwManaged
             }
         }
 
-        public double ElapsedMilliseconds
-        {
-            get
-            {
-                long tickCurrent = DateTime.Now.Ticks;
-                return TimeSpan.FromTicks(tickCurrent - _tickStart).TotalMilliseconds;
-            }
-        }
 
-        private void clientConnectAttempt()
-        {
-            aw = new Instance(_universeConnection.Connection.Domain, _universeConnection.Connection.Port);
-        }
 
         public void Start()
         {
+            StartServices();
             try
             {
-                _tickStart = DateTime.Now.Ticks;
                 int rc;
 
-                Thread t = new Thread(clientConnectAttempt);
-                t.Start();
-                System.Diagnostics.Stopwatch sw = new Stopwatch();
-                sw.Start();
-                while (aw == null)
-                {
-                    if (sw.ElapsedMilliseconds > 5000)
-                    {
-                        t.Abort();
-                        throw new NetworkException("Universe connection timed out.");
-                    }
-                    Thread.Sleep(10);
-                }
-                
-                //greeter
-                //Set the login attributes and log the bot into the universe
-                aw.SetString(Attributes.LoginName, _universeConnection.Connection.LoginName);
-                aw.SetString(Attributes.LoginPrivilegePassword, _universeConnection.Connection.PrivilegePassword);
-                aw.SetInt(Attributes.LoginOwner, _universeConnection.Connection.Owner);
-                rc = aw.Login();
-                if (rc != 0)
-                    HandleExceptionManaged(rc);
+                aw = AwHelpers.AwHelpers.Connect(_universeConnection.Connection,false);
+                AwHelpers.AwHelpers.Login(aw,_universeConnection.Connection,false);
+
 
                 if (BotEventLoggedIn!=null)
-                    BotEventLoggedIn(this, new EventBotLoggedInArgs(LoginConfiguration.Connection));
+                    BotEventLoggedIn(this, new EventBotLoggedInArgs(LoginConfiguration.Connection,0));
 
                 aw.EventAvatarAdd += aw_EventAvatarAdd;
                 aw.EventAvatarChange += aw_EventAvatarChange;
@@ -276,6 +263,8 @@ namespace AwManaged
                 aw.EventObjectClick += aw_EventObjectClick;
                 aw.EventObjectDelete += aw_EventObjectDelete;
                 aw.EventObjectAdd += aw_EventObjectAdd;
+                // immedia result.
+                aw.CallbackObjectResult += aw_CallbackObjectResult;
 
                 // Have the bot enter the specified world under Care Taker Privileges (default/prefered)
                 if (aw.GetBool(Attributes.WorldCaretakerCapability))
@@ -319,6 +308,18 @@ namespace AwManaged
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="error">The error.</param>
+        void aw_CallbackObjectResult(Instance sender, int error)
+        {
+            //Model changed = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
+            //if (changed!=null)
+            //{
+            //}
+        }
+
         #endregion
 
         #region Constructors
@@ -338,19 +339,22 @@ namespace AwManaged
         //    _universeConnection = loginConfiguration;
         //}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BotEngine"/> class.
-        /// Load the configuration from the App.Config
-        /// </summary>
-        public BotEngine()
+        public IEnumerable<IActionTrigger> Interpret(string action)
         {
+            return _actionInterpreter.Interpret(action);
+        }
+
+        private void StartServices()
+        {
+            _actionInterpreter = new ActionInterpreterService(){TechnicalName="ActionInterpreter"};
+            ServicesManager.AddService(_actionInterpreter);
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["UniverseConnection"]))
                 throw new Exception("No universe connection specified in your app.config.");
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageClientConnection"]))
                 throw new Exception("No storage client connection specified in your app.config.");
 
             _universeConnection = new LoginConfiguration(ConfigurationManager.AppSettings["UniverseConnection"]);
-            ServicesManager = new ServicesManager();
+
             
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageServerConnection"]))
             {
@@ -384,6 +388,21 @@ namespace AwManaged
 
             ServicesManager.Start();
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BotEngine"/> class.
+        /// Load the configuration from the App.Config
+        /// </summary>
+        public BotEngine()
+        {
+            ServicesManager = new ServicesManager();
+            //AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+        }
+
+        //Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        //{
+        //    //throw new NotImplementedException();
+        //}
 
         private RemotingServer<RemotingBotEngine> _remotingServer;
 
@@ -431,8 +450,8 @@ namespace AwManaged
 
         void aw_EventObjectAdd(Instance sender)
         {
-            lock (this)
-            {
+          //  lock (this)
+          //  {
                 switch (aw.GetInt(Attributes.ObjectType))
                 {
                     case (int)AW.ObjectType.Camera:
@@ -445,96 +464,48 @@ namespace AwManaged
                         aw_addZoneObject(sender);
                         return;
                 }
-                Model o = null;
+                var id = sender.GetInt(Attributes.ObjectId);
+                var node = _sceneNodes.Models.Find(p => p.Id == id);
+                var o = AwConvert.CastModelObject(sender);
 
-
-                lock (sender)
+                if (node == null)
                 {
-                    try
-                    {
-                        // check if the object exists in the cache, this will indicat a change to the object rather than an add.
-                        var result = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
-                        if (result == null)
-                        {
-                            // new object.
-                            o = AwConvert.CastModelObject(sender);
-                            _sceneNodes.Models.InternalAdd(o);
-                            if (ObjectEventAdd != null)
-                                ObjectEventAdd(this, new EventObjectAddArgs(o, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
-                        }
-                        else
-                        {
-                            // existing model, add the update, aw_remove should remove the old object by its old number.
-                            SceneNodes.Models.InternalAdd(AwConvert.CastModelObject(sender));
-                        }
-                    }
-                    catch (InstanceException ex)
-                    {
-                        HandleExceptionManaged(ex);
-                    }
+                    _sceneNodes.Models.InternalAdd(o);
+                    if (ObjectEventAdd != null)
+                        ObjectEventAdd(this,
+                                       new EventObjectAddArgs(o, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
                 }
-            }
+                else
+                {
+                    _sceneNodes.Models.InternalRemove(node);
+                    o._isChange = true;
+                    _sceneNodes.Models.InternalAdd(o);
+                    if (ObjectEventAdd != null)
+                        ObjectEventChange(this,new EventObjectChangeArgs(o,node, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
+                }
+          //  }
         }
 
+        /// <summary>
+        /// Handels the aw delete, mainly process the _objectChanges and _objectDeletes queue.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
         void aw_EventObjectDelete(Instance sender)
         {
-            lock (this)
-            {
-                Model changedModel = null;
-                if (_objectChanges.Count > 0)
-                    changedModel = _objectChanges[0];
-
-                lock (_objectChanges)
+        //    lock (this)
+        //    {
+                var removedObject = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
+                if (removedObject._isChange)
                 {
-                    lock (sender)
-                    {
-                        try
-                        {
-                                var remove = _sceneNodes.Models.FindAll(p => p.Id == sender.GetInt(Attributes.ObjectId));
-                                if (remove.Count == 2)
-                                {
-                                    // this was an object update. remove index[0];
-                                    _sceneNodes.Models.InternalRemove(remove[0]);
-                                    if (ObjectEventChange != null)
-                                    {
-                                        if (changedModel != null && changedModel.Id == remove[1].Id)
-                                        {
-                                            // if the model exists and corelates with the object id currently removed then 
-                                            // the change was a success, so we can remove the model from the change list.
-                                            // note that we do not raise an event, or we will get a circular event trigger.
-                                            _objectChanges.Remove(changedModel);
-                                        }
-                                        else
-                                        {
-                                            var args = new EventObjectChangeArgs(remove[1], remove[0],
-                                                                                 GetAvatar(
-                                                                                     sender.GetInt(
-                                                                                         Attributes.AvatarSession)));
-                                            ObjectEventChange(this, args);
-                                        }
-                                    }
-                                }
-                                else if (remove.Count == 1)
-                                {
-                                    _sceneNodes.Models.InternalRemove(remove[0]);
-                                    if (ObjectEventRemove != null)
-                                        ObjectEventRemove(this, new EventObjectRemoveArgs(remove[0], GetAvatar(sender.GetInt(Attributes.AvatarSession))));
-
-                                }
-                        }
-                        catch (InstanceException ex)
-                        {
-                            HandleExceptionManaged(ex);
-                        }
-                    }
-                    // check if there are more object changes.
-                    if (_objectChanges.Count > 0)
-                    {
-                        changeObject(_objectChanges[0]);
-                    }
+                    removedObject._isChange = false;
+                    return;
                 }
-            }
+                _sceneNodes.Models.InternalRemove(removedObject);
+                if (ObjectEventRemove != null)
+                    ObjectEventRemove(this,new EventObjectRemoveArgs(removedObject,GetAvatar(sender.GetInt(Attributes.AvatarSession))));
+        //    }
         }
+
 
         void aw_EventObjectClick(Instance sender)
         {
@@ -641,7 +612,7 @@ namespace AwManaged
                                         (ObjectType)aw.GetInt(Attributes.ObjectType),
                                         aw.GetString(Attributes.ObjectModel),
                                         position, rotation, aw.GetString(Attributes.ObjectDescription),
-                                        aw.GetString(Attributes.ObjectAction), aw.GetInt(Attributes.ObjectNumber),
+                                        aw.GetString(Attributes.ObjectAction), /* aw.GetInt(Attributes.ObjectNumber) ,*/
                                         aw.GetString(Attributes.ObjectData));
 
                     _sceneNodes.Models.InternalAdd(o);
@@ -809,16 +780,24 @@ namespace AwManaged
         }
 
         private List<Model> _objectChanges = new List<Model>();
+        private List<Model> _objectDeletes = new List<Model>();
 
         public void ChangeObject(Model model)
         {
             lock (this)
             {
-                _objectChanges.Add(model.Clone());
-                if (_objectChanges.Count == 1)
-                {
-                    changeObject(model);
-                }
+
+                var changeModel = model.Clone();
+                changeObject(changeModel);
+                //changed = AwConvert.CastModelObject(sender);
+
+
+                //changeModel._isChange = true;
+                //_objectChanges.Add(changeModel);
+                //if (_objectChanges.Count == 1)
+                //{
+                //    changeObject(model);
+                //}
             }
         }
 
@@ -834,46 +813,61 @@ namespace AwManaged
             b.Timer = new Timer(ModelCallback, b, delay, 0);
         }
 
+        public delegate void AsyncChangeObject(Model o, ObjectTransactionType type);
+
+
         private void changeObject(Model o)
         {
             lock (this)
-            {
+            //{
                 try
                 {
-                    aw.SetInt(Attributes.ObjectId, o.Id);
-                    aw.SetInt(Attributes.ObjectOldNumber, 0);
-                    aw.SetInt(Attributes.ObjectOwner, o.Owner);
-                    aw.SetInt(Attributes.ObjectType, (int) o.Type);
-                    aw.SetInt(Attributes.ObjectX, (int) o.Position.x);
-                    aw.SetInt(Attributes.ObjectY, (int) o.Position.y);
-                    aw.SetInt(Attributes.ObjectZ, (int) o.Position.z);
-                    aw.SetInt(Attributes.ObjectTilt, (int) o.Rotation.x);
-                    aw.SetInt(Attributes.ObjectYaw, (int) o.Rotation.y);
-                    aw.SetInt(Attributes.ObjectRoll, (int) o.Rotation.z);
-                    aw.SetString(Attributes.ObjectDescription, o.Description + " " + DateTime.Now.ToLongTimeString());
-                    aw.SetString(Attributes.ObjectAction, o.Action);
-                    aw.SetString(Attributes.ObjectModel, o.ModelName);
-                    if (o.Data != null)
-                        aw.SetString(AW.Attributes.ObjectData, o.Data);
-                    int rc = aw.ObjectChange();
-                    if (rc != 0)
-                        throw new AwException(rc);
-                }
-                catch (InstanceException ex)
-                {
-                    HandleExceptionManaged(ex);
-                    //switch (ex.ErrorCode)
-                    //{
-                    //    case (int) ReasonCodeReturnType.RC_TIMEOUT:
-                    //        ChangeObject(o);
-                    //        break;
-                    //    default:
-                    //        HandleExceptionManaged(ex);
-                    //        break;
-                    //}
-                }
-            }
-        }
+                        //if (CurrentNode >= Nodes)
+                        //{
+                        //    CurrentNode = 0;
+                        //}
+
+                        // indicate which node session should handle the change to the object.
+                        //o._ChangeNode = CurrentNode;
+                        //AsyncChangeObject inv = BotNodes[CurrentNode].ObjectTransaction;
+                        //inv.BeginInvoke(o, ObjectTransactionType.Change, null, null);
+                        //CurrentNode++;
+                        aw.SetInt(Attributes.ObjectId, o.Id);
+                        aw.SetInt(Attributes.ObjectOldNumber, 0);
+                        aw.SetInt(Attributes.ObjectOwner, o.Owner);
+                        aw.SetInt(Attributes.ObjectType, (int)o.Type);
+                        aw.SetInt(Attributes.ObjectX, (int)o.Position.x);
+                        aw.SetInt(Attributes.ObjectY, (int)o.Position.y);
+                        aw.SetInt(Attributes.ObjectZ, (int)o.Position.z);
+                        aw.SetInt(Attributes.ObjectTilt, (int)o.Rotation.x);
+                        aw.SetInt(Attributes.ObjectYaw, (int)o.Rotation.y);
+                        aw.SetInt(Attributes.ObjectRoll, (int)o.Rotation.z);
+                        aw.SetString(Attributes.ObjectDescription, o.Description);
+                        aw.SetString(Attributes.ObjectAction, o.Action);
+                        //aw.SetString(Attributes.ObjectModel, o.ModelName);
+                        if (o.Data != null)
+                            aw.SetString(AW.Attributes.ObjectData, o.Data);
+                        int rc = aw.ObjectChange();
+                        if (rc != 0)
+                            throw new AwException(rc);
+                        _sceneNodes.Models.InternalRemoveAll(p => p.Id == o.Id);
+                        _sceneNodes.Models.InternalAdd(o);
+                    }
+                    catch (InstanceException ex)
+                    {
+                        HandleExceptionManaged(ex);
+                        //switch (ex.ErrorCode)
+                        //{
+                        //    case (int) ReasonCodeReturnType.RC_TIMEOUT:
+                        //        ChangeObject(o);
+                        //        break;
+                        //    default:
+                        //        HandleExceptionManaged(ex);
+                        //        break;
+                        //}
+                    }
+                    // }
+                 }
 
         #endregion
 
@@ -1025,7 +1019,7 @@ namespace AwManaged
         public void HandleExceptionManaged(InstanceException instanceException)
         {
 
-          //  throw new AwException(instanceException.ErrorCode);
+            throw new AwException(instanceException.ErrorCode);
             //TODO: handle universe server diconnected exception for example. keep the bot alive.
             //TODO: Handle server disconnected exception.
         }

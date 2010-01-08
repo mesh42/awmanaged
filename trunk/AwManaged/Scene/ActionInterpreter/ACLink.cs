@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -38,6 +39,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Gets or sets the name of the mover to link to object to.
         /// </summary>
         /// <value>The name of the mover.</value>
+        [ACItemBinding(CommandInterpretType.SingleArgument)]
         public string MoverName
         {
             get { return _moverName; }

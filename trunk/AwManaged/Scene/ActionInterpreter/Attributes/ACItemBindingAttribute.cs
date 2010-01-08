@@ -19,13 +19,27 @@ namespace AwManaged.Scene.ActionInterpreter.Attributes
     public enum CommandInterpretType
     {
         /// <summary>
-        /// Format is in name value pairs.
+        /// Format is in name value pairs, seperated by =
         /// </summary>
         NameValuePairs,
         /// <summary>
+        /// Format is in name value pairs, seperated by space
+        /// </summary>
+        NameValuePairsSpace,
+        /// <summary>
         /// Property values are seperated by spaces.
         /// </summary>
-        Space
+        Space,
+        /// <summary>
+        /// Property is a literal name/flag (enumeration), which binds to a boolean property.
+        /// </summary>
+        Flag,
+        /// <summary>
+        /// Command has a single argument. for example: crate group groupname.
+        /// groupname will be bound to the property decorated as single argument.
+        /// </summary>
+        SingleArgument,
+
     }
 
     /// <summary>
@@ -35,10 +49,37 @@ namespace AwManaged.Scene.ActionInterpreter.Attributes
     {
         public CommandInterpretType Type { get; set; }
         public string LiteralName { get; set; }
+        public char Delimiter { get; set; }
 
         public ACItemBindingAttribute(string literalName, CommandInterpretType type)
         {
             LiteralName = literalName;
+            Type = type;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ACItemBindingAttribute"/> class.
+        /// used for flag intepretation.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        public ACItemBindingAttribute(CommandInterpretType type)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ACItemBindingAttribute"/> class.
+        /// for a name value pair, which property value is delimited with multi values.
+        /// for example: 
+        /// bump lock owners=4711:1174:333333
+        /// </summary>
+        /// <param name="literalName">Name of the literal.</param>
+        /// <param name="delimiter">The delimiter.</param>
+        /// <param name="type">The type.</param>
+        public ACItemBindingAttribute(string literalName, char delimiter, CommandInterpretType type)
+        {
+            LiteralName = literalName;
+            Delimiter = delimiter;
             Type = type;
         }
     }

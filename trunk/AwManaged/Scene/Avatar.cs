@@ -64,5 +64,19 @@ namespace AwManaged.Scene
         public bool IsChanged{get; internal set;}
 
         #endregion
+
+        #region IObjectLifetime Members
+
+        public TimeSpan LifeTime
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public TimeSpan IdleTime
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

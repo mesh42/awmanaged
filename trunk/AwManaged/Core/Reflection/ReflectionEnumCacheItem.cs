@@ -25,6 +25,11 @@ namespace AwManaged.Core.Reflection
             _itemFields = itemFields;
         }
 
+        public ReflectionEnumCacheItemField GetFieldByLiteralName(string literalName)
+        {
+            return ItemFields.Find(p => p.LiteralNames.Contains(literalName));
+        }
+
         public List<ReflectionEnumCacheItemField> ItemFields
         {
             get { return _itemFields; }

@@ -16,5 +16,9 @@ namespace AwManaged.Core.Interfaces
         void AddService(IService service);
         void RemoveService(string technicalName);
         void StopService(string service);
+        /// <summary>
+        /// Occurs when a service has been started by the event manager.
+        /// </summary>
+        event Core.EventHandling.ServiceStartedelegate OnServiceStarted;
     }
 }

@@ -219,7 +219,7 @@ namespace AwManaged.Converters
                                       (ObjectType) sender.GetInt(Attributes.ObjectType),
                                       sender.GetString(Attributes.ObjectModel),
                                       position, rotation, sender.GetString(Attributes.ObjectDescription),
-                                      sender.GetString(Attributes.ObjectAction), sender.GetInt(Attributes.ObjectNumber),
+                                      sender.GetString(Attributes.ObjectAction), /*sender.GetInt(Attributes.ObjectNumber),*/
                                       sender.GetString(Attributes.ObjectData));
 
                     return o;

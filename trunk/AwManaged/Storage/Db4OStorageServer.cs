@@ -110,7 +110,7 @@ namespace AwManaged.Storage
 
         public string DisplayName
         {
-            get; internal set;
+            get { return "Storage Server."; }
         }
 
         public Guid Id

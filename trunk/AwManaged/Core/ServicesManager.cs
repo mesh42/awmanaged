@@ -11,6 +11,7 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using AwManaged.Core.EventHandling;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Core
@@ -55,6 +56,8 @@ namespace AwManaged.Core
                 if (service.IsRunning)
                     throw new Exception(string.Format("Can't start the {0} Service, service is already running.",service.TechnicalName));
                 service.Start();
+                if (OnServiceStarted != null)
+                    OnServiceStarted.Invoke(this, new ServiceStartedArgs(service));
             }
             return true;
         }
@@ -142,6 +145,13 @@ namespace AwManaged.Core
         {
             get { throw new NotImplementedException(); }
         }
+
+        #endregion
+
+        #region IServicesManager Members
+
+
+        public event AwManaged.Core.EventHandling.ServiceStartedelegate OnServiceStarted;
 
         #endregion
     }

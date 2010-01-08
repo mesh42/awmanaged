@@ -1,3 +1,9 @@
+Release 0.3.9 (unstable) optimizing release
+* Working some more on the action string interpreter
+* Removing old and new number from the model properties, they are not used in the managed environment.
+* Optimizing object change/add/remote speed.
+* Adding some color and tests to the console.
+
 Release 0.3.8 (unstable) maintenance release
 * Adding reflection tools and unit tests for IActionCommand and IActionTrigger
 * Adding command item attributes, which indicate how to bind to action string command elements.

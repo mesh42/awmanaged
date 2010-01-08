@@ -92,8 +92,13 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="AwHelpers\AwHelpers.cs" />
+    <Compile Include="BotNode.cs">
+    </Compile>
+    <Compile Include="Core\EventHandling\ServiceStartedArgs.cs" />
     <Compile Include="Core\Interfaces\IConnectionProperties.cs" />
     <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
+    <Compile Include="Core\Interfaces\IObjectLifetime.cs" />
     <Compile Include="Core\Interfaces\IServicesManager.cs" />
     <Compile Include="Core\Reflection\ReflectionCache.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCache.cs" />
@@ -101,6 +106,7 @@
     <Compile Include="Core\Reflection\ReflectionEnumCacheItemField.cs" />
     <Compile Include="Core\Reflection\ReflectionHelpers.cs" />
     <Compile Include="Core\ServicesManager.cs" />
+    <Compile Include="EventHandling\BotEngine\EventBotSlaveStartedArgs.cs" />
     <Compile Include="EventHandling\BotEngine\Interfaces\IBotEngineEvents.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
     <Compile Include="EventHandling\RemotingBotEngine\EventBotEntersWorldArgs.cs" />
@@ -196,8 +202,12 @@
     <Compile Include="Scene\ActionInterpreter\ATUnknown.cs" />
     <Compile Include="Scene\ActionInterpreter\CursorType.cs" />
     <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
+    <Compile Include="Scene\ActionInterpreter\ExtendedActions\ACEKey.cs" />
+    <Compile Include="Scene\ActionInterpreter\GlobalType.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\IACLiteralNames.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\IActionCommand.cs" />
+    <Compile Include="Scene\ActionInterpreter\Interface\IActionCommandGlobal.cs" />
+    <Compile Include="Scene\ActionInterpreter\Interface\IActionCommandName.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\IActionInterpreter.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleportX.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\ILiteralAction.cs" />

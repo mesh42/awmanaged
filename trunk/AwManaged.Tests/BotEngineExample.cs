@@ -10,13 +10,16 @@
  *
  * **********************************************************************************/
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using AwManaged.Core;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.BotEngine;
 using AwManaged.Math;
 using AwManaged.Scene;
+using AwManaged.Scene.ActionInterpreter.Interface;
 using Db4objects.Db4o.Linq;
 
 namespace AwManaged.Tests
@@ -40,20 +43,55 @@ namespace AwManaged.Tests
     public class BotEngineExample : BotEngine, IHaveToCleanUpMyShit
     {
         /// <summary>
+        /// Stopwatch for performance monitoring.
+        /// </summary>
+        Stopwatch _sw1 = new Stopwatch();
+        /// <summary>
+        /// Stopwatch for performance monitoring.
+        /// </summary>
+        Stopwatch _sw2 = new Stopwatch();
+
+        private void WriteLine(ConsoleColor color, string text )
+        {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = oldColor;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BotEngineExample"/> class.
         /// 
         /// You will have to have a valid app.Config settings file, please read documentation on codeplex.
         /// </summary>
         public BotEngineExample()
         {
+            Console.WindowWidth = 120;
+            Console.WindowHeight = 48;
+            Console.Title = string.Format("Managed Bot Egine Server {0}\r\n", base.Version());
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.Clear();
+
+            ServicesManager.OnServiceStarted += new AwManaged.Core.EventHandling.ServiceStartedelegate(ServicesManager_OnServiceStarted);
+            BotEventSlaveStarted += new BotEventSlaveStarted(HandleBotEventSlaveStarted);
             BotEventLoggedIn += HandleBotEventLoggedIn;
             BotEventEntersWorld += HandleBotEventEntersWorld;
-            Console.WriteLine("AwManaged BotEngine Example");
-            Console.WriteLine("Storage server running.");
 
+            WriteLine(ConsoleColor.Yellow,string.Format("Managed Bot Egine Server {0}\r\n",base.Version()) );
+            WriteLine(ConsoleColor.White, "Starting services");
+            _sw1.Start();
             // ensure creation of remote client test account for the AwManaged.RemotingTests console application.
-            Console.WriteLine("Connecting to universe...");
             Start();
+        }
+
+        void HandleBotEventSlaveStarted(BotEngine sender, EventBotSlaveStartedArgs e)
+        {
+            WriteLine(ConsoleColor.Green,string.Format("Bot slave node {0} started under name [{1}] in world {2}.",e.Node,e.ConnectionProperties.LoginName,e.ConnectionProperties.World));
+        }
+
+        void ServicesManager_OnServiceStarted(IServicesManager sender, AwManaged.Core.EventHandling.ServiceStartedArgs e)
+        {
+            Console.WriteLine("Service {0} started. ({1}).",e.Service.TechnicalName,e.Service.DisplayName);
         }
 
         /// <summary>
@@ -64,7 +102,6 @@ namespace AwManaged.Tests
         void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs e)
         {
             var dep = new DependendObject<Avatar,Model>(e.Avatar, e.Model);
-            DoClick();
             var db = sender.Storage.Db;
             // store the number of clicks on this object in the storage provider.
             ModelClickStatistics stat;
@@ -87,26 +124,42 @@ namespace AwManaged.Tests
         {
             Console.WriteLine(string.Format("object {0} with id {1} removed.", e.Model.ModelName, e.Model.Id));
         }
+
+        Random r = new Random();
+
         /// <summary>
         /// Handles the object event add.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleObjectEventAdd(BotEngine sender, EventObjectAddArgs e)
+        void HandleObjectEventAdd(BotEngine sender, EventObjectAddArgs e)
         {
-            Console.WriteLine(string.Format("object {0} with id {1} added.", e.Model.ModelName,e.Model.Id));
-            // perform some unit tests, these are invoked by the object description.
-            switch (e.Model.Action)
+            //Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(string.Format("object {0} with id {1} added.", e.Model.ModelName, e.Model.Id));
+            //Console.ForegroundColor = ConsoleColor.White;
+
+            if (e.Model.Action.Contains("@change"))
             {
-                case "@remove" :
-                    sender.DeleteObject(e.Model);
-                    break;
-                case "@change" :
-                    var model = e.Model;
-                    model.Description = DateTime.Now.ToLongTimeString();
-                    sender.ChangeObject(model);
-                    break;
+                string htmlColor = ColorTranslator.ToHtml(Color.FromArgb(255, r.Next(255), r.Next(255), (byte) r.Next(255))).Substring(1);
+                var model = e.Model;
+                model.Action = "create color " + htmlColor  + ";@change";
+                model.Description = DateTime.Now.ToLongTimeString();
+                sender.ChangeObject(model);
             }
+
+            //// perform some unit tests, these are invoked by the object description.
+            //switch (e.Model.Action)
+            //{
+            //    case "@remove" :
+            //        sender.DeleteObject(e.Model);
+            //        break;
+            //    case "@change" :
+            //        var model = e.Model;
+            //        model.Description = DateTime.Now.ToLongTimeString();
+            //        sender.ChangeObject(model);
+            //        Console.WriteLine(string.Format("Changed model {0}.",model.Id));
+            //        break;
+            //}
         }
         /// <summary>
         /// Handles the avatar event remove.
@@ -128,11 +181,11 @@ namespace AwManaged.Tests
             Console.WriteLine("Avatar {0} with session {1} has been added.", e.Avatar.Name, e.Avatar.Session);
             
             // don't perform actions when the bot has been logged in shorter than 10 seconds (prevent greeting flood).
-            if (sender.ElapsedMilliseconds > 10000)
-            {
+            //if (sender.ElapsedMilliseconds > 10000)
+            //{
                 // transport the avatar to a certain location.
                 var teleport = new Vector3(500, 500, 500);
-                sender.Teleport(e.Avatar, 500, 500, 500, 45);
+                //sender.Teleport(e.Avatar, 500, 500, 500, 45);
                 // send a message that the user has entered the world and has been teleported to a certain location (with a time delay).
                 var message = string.Format("Teleported {0} to location {1},{2},{3}",
                                             new[]
@@ -143,7 +196,7 @@ namespace AwManaged.Tests
                 sender.Say(5000, SessionArgumentType.AvatarSessionMustExist, e.Avatar,
                            string.Format("{0} enters.", e.Avatar.Name));
                 sender.Say(6000, SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
-            }
+            //}
         }
         /// <summary>
         /// Handles the object event scan completed.
@@ -152,7 +205,9 @@ namespace AwManaged.Tests
         /// <param name="e">The <see cref="AwManaged.EventHandling.BotEngine.EventObjectScanCompletedEventArgs"/> instance containing the event data.</param>
         void HandleObjectEventScanCompleted(BotEngine sender, EventObjectScanCompletedEventArgs e)
         {
-            Console.WriteLine(string.Format("Found {0} objects.", e.SceneNodes.Models.Count));
+            _sw1.Stop();
+            Console.WriteLine(string.Format("Found {0} objects in {1} ms.", e.SceneNodes.Models.Count,_sw1.ElapsedMilliseconds));
+            _sw1.Reset();
             // start receiving object events.
             sender.ObjectEventAdd += HandleObjectEventAdd;
             sender.ObjectEventRemove += HandleObjectEventRemove;
@@ -168,8 +223,7 @@ namespace AwManaged.Tests
             var b = from Model p in e.SceneNodes.Models where p.Action.Contains(actionContains) select p;
             Console.WriteLine(string.Format("found {0} objects which contain action {1}",b.Count(), actionContains));
             Console.Write("Performing main backup...");
-            var sw = new Stopwatch();
-            sw.Start();
+            _sw1.Start();
             var db = sender.Storage.Db;
             //var main_backup = from SceneNodes.SceneNodes p in db select p;
             //if (main_backup.Count() == 1)
@@ -177,15 +231,27 @@ namespace AwManaged.Tests
             sender.Storage.Db.Store(e.SceneNodes);
             db.Commit();
             
-            Console.WriteLine("Done!" + sw.ElapsedMilliseconds + " ms.");
+            Console.WriteLine("Done!" + _sw1.ElapsedMilliseconds + " ms.");
+            List<IEnumerable<IActionTrigger>> triggers = new List<IEnumerable<IActionTrigger>>();
 
+            _sw1.Reset();
+            _sw1.Start();
+            foreach (var model in e.SceneNodes.Models)
+            {
+                var m = Interpret(model.Action);
+                if (m != null)
+                {
+                    triggers.Add(Interpret(model.Action));
+                }
+            }
+            Console.WriteLine(string.Format("Interpreted {0} object actions in {1} ms.", triggers.Count, _sw1.ElapsedMilliseconds));
         }
 
         static void HandleObjectEventChange(BotEngine sender, EventObjectChangeArgs e)
         {
             Console.WriteLine(
-                string.Format("object {0} with id {1} changed. old number {2}, new number {3}", 
-                new object[]{e.Model.ModelName, e.Model.Id,e.OldModel.Number,e.Model.Number}));
+                string.Format("object {0} with id {1} changed", 
+                new object[]{e.Model.ModelName, e.Model.Id}));
         }
 
         /// <summary>
@@ -193,10 +259,13 @@ namespace AwManaged.Tests
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        static void HandleBotEventLoggedIn(BotEngine sender, EventBotLoggedInArgs e)
+        void HandleBotEventLoggedIn(BotEngine sender, EventBotLoggedInArgs e)
         {
-            Console.WriteLine(string.Format("Bot [{0}] logged into the {1} universe server on port {2}",
-                e.ConnectionProperties.LoginName, e.ConnectionProperties.Domain,e.ConnectionProperties.Port));
+            _sw1.Stop();
+            Console.WriteLine(string.Format("Bot [{0}] logged into the {1} universe server in {2} ms.",
+                e.ConnectionProperties.LoginName, e.ConnectionProperties.Domain,_sw1.ElapsedMilliseconds));
+            _sw1.Reset();
+            _sw1.Start();
         }
 
         /// <summary>
@@ -206,13 +275,16 @@ namespace AwManaged.Tests
         /// <param name="e">The e.</param>
         void HandleBotEventEntersWorld(BotEngine sender, EventBotEntersWorldArgs e)
         {
+            _sw1.Stop();
             // start receiving avatar events.
             sender.AvatarEventAdd += HandleAvatarEventAdd;
             sender.AvatarEventRemove += HandleAvatarEventRemove;
 
-            Console.WriteLine(string.Format("[{0}] Entered world {1}.",e.ConnectionProperties.LoginName,e.ConnectionProperties.World));
+            Console.WriteLine(string.Format("[{0}] Entered world {1} in {2} ms.",e.ConnectionProperties.LoginName,e.ConnectionProperties.World,_sw1.ElapsedMilliseconds));
+            _sw1.Reset();
             sender.ObjectEventScanCompleted += HandleObjectEventScanCompleted;
             Console.Write("Scanning objects...");
+            _sw1.Start();
             sender.ScanObjects();
         }
     }
