@@ -20,14 +20,18 @@ namespace AwManaged.Scene.ActionInterpreter
     public enum CursorType
     {
         /// <summary>
+        /// No binding needed, this is tor internal compatibility.
+        /// </summary>
+        Unspeficied = 0,
+        /// <summary>
         /// On OR true OR yes: show the mouse. 
         /// </summary>
         [ACEnumBinding(new[]{"on","true","yes"})]
-        On,
+        On = 1,
         /// <summary>
         /// off OR false OR no: hide the mouse cursor.
         /// </summary>
         [ACEnumBinding(new[] { "off", "false", "no" })]
-        Off
+        Off = -1
     }
 }

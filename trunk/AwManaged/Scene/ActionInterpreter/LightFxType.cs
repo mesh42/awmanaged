@@ -19,6 +19,8 @@ namespace AwManaged.Scene.ActionInterpreter
     [ACEnumType]
     public enum LightFxType
     {
+        [ACEnumBinding(new[] { "" })]
+        None,
         /// <summary>
         /// blink - light alternates equally between on and off
         /// </summary>

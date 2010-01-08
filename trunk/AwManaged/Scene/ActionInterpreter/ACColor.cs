@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System.Drawing;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -17,7 +18,7 @@ namespace AwManaged.Scene.ActionInterpreter
     /// <summary>
     /// The color command assigns a new color to every polygon on an object.
     /// </summary>
-    public sealed class ACColor : IActionCommand
+    public sealed class ACColor : IActionCommand, IActionCommandName
     {
         private string _name;
         private Color _color;
@@ -39,6 +40,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The color argument specifies the color to apply. The color can either be specified as one of many preset word values or as a "raw" hexadecimal value giving the red/green/blue component values (the same format as used for the "BGCOLOR=" tag in HTML).
         /// </summary>
         /// <value>The color.</value>
+        [ACItemBinding("color", CommandInterpretType.NameValuePairsSpace)]
         public Color Color
         {
             get { return _color; }
@@ -49,6 +51,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The optional name argument specifies the name of the object to color. Object names are assigned via the name command.
         /// </summary>
         /// <value>The name.</value>
+        [ACItemBinding("name", CommandInterpretType.NameValuePairs)]
         public string Name
         {
             get { return _name; }

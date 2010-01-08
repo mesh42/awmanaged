@@ -16,9 +16,9 @@ using AwManaged.Core.Interfaces;
 namespace AwManaged.EventHandling.BotEngine
 {
     [Serializable]
-    public delegate void BotEventLoggedInDelegate(AwManaged.BotEngine sender, EventBotLoggedInArgs e);
+    public delegate void BotEventSlaveStarted(AwManaged.BotEngine sender, EventBotSlaveStartedArgs e);
 
-    public class EventBotLoggedInArgs : MarshalByRefObject
+    public class EventBotSlaveStartedArgs : MarshalByRefObject
     {
         private readonly int _node;
 
@@ -27,12 +27,12 @@ namespace AwManaged.EventHandling.BotEngine
             get { return _node; }
         }
 
-        public UniverseConnectionProperties  ConnectionProperties
-        { 
-            get; private set;
+        public UniverseConnectionProperties ConnectionProperties
+        {
+            get;private set;
         }
 
-        public EventBotLoggedInArgs(ICloneableT<UniverseConnectionProperties> connectionProperties, int node)
+        public EventBotSlaveStartedArgs(ICloneableT<UniverseConnectionProperties> connectionProperties, int node)
         {
             _node = node;
             ConnectionProperties = connectionProperties.Clone();

@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -37,6 +38,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The owners argument allows the user to define a list of citizen numbers (separated by colons) that will be able to use the following command.
         /// </summary>
         /// <value>The owners.</value>
+        [ACItemBinding("owners",':', CommandInterpretType.NameValuePairs)]
         public List<int> Owners
         {
             get { return _owners; }

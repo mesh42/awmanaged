@@ -102,6 +102,8 @@
     </Compile>
     <Compile Include="UnitTests\AuthorizationTests.cs">
     </Compile>
+    <Compile Include="UnitTests\NodeBalancingTests.cs">
+    </Compile>
     <Compile Include="UnitTests\ObjectTests.cs" />
     <Compile Include="UnitTests\ReflectionTests.cs" />
   </ItemGroup>
@@ -131,6 +133,7 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>copy $(SolutionDir)\Dependencies\activeworlds.com\aw.dll $(TargetDir)</PreBuildEvent>
+    <PreBuildEvent>mkdir $(TargetDir)master
+copy $(SolutionDir)\Dependencies\activeworlds.com\aw.dll $(TargetDir)awtemp.dll</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -71,14 +71,22 @@ namespace AwManaged.Scene
         public string Description { get { return _description; } set { _description = value;} }
         [XmlAttribute]
         public string Action { get{ return _action;} set { _action = value;} }
-        [XmlAttribute]
-        public int Number { get { return _number;} internal set { _number = Number;} }
+        //[XmlAttribute]
+        //public int Number { get { return _number;} internal set { _number = Number;} }
         [XmlAttribute]
         public string Data { get { return _data;} set { _data = value;}  }
+        /// <summary>
+        /// Indicates if the object is being changed.
+        /// </summary>
+        internal bool _isChange;
+        /// <summary>
+        /// Indicates which bot node manages the change to this object.
+        /// </summary>
+        internal int _ChangeNode;
 
         public Model(){}
 
-        public Model(int id, int owner, DateTime timestamp, ObjectType type, string model, Vector3 position, Vector3 rotation, string description, string action, int number, string data)
+        public Model(int id, int owner, DateTime timestamp, ObjectType type, string model, Vector3 position, Vector3 rotation, string description, string action, string data)
         {
             Id = id;
             Owner = owner;
@@ -89,7 +97,7 @@ namespace AwManaged.Scene
             Rotation = rotation;
             Description = description;
             Action = action;
-            Number = number;
+            //Number = number;
             Data = data;
         }
 

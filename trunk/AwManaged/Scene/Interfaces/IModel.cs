@@ -28,6 +28,6 @@ namespace AwManaged.Scene.Interfaces
         string Description { get; set; }
         string Action { get; set; }
         string Data { get; set; }
-        int Number { get; }
+        //int Number { get; }
     }
 }

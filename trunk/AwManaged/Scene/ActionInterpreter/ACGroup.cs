@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -35,6 +36,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The name argument is the filename of a zipped AWG file located on the object path in the groups subfolder. Note that no encroachment will be determined for the group's children, nor do these children objects increase the cell data limit.
         /// </summary>
         /// <value>The name.</value>
+        [ACItemBinding(CommandInterpretType.SingleArgument)]
         public string Name
         {
             get { return _name; }

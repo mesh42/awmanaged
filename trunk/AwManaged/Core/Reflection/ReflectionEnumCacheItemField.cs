@@ -25,5 +25,20 @@ namespace AwManaged.Core.Reflection
             _value = value;
             _literalNames = literalNames;
         }
+
+        public List<string> LiteralNames
+        {
+            get { return _literalNames; }
+        }
+
+        public int Value
+        {
+            get { return _value; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
     }
 }

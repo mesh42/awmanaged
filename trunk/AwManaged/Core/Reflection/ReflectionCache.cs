@@ -10,22 +10,18 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using AwManaged.Scene.ActionInterpreter.Attributes;
+using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Core.Reflection
 {
     public sealed class ReflectionCache
     {
-        private readonly List<ReflectionEnumCache> _enumCache;
-
-        public ReflectionCache(List<ReflectionEnumCache> enumCache)
+        public List<IActionTrigger> TriggerInterpreters = ReflectionHelpers.GetInstancesOfInterface<IActionTrigger>(); 
+        public List<IActionCommand> CommandInterpreters = ReflectionHelpers.GetInstancesOfInterface<IActionCommand>();
+        public ReflectionEnumCache EnumCache = ReflectionHelpers.GetEnums<ACEnumTypeAttribute, ACEnumBindingAttribute>();
+        public ReflectionCache()
         {
-            _enumCache = enumCache;
         }
-
-        public List<ReflectionEnumCache> EnumCache1
-        {
-            get { return _enumCache; }
-        }
-
     }
 }

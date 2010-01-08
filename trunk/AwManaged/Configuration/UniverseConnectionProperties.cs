@@ -12,6 +12,7 @@
 using System;
 using System.ComponentModel;
 using AwManaged.Configuration.Interfaces;
+using AwManaged.Core.Interfaces;
 using AwManaged.Math;
 using AWManaged.Security;
 
@@ -19,6 +20,8 @@ namespace AwManaged.Configuration
 {
     public class UniverseConnectionProperties : MarshalByRefObject, IUniverseConnectionProperties<UniverseConnectionProperties>
     {
+        private int _connectionTimeOut = 10000;
+
         /// <summary>
         /// Gets or sets the authorization.
         /// </summary>
@@ -31,14 +34,14 @@ namespace AwManaged.Configuration
         /// </summary>
         /// <value>The domain.</value>
         [Description("The IP Address or Fully Qualified Domain Name (FQDN) of the universe server.")]
-        [Category("Authentication")]
+        [Category("Connection")]
         public string Domain { get; internal set; }
         /// <summary>
         /// Gets or sets the port.
         /// </summary>
         /// <value>The port.</value>
         [Description("The TCP port of the universe server.")]
-        [Category("Authentication")]
+        [Category("Connection")]
         public int Port { get; internal set; }
         /// <summary>
         /// Gets or sets the owner.
@@ -82,6 +85,13 @@ namespace AwManaged.Configuration
         [Description("The initial rotation vector of the avatar, expressed in yaw / pitch and roll.")]
         [Category("Positioning")]
         public Vector3 Rotation { get; internal set; }
+        /// <summary>
+        /// Gets or sets the connection timeout.
+        /// </summary>
+        /// <value>The connection timeout.</value>
+        [Description("The number of milliseconds before a connection time out is reached.")]
+        [Category("Connection")]
+        public int ConnectionTimeOut { get { return _connectionTimeOut; } internal set {_connectionTimeOut = value ; }}
 
 
         #region IUniverseConnectionProperties<UniverseConnectionProperties> Members
@@ -135,7 +145,11 @@ namespace AwManaged.Configuration
 
         #region ICloneableT<UniverseConnectionProperties> Members
 
-        UniverseConnectionProperties AwManaged.Core.Interfaces.ICloneableT<UniverseConnectionProperties>.Clone()
+        #endregion
+
+        #region ICloneableT<UniverseConnectionProperties> Members
+
+        public UniverseConnectionProperties Clone()
         {
             return (UniverseConnectionProperties) MemberwiseClone();
         }

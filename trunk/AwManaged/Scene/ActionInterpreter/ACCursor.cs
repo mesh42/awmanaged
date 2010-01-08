@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -35,6 +36,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The flag argument is required and specifies whether the cursor should be displayed.
         /// </summary>
         /// <value>The flag.</value>
+        [ACItemBinding(CommandInterpretType.Flag)]
         public CursorType Flag
         {
             get { return _flag; }

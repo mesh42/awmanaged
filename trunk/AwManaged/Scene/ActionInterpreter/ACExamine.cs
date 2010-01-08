@@ -26,8 +26,6 @@ namespace AwManaged.Scene.ActionInterpreter
             
         }
 
-        #region ILiteralAction Members
-
         public string LiteralAction
         {
             get { return "examine"; }
@@ -35,6 +33,5 @@ namespace AwManaged.Scene.ActionInterpreter
 
         public string LiteralPart { get; set; }
 
-        #endregion
     }
 }

@@ -11,6 +11,7 @@
  * **********************************************************************************/
 using System;
 using System.Drawing;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
@@ -31,7 +32,7 @@ namespace AwManaged.Scene.ActionInterpreter
         private MediaSoundFx _fx;
         private bool _set;
         private float _radius;
-        private float _radof;
+        private float _radoff;
         private byte _vol;
         private int _loop;
         private bool _osd;
@@ -51,7 +52,7 @@ namespace AwManaged.Scene.ActionInterpreter
             _fx = fx;
             _set = set;
             _radius = radius;
-            _radof = radof;
+            _radoff = radof;
             _vol = vol;
             _loop = loop;
             _osd = osd;
@@ -63,6 +64,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Set changes the attributes of an already playing media on the fly, without pausing or stopping the stream. Note, the resolution cannot be changed on the fly.
         /// </summary>
         /// <value><c>true</c> if set; otherwise, <c>false</c>.</value>
+        /// todo: interpret this bool flag
         public bool Set
         {
             get { return _set; }
@@ -73,6 +75,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// nostop disables the mouse click or bump trigger to stop running media. Objects using the bump trigger always have this option set, to avoid subsequent on/off triggering of the media command. In conjunction with the activate trigger, this disables the toggle-switch-function, which is applied on media signs by default. When used with the create trigger the nostop argument has no effect.
         /// </summary>
         /// <value><c>true</c> if nostop; otherwise, <c>false</c>.</value>
+        /// todo: interpret this bool flag
         public bool Nostop
         {
             get { return _nostop; }
@@ -83,6 +86,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// ext forces the video to open an external window. If the media only contains audio, no external window is displayed. Valid values are on/off, yes/ no, or true/false (default off).
         /// </summary>
         /// <value><c>true</c> if ext; otherwise, <c>false</c>.</value>
+        /// todo: interpret this bool flag
         public bool Ext
         {
             get { return _ext; }
@@ -93,6 +97,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// osd (on-screen display) specifies if a TV-like on-screen-display should be displayed on top of the video frames. Valid values are on/off, yes/ no, or true/false (default on).
         /// </summary>
         /// <value><c>true</c> if osd; otherwise, <c>false</c>.</value>
+        /// todo: interpret this bool flag
         public bool Osd
         {
             get { return _osd; }
@@ -103,6 +108,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Loop specifies the count of loops to play the specified media file. Valid values are in the range from 1 to 2,147,483,647. Default is 1.
         /// </summary>
         /// <value>The loop.</value>
+        [ACItemBinding("loop", CommandInterpretType.NameValuePairs)]
         public int Loop
         {
             get { return _loop; }
@@ -113,6 +119,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Vol specifies the relative volume of the played sound, in percent value. Valid values are in the range from 0 to 100, where 0% is silence (mute) and 100% is full volume. Default is 100%.
         /// </summary>
         /// <value>The vol.</value>
+        [ACItemBinding("vol", CommandInterpretType.NameValuePairs)]
         public byte Vol
         {
             get { return _vol; }
@@ -123,16 +130,18 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Radoff specifies the maximum distance in meters the media stream will play. The default radoff is 30 meters. radoff cannot be smaller than radius. Outside the given radoff an ongoing media is stopped.
         /// </summary>
         /// <value>The radof.</value>
-        public float Radof
+        [ACItemBinding("radoff", CommandInterpretType.NameValuePairs)]
+        public float Radoff
         {
-            get { return _radof; }
-            set { _radof = value; }
+            get { return _radoff; }
+            set { _radoff = value; }
         }
 
         /// <summary>
         /// Radius specifies the maximum distance in meters the sound can be heard. The default radius is 30 meters.
         /// </summary>
         /// <value>The radius.</value>
+        [ACItemBinding("radius", CommandInterpretType.NameValuePairs)]
         public float Radius
         {
             get { return _radius; }
@@ -143,6 +152,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// FX specifies a sound effect applied to the media.
         /// </summary>
         /// <value>The fx.</value>
+        [ACItemBinding("fx", CommandInterpretType.NameValuePairs)]
         public MediaSoundFx Fx
         {
             get { return _fx; }
@@ -154,6 +164,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Note that the proportions of the video (height and width) only depends on the sign's proportions and not on the used resolution.
         /// </summary>
         /// <value>The res.</value>
+        [ACItemBinding("res", CommandInterpretType.NameValuePairs)]
         public ResType Res
         {
             get { return _res; }
@@ -169,12 +180,14 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Color specifies the color to use for the sign text, and bcolor specifies the sign's background color. Both arguments are optional. The default color scheme is white text on a blue background. The colors can either be specified as one of many preset word values or as a "raw" hexadecimal value giving the red/green/blue component values (the same format as used for the BGCOLOR= HTML tag).
         /// </summary>
         /// <value>The color.</value>
+        [ACItemBinding("color", CommandInterpretType.NameValuePairs)]
         public Color Color
         {
             get { return _color; }
             set { _color = value; }
         }
 
+        [ACItemBinding(CommandInterpretType.Flag)]
         public MediaPlayType PlayType
         {
             get { return _playType; }
@@ -185,6 +198,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Name specifies the name of the same owner's object to place the media on.
         /// </summary>
         /// <value>The name.</value>
+        [ACItemBinding("name", CommandInterpretType.NameValuePairs)]
         public string Name
         {
             get { return _name; }
@@ -195,6 +209,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// Info text is text for the sign object. It will be displayed while the media is loading and after the media has finished. If omitted, the info text defaults to the contents of the object's description field (this is also the most common form of the sign command.) If specified, the into text must be enclosed in double quotes. Optionally, if the url or path includes spaces, the into text must be used to take the url or path, and the url option must be omitted.
         /// </summary>
         /// <value>The info text.</value>
+        // todo: interpret this.
         public string InfoText
         {
             get { return _infoText; }
@@ -205,6 +220,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The URL command, the only required argument, specifies the url, web-address or path to the media file. If the url is empty and a name is specified, it will stop running media on all objects of the triggered object's owner within the current view range. The url-prefix defaults to "http://" if no other protocol is specified.
         /// </summary>
         /// <value>The URL.</value>
+        [ACItemBinding("url", CommandInterpretType.NameValuePairs)]
         public string Url
         {
             get { return _url; }

@@ -25,6 +25,7 @@ namespace AwManaged.Scene.ActionInterpreter
         private float _time;
         private float _angle;
         private string _name;
+        private float _pitch;
 
         public ACLight()
         {
@@ -43,7 +44,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// <param name="time">The time.</param>
         /// <param name="angle">The angle.</param>
         /// <param name="name">The name.</param>
-        public ACLight(LightType type, Color color, float brightness, float radius, LightFxType fx, float time, float angle, string name)
+        public ACLight(LightType type, Color color, float brightness, float radius, LightFxType fx, float time, float angle, string name, float pitch)
         {
             _type = type;
             _color = color;
@@ -53,6 +54,18 @@ namespace AwManaged.Scene.ActionInterpreter
             _time = time;
             _angle = angle;
             _name = name;
+            _pitch = pitch;
+        }
+
+        /// <summary>
+        /// Gets or sets the pitch.
+        /// </summary>
+        /// <value>The pitch.</value>
+        [ACItemBinding("pitch", CommandInterpretType.NameValuePairs)]
+        public float Pitch
+        {
+            get { return _pitch; }
+            set { _pitch = value; }
         }
 
         /// <summary>
