@@ -24,7 +24,7 @@ namespace AwManaged.EventHandling.BotEngine
         public Avatar Avatar { get; private set; }
         public Model OldModel { get; private set; }
 
-        public EventObjectChangeArgs(ICloneableT<Model> model, ICloneableT<Model> oldModel, ICloneableT<Avatar> avatar)
+        public EventObjectChangeArgs(ICloneableT<Model> model , ICloneableT<Model> oldModel, ICloneableT<Avatar> avatar)
         {
             Model = model.Clone();
             OldModel = oldModel.Clone();

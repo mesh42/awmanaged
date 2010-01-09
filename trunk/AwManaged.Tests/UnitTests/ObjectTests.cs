@@ -75,7 +75,7 @@ namespace AwManaged.Tests.UnitTests
         public void ObjectSerializationTests()
         {
             var o = new Model(1, 1, DateTime.Now, ObjectType.V3, "model1", new Vector3(10, 20, 30),
-                              new Vector3(40, 50, 60), "description", "action",/* 10,*/ string.Empty);
+                              new Vector3(40, 50, 60), "description", "action"/*, 10, string.Empty*/);
             Serialize(o, "test.xml");
         }
 
@@ -83,7 +83,7 @@ namespace AwManaged.Tests.UnitTests
         public void ZoneSerializationTests()
         {
             var model = new Model(1, 1, DateTime.Now, ObjectType.V3, "model1", new Vector3(10, 20, 30),
-                                  new Vector3(40, 50, 60), "description", "action",/* 10,*/ string.Empty);
+                                  new Vector3(40, 50, 60), "description", "action"/*, 10, string.Empty*/);
 
             var zoneV4 = new Zone();
 

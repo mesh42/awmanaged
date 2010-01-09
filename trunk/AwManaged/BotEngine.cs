@@ -48,18 +48,22 @@ namespace AwManaged
     public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection>
     {
         #region Fields
+        private const int _maxFlushItems = 255;
         private LoginConfiguration _universeConnection;
         private Instance aw { get; set; }
         private Timer _timer;
         //private ProtectedList<Model> _model = new ProtectedList<Model>();
         private Model _modelRemoved;
         private SceneNodes _sceneNodes = new SceneNodes();
+        private SceneNodes _sceneNodesNew = new SceneNodes();
 
         private Db4OStorageClient _storageClient;
         private Db4OStorageClient _authStorageClient;
         private Db4OStorageServer _storageServer;
         private Db4OStorageServer _authStorageServer;
         private ActionInterpreterService _actionInterpreter;
+
+        private int BotHash = Guid.NewGuid().GetHashCode();
 
         public Db4OStorageClient Storage { get { return _storageClient; }}
 
@@ -94,6 +98,7 @@ namespace AwManaged
         public event ObjectEventScanCompletedDelegate ObjectEventScanCompleted;
         public event ChatEventDelegate ChatEvent;
         public event ObjectEventChangeDelegate ObjectEventChange;
+        public event TransactionEventCompletedDelegate TransactionEventCompleted;
 
         #endregion
 
@@ -197,50 +202,188 @@ namespace AwManaged
 
         #endregion
 
-        public void DeleteObject(Model o)
+        private SimpleTransaction<Model> _transaction = new SimpleTransaction<Model>(null);
+
+
+        public void AddObjects(SimpleTransaction<Model> transaction)
         {
             lock (this)
             {
-                try
+                if ((_transaction == null || _transaction.CommitsPending == 0) ||
+                    (_transaction != null && _transaction.CommitsPending == 0))
                 {
-                    aw.SetInt(Attributes.ObjectId, o.Id);
-                    //aw.SetInt(Attributes.ObjectNumber, o.Number);
-                    //aw.SetInt(Attributes.ObjectX, (int) o.Position.x);
-                    // aw.SetInt(Attributes.ObjectZ, (int) o.Position.z);
-                    aw.ObjectDelete();
+                    _transaction = transaction;
+                    _transaction.Commit();
+                    for (int i = 0; i < _transaction._transactionList.Count();i++ )
+                    {
+                        AddObject(_transaction._transactionList[i]);
+                    }
+                    return;
                 }
-                catch (InstanceException ex)
-                {
-                    HandleExceptionManaged(ex);
-                }
+                throw new Exception("Right now, we support only one transaction at a time.");
             }
         }
 
         public void AddObject(Model o)
         {
+            // prevent disconnection from the uni on massive updates.
+            while (_pendingTransactions > 255)
+                Utility.Wait(10);
             lock (this)
             {
-                try
+                if (o.Hash == 0) o.Hash = Guid.NewGuid().GetHashCode();
+                o.TransactionItemType = TransactionItemType.Add;
+                o.IsRuntimeTransaction = true;
+                _sceneNodesNew.Models.InternalAdd(o.Clone());
+                AwConvert.SetObject(aw,o);
+                _pendingTransactions++;
+                aw.SetInt(Attributes.ObjectCallbackReference, o.Hash);
+                int rc = aw.ObjectAdd();
+                if (rc!=0)
+                    throw new AwException(rc);
+            }
+        }
+
+        public void ChangeObject(Model model)
+        {
+            // prevent disconnection from the uni on massive updates.
+            while (_pendingTransactions > 255)
+                Utility.Wait(10);
+            lock (this)
+            {
+                if (model.Hash == 0) model.Hash = Guid.NewGuid().GetHashCode();
+                model.TransactionItemType = TransactionItemType.Add;
+                model.IsRuntimeTransaction = true;
+                _sceneNodesNew.Models.InternalAdd(model.Clone());
+                AwConvert.SetObject(aw, model);
+                _pendingTransactions++;
+                aw.SetInt(Attributes.ObjectCallbackReference, model.Hash);
+                int rc = aw.ObjectChange();
+                if (rc != 0)
+                    throw new AwException(rc);
+            }
+        }
+
+        public void DeleteObject(Model o)
+        {
+            // prevent disconnection from the uni on massive updates.
+            while (_pendingTransactions > 255)
+                Utility.Wait(10);
+            lock (this)
+            {
+                if (o.Hash == 0) o.Hash = Guid.NewGuid().GetHashCode();
+                o.TransactionItemType = TransactionItemType.Remove;
+                o.IsRuntimeTransaction = true;
+                _sceneNodesNew.Models.InternalAdd(o.Clone());
+                aw.SetInt(Attributes.ObjectId, o.Id);
+                aw.SetInt(Attributes.ObjectNumber, 0);
+                aw.SetInt(Attributes.ObjectCallbackReference, o.Hash);
+                _pendingTransactions++;
+                int rc = aw.ObjectDelete();
+                if (rc != 0)
+                    throw new AwException(rc);
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="error">The error.</param>
+        void aw_CallbackObjectResult(Instance sender, int error)
+        {
+            lock (this)
+            {
+                Model o;
+                var hash = sender.GetInt(Attributes.ObjectCallbackReference);
+                if (hash != 0)
                 {
-                    aw.SetString(Attributes.ObjectDescription, o.Description);
-                    aw.SetString(Attributes.ObjectModel, o.ModelName);
-                    aw.SetInt(Attributes.ObjectRoll, (int) o.Rotation.z);
-                    aw.SetInt(Attributes.ObjectTilt, (int) o.Rotation.x);
-                    aw.SetInt(Attributes.ObjectYaw, (int) o.Rotation.y);
-                    aw.SetString(Attributes.ObjectAction, o.Action);
-                    aw.SetInt(Attributes.ObjectX, (int) o.Position.x);
-                    aw.SetInt(Attributes.ObjectY, (int) o.Position.y);
-                    aw.SetInt(Attributes.ObjectZ, (int) o.Position.z);
-                    aw.ObjectAdd();
+                    o = _sceneNodesNew.Models.Find(p => p.Hash == hash);
+                    _sceneNodesNew.Models.InternalRemove(o);
+                    if (o == null)
+                        o = _transaction._transactionList.Find(p => p.Hash == hash);
+                    if (o!=null && o.TransactionId != 0)
+                    {
+                        o.Id = sender.GetInt(Attributes.ObjectId);
+                        var model = _transaction._transactionList.Find(p => p.Hash == hash);
+                        if (model != null)
+                        {
+                            _transaction.Commit(model);
+                        }
+                    }
+                    _sceneNodes.Models.InternalAdd(o);
                 }
-                catch (InstanceException ex)
+                else
                 {
-                    HandleExceptionManaged(ex);
+                    throw new Exception("Hash not set.");
                 }
+                if (_pendingTransactions > 0)
+                    _pendingTransactions--;
             }
         }
 
 
+
+        void aw_EventObjectAdd(Instance sender)
+        {
+            lock (this)
+            {
+                switch (aw.GetInt(Attributes.ObjectType))
+                {
+                    case (int)AW.ObjectType.Camera:
+                        AddCameraObject(sender);
+                        return;
+                    case (int)AW.ObjectType.Mover:
+                        AddMoverObject(sender);
+                        return;
+                    case (int)AW.ObjectType.Zone:
+                        aw_addZoneObject(sender);
+                        return;
+                }
+                var id = sender.GetInt(Attributes.ObjectId);
+                var o = _sceneNodes.Models.Find(p => p.Id == id);
+                if (o == null) // new object added outside this runtime.
+                {
+                    o = AwConvert.CastModelObject(sender);
+                    o.TransactionItemType = TransactionItemType.Add;
+                    if (ObjectEventAdd != null)
+                        ObjectEventAdd(this, new EventObjectAddArgs(o, GetAvatarByCitnum(o.Owner)));
+                }
+
+                if (_transaction._finished)
+                    _transaction.Completed();
+            }
+        }
+
+        /// <summary>
+        /// Handels the aw delete, mainly process the _objectChanges and _objectDeletes queue.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        void aw_EventObjectDelete(Instance sender)
+        {
+            lock (this)
+            {
+                var id = sender.GetInt(Attributes.ObjectId);
+                var o = _sceneNodes.Models.FindAll(p => p.Id == id);
+                if (o.Count == 2) // change, last record is winner.
+                {
+                    if (!o[1].IsRuntimeTransaction)
+                    {
+                        if (ObjectEventChange != null)
+                            ObjectEventChange(this, new EventObjectChangeArgs(o[1],o[0], GetAvatarByCitnum(o[1].Owner)));
+                    }
+                }
+                else if (!o[0].IsRuntimeTransaction) // new object added outside this runtime.
+                {
+                    if (ObjectEventRemove != null)
+                        ObjectEventRemove(this, new EventObjectRemoveArgs(o[0], GetAvatarByCitnum(o[0].Owner)));
+                }
+
+                _sceneNodes.Models.InternalRemove(o[0]);
+
+                if (_transaction._finished)
+                    _transaction.Completed();
+            }
+        }
 
         public void Start()
         {
@@ -250,13 +393,13 @@ namespace AwManaged
                 int rc;
 
                 aw = AwHelpers.AwHelpers.Connect(_universeConnection.Connection,false);
-                AwHelpers.AwHelpers.Login(aw,_universeConnection.Connection,false);
+                aw.EventAvatarAdd += aw_EventAvatarAdd;
+                AwHelpers.AwHelpers.Login(aw, _universeConnection.Connection, false);
 
 
                 if (BotEventLoggedIn!=null)
                     BotEventLoggedIn(this, new EventBotLoggedInArgs(LoginConfiguration.Connection,0));
 
-                aw.EventAvatarAdd += aw_EventAvatarAdd;
                 aw.EventAvatarChange += aw_EventAvatarChange;
                 aw.EventChat += aw_EventChat;
                 aw.EventAvatarDelete += aw_EventAvatarDelete;
@@ -308,17 +451,7 @@ namespace AwManaged
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="error">The error.</param>
-        void aw_CallbackObjectResult(Instance sender, int error)
-        {
-            //Model changed = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
-            //if (changed!=null)
-            //{
-            //}
-        }
+        private int _pendingTransactions;
 
         #endregion
 
@@ -448,64 +581,22 @@ namespace AwManaged
             }
         }
 
-        void aw_EventObjectAdd(Instance sender)
+        private bool IsLocalChange(int callbackHash)
         {
-          //  lock (this)
-          //  {
-                switch (aw.GetInt(Attributes.ObjectType))
-                {
-                    case (int)AW.ObjectType.Camera:
-                        AddCameraObject(sender);
-                        return;
-                    case (int)AW.ObjectType.Mover:
-                        AddMoverObject(sender);
-                        return;
-                    case (int)AW.ObjectType.Zone:
-                        aw_addZoneObject(sender);
-                        return;
-                }
-                var id = sender.GetInt(Attributes.ObjectId);
-                var node = _sceneNodes.Models.Find(p => p.Id == id);
-                var o = AwConvert.CastModelObject(sender);
-
-                if (node == null)
-                {
-                    _sceneNodes.Models.InternalAdd(o);
-                    if (ObjectEventAdd != null)
-                        ObjectEventAdd(this,
-                                       new EventObjectAddArgs(o, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
-                }
-                else
-                {
-                    _sceneNodes.Models.InternalRemove(node);
-                    o._isChange = true;
-                    _sceneNodes.Models.InternalAdd(o);
-                    if (ObjectEventAdd != null)
-                        ObjectEventChange(this,new EventObjectChangeArgs(o,node, GetAvatar(sender.GetInt(Attributes.AvatarSession))));
-                }
-          //  }
+            if (callbackHash == BotHash || _transaction.ContainsHash(callbackHash))
+                return true;
+            return false;
         }
 
-        /// <summary>
-        /// Handels the aw delete, mainly process the _objectChanges and _objectDeletes queue.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        void aw_EventObjectDelete(Instance sender)
-        {
-        //    lock (this)
-        //    {
-                var removedObject = _sceneNodes.Models.Find(p => p.Id == sender.GetInt(Attributes.ObjectId));
-                if (removedObject._isChange)
-                {
-                    removedObject._isChange = false;
-                    return;
-                }
-                _sceneNodes.Models.InternalRemove(removedObject);
-                if (ObjectEventRemove != null)
-                    ObjectEventRemove(this,new EventObjectRemoveArgs(removedObject,GetAvatar(sender.GetInt(Attributes.AvatarSession))));
-        //    }
-        }
 
+        private Avatar GetAvatarByCitnum(int citnum)
+        {
+            var avatar= _sceneNodes.Avatars.Find(p => p.Citizen == citnum);
+            if (avatar == null)
+                return new Avatar() {Citizen = citnum};
+            else
+                return avatar;
+        }
 
         void aw_EventObjectClick(Instance sender)
         {
@@ -606,15 +697,21 @@ namespace AwManaged
                         z = aw.GetInt(Attributes.ObjectRoll)
                     };
 
+                    string trans = aw.GetString(Attributes.ObjectCallbackReference);
+                    if (trans !=null)
+                    {
+                        
+                    }
+
                     Model o = new Model(aw.GetInt(Attributes.ObjectId),
                                         aw.GetInt(Attributes.ObjectOwner),
                                         AwConvert.ConvertFromUnixTimestamp(aw.GetInt(Attributes.ObjectBuildTimestamp)),
                                         (ObjectType)aw.GetInt(Attributes.ObjectType),
                                         aw.GetString(Attributes.ObjectModel),
                                         position, rotation, aw.GetString(Attributes.ObjectDescription),
-                                        aw.GetString(Attributes.ObjectAction), /* aw.GetInt(Attributes.ObjectNumber) ,*/
-                                        aw.GetString(Attributes.ObjectData));
-
+                                        aw.GetString(Attributes.ObjectAction)/*, aw.GetInt(Attributes.ObjectNumber) 
+                                        /*aw.GetString(Attributes.ObjectData)*/);
+                    o.TransactionItemType = TransactionItemType.Scan;
                     _sceneNodes.Models.InternalAdd(o);
                     //if (ObjectEventAdd != null)
                     //    ObjectEventAdd(this, new EventObjectAddArgs(o, this.GetAvatar(aw.GetInt(Attributes.AvatarSession))));
@@ -779,27 +876,15 @@ namespace AwManaged
             }
         }
 
+        private void SetTracking(Model o, TransactionItemType transactionType)
+        {
+            o.Hash = Guid.NewGuid().GetHashCode();
+            o.TransactionItemType = transactionType;
+        }
+
+
         private List<Model> _objectChanges = new List<Model>();
         private List<Model> _objectDeletes = new List<Model>();
-
-        public void ChangeObject(Model model)
-        {
-            lock (this)
-            {
-
-                var changeModel = model.Clone();
-                changeObject(changeModel);
-                //changed = AwConvert.CastModelObject(sender);
-
-
-                //changeModel._isChange = true;
-                //_objectChanges.Add(changeModel);
-                //if (_objectChanges.Count == 1)
-                //{
-                //    changeObject(model);
-                //}
-            }
-        }
 
         private void ModelCallback(object state)
         {
@@ -816,58 +901,58 @@ namespace AwManaged
         public delegate void AsyncChangeObject(Model o, ObjectTransactionType type);
 
 
-        private void changeObject(Model o)
-        {
-            lock (this)
-            //{
-                try
-                {
-                        //if (CurrentNode >= Nodes)
-                        //{
-                        //    CurrentNode = 0;
-                        //}
+        //private void changeObject(Model o)
+        //{
+        //    lock (this)
+        //    //{
+        //        try
+        //        {
+        //                //if (CurrentNode >= Nodes)
+        //                //{
+        //                //    CurrentNode = 0;
+        //                //}
 
-                        // indicate which node session should handle the change to the object.
-                        //o._ChangeNode = CurrentNode;
-                        //AsyncChangeObject inv = BotNodes[CurrentNode].ObjectTransaction;
-                        //inv.BeginInvoke(o, ObjectTransactionType.Change, null, null);
-                        //CurrentNode++;
-                        aw.SetInt(Attributes.ObjectId, o.Id);
-                        aw.SetInt(Attributes.ObjectOldNumber, 0);
-                        aw.SetInt(Attributes.ObjectOwner, o.Owner);
-                        aw.SetInt(Attributes.ObjectType, (int)o.Type);
-                        aw.SetInt(Attributes.ObjectX, (int)o.Position.x);
-                        aw.SetInt(Attributes.ObjectY, (int)o.Position.y);
-                        aw.SetInt(Attributes.ObjectZ, (int)o.Position.z);
-                        aw.SetInt(Attributes.ObjectTilt, (int)o.Rotation.x);
-                        aw.SetInt(Attributes.ObjectYaw, (int)o.Rotation.y);
-                        aw.SetInt(Attributes.ObjectRoll, (int)o.Rotation.z);
-                        aw.SetString(Attributes.ObjectDescription, o.Description);
-                        aw.SetString(Attributes.ObjectAction, o.Action);
-                        //aw.SetString(Attributes.ObjectModel, o.ModelName);
-                        if (o.Data != null)
-                            aw.SetString(AW.Attributes.ObjectData, o.Data);
-                        int rc = aw.ObjectChange();
-                        if (rc != 0)
-                            throw new AwException(rc);
-                        _sceneNodes.Models.InternalRemoveAll(p => p.Id == o.Id);
-                        _sceneNodes.Models.InternalAdd(o);
-                    }
-                    catch (InstanceException ex)
-                    {
-                        HandleExceptionManaged(ex);
-                        //switch (ex.ErrorCode)
-                        //{
-                        //    case (int) ReasonCodeReturnType.RC_TIMEOUT:
-                        //        ChangeObject(o);
-                        //        break;
-                        //    default:
-                        //        HandleExceptionManaged(ex);
-                        //        break;
-                        //}
-                    }
-                    // }
-                 }
+        //                // indicate which node session should handle the change to the object.
+        //                //o._ChangeNode = CurrentNode;
+        //                //AsyncChangeObject inv = BotNodes[CurrentNode].ObjectTransaction;
+        //                //inv.BeginInvoke(o, ObjectTransactionType.Change, null, null);
+        //                //CurrentNode++;
+        //                aw.SetInt(Attributes.ObjectId, o.Id);
+        //                aw.SetInt(Attributes.ObjectOldNumber, 0);
+        //                aw.SetInt(Attributes.ObjectOwner, o.Owner);
+        //                aw.SetInt(Attributes.ObjectType, (int)o.Type);
+        //                aw.SetInt(Attributes.ObjectX, (int)o.Position.x);
+        //                aw.SetInt(Attributes.ObjectY, (int)o.Position.y);
+        //                aw.SetInt(Attributes.ObjectZ, (int)o.Position.z);
+        //                aw.SetInt(Attributes.ObjectTilt, (int)o.Rotation.x);
+        //                aw.SetInt(Attributes.ObjectYaw, (int)o.Rotation.y);
+        //                aw.SetInt(Attributes.ObjectRoll, (int)o.Rotation.z);
+        //                aw.SetString(Attributes.ObjectDescription, o.Description);
+        //                aw.SetString(Attributes.ObjectAction, o.Action);
+        //                //aw.SetString(Attributes.ObjectModel, o.ModelName);
+        //                //if (o.Data != null)
+        //                //    aw.SetString(AW.Attributes.ObjectData, o.Data);
+        //                int rc = aw.ObjectChange();
+        //                if (rc != 0)
+        //                    throw new AwException(rc);
+        //                _sceneNodes.Models.InternalRemoveAll(p => p.Id == o.Id);
+        //                _sceneNodes.Models.InternalAdd(o);
+        //            }
+        //            catch (InstanceException ex)
+        //            {
+        //                HandleExceptionManaged(ex);
+        //                //switch (ex.ErrorCode)
+        //                //{
+        //                //    case (int) ReasonCodeReturnType.RC_TIMEOUT:
+        //                //        ChangeObject(o);
+        //                //        break;
+        //                //    default:
+        //                //        HandleExceptionManaged(ex);
+        //                //        break;
+        //                //}
+        //            }
+        //            // }
+        //         }
 
         #endregion
 
@@ -1099,5 +1184,6 @@ namespace AwManaged
         }
 
         #endregion
+
     }
 }

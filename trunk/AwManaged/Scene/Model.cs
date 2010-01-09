@@ -12,6 +12,7 @@
 using System;
 using System.Xml.Serialization;
 using AW;
+using AwManaged.Core.Interfaces;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
 using Db4objects.Db4o.Config.Attributes;
@@ -40,8 +41,8 @@ namespace AwManaged.Scene
         private string _action;
         [Indexed]
         private int _number;
-        [Indexed]
-        private string _data;
+        //[Indexed]
+        //private string _data;
 
         //private int _id;
         //private int _owner;
@@ -73,8 +74,8 @@ namespace AwManaged.Scene
         public string Action { get{ return _action;} set { _action = value;} }
         //[XmlAttribute]
         //public int Number { get { return _number;} internal set { _number = Number;} }
-        [XmlAttribute]
-        public string Data { get { return _data;} set { _data = value;}  }
+        //[XmlAttribute]
+        //public string Data { get { return _data;} set { _data = value;}  }
         /// <summary>
         /// Indicates if the object is being changed.
         /// </summary>
@@ -84,9 +85,14 @@ namespace AwManaged.Scene
         /// </summary>
         internal int _ChangeNode;
 
-        public Model(){}
+        public Model()
+        {
+            _position = Vector3.Zero;
+            _rotation = Vector3.Zero;
 
-        public Model(int id, int owner, DateTime timestamp, ObjectType type, string model, Vector3 position, Vector3 rotation, string description, string action, string data)
+        }
+
+        public Model(int id, int owner, DateTime timestamp, ObjectType type, string model, Vector3 position, Vector3 rotation, string description, string action)
         {
             Id = id;
             Owner = owner;
@@ -98,7 +104,6 @@ namespace AwManaged.Scene
             Description = description;
             Action = action;
             //Number = number;
-            Data = data;
         }
 
         #region ICloneableT<IModel> Members
@@ -115,6 +120,55 @@ namespace AwManaged.Scene
         public event AwManaged.Core.Interfaces.ChangedEventDelegate<Model> OnChanged;
 
         public bool IsChanged{get; internal set;}
+
+        #endregion
+
+        #region ITransactionItem Members
+
+        public int Hash
+        {
+            get; set;
+        }
+
+        #endregion
+
+        #region ITransactionItem Members
+
+
+        public bool IsComitted
+        {
+            get; set;
+        }
+
+        #endregion
+
+        #region ITransactionItem Members
+
+
+        public TransactionItemType TransactionItemType
+        {
+            get; internal set;
+        }
+
+        #endregion
+
+        #region ITransactionItem Members
+
+
+        public int TransactionId
+        {
+            get; set;
+        }
+
+        #endregion
+
+        #region ITransactionItem Members
+
+
+        public bool IsRuntimeTransaction
+        {
+            get;set;
+        }
 
         #endregion
     }

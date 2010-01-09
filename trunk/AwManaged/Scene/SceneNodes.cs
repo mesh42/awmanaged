@@ -38,6 +38,7 @@ namespace AwManaged.Scene
         /// </summary>
         public SceneNodes()
         {
+            Models = new ProtectedList<Model>();
             Cameras = new ProtectedList<Camera>();
             Movers = new ProtectedList<Mover>();
             Zones = new ProtectedList<Zone>();

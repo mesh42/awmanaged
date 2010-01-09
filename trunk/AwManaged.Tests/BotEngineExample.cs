@@ -222,6 +222,36 @@ namespace AwManaged.Tests
             Console.WriteLine(string.Format("object query test, testing object actions which contain {0}",actionContains));
             var b = from Model p in e.SceneNodes.Models where p.Action.Contains(actionContains) select p;
             Console.WriteLine(string.Format("found {0} objects which contain action {1}",b.Count(), actionContains));
+
+            //sender.AddObject(new Model(){ModelName="bzmb0.rwx",Position=new Vector3(0,0,10000)});
+
+
+#if OBJECT_ADD
+            // remove all objects which are part of the unit test.
+            foreach (var model in e.SceneNodes.Models.FindAll(p => p.Action.Contains("@key=unittest")))
+            {
+                sender.DeleteObject(model);
+            }
+            var transaction = new SimpleTransaction<Model>(sender);
+            transaction.OnTransactionCompleted += transaction_OnTransactionCompleted;
+            for (int h = 0; h < 1; h++)
+                for (int j = 0; j < 15; j++)
+                    for (int i = 0; i < 15; i++)
+                    {
+                        transaction.Add(new Model()
+                                            {
+                                                ModelName = "bzmb0.rwx",
+                                                Action = "@key=unittest",
+                                                Description = "Bot created object teet",
+                                                Position = new Vector3((i * 120) + (-h * 1600), j * 120, 5000)
+                                            });
+                    }
+            sender.AddObjects(transaction);
+
+#endif
+
+#if BACKUP
+
             Console.Write("Performing main backup...");
             _sw1.Start();
             var db = sender.Storage.Db;
@@ -230,8 +260,11 @@ namespace AwManaged.Tests
             //    db.Delete(main_backup.Single());
             sender.Storage.Db.Store(e.SceneNodes);
             db.Commit();
-            
             Console.WriteLine("Done!" + _sw1.ElapsedMilliseconds + " ms.");
+#endif
+
+#if ACTION_INTERPRETER
+
             List<IEnumerable<IActionTrigger>> triggers = new List<IEnumerable<IActionTrigger>>();
 
             _sw1.Reset();
@@ -245,13 +278,53 @@ namespace AwManaged.Tests
                 }
             }
             Console.WriteLine(string.Format("Interpreted {0} object actions in {1} ms.", triggers.Count, _sw1.ElapsedMilliseconds));
+
+#endif
+
+        }
+
+        void transaction_OnTransactionCompleted(BotEngine sender, EventTransactionCompletedArgs e)
+        {
+            Console.WriteLine("Transaction {0} committed {1} objects, and completed in {2} ms.",
+                e.Transaction.TransactionId,e.Transaction.Commits,e.Transaction.elapsedMs);
+
+            foreach (var model in sender.SceneNodes.Models.FindAll(p => p.Action.Contains("@key=unittest")))
+            {
+                sender.DeleteObject(model);
+            }
+
+            // create a second transaction
+            var transaction = new SimpleTransaction<Model>(sender);
+            transaction.OnTransactionCompleted += transaction_OnTransactionCompleted2;
+            for (int h = 0; h < 1; h++)
+                for (int j = 0; j < 15; j++)
+                    for (int i = 0; i < 15; i++)
+                    {
+                        transaction.Add(new Model()
+                        {
+                            ModelName = "bzmb0.rwx",
+                            Action = "@key=unittest",
+                            Description = "Bot created object teet",
+                            Position = new Vector3((i * 120) + (-h * 1600), j * 120, 10000)
+                        });
+                    }
+            sender.AddObjects(transaction);
+        }
+
+        void transaction_OnTransactionCompleted2(BotEngine sender, EventTransactionCompletedArgs e)
+        {
+            Console.WriteLine("Transaction {0} committed {1} objects, and completed in {2} ms.",
+                e.Transaction.TransactionId, e.Transaction.Commits, e.Transaction.elapsedMs);
+
+            foreach (var model in sender.SceneNodes.Models.FindAll(p => p.Action.Contains("@key=unittest")))
+            {
+                sender.DeleteObject(model);
+            }
         }
 
         static void HandleObjectEventChange(BotEngine sender, EventObjectChangeArgs e)
         {
-            Console.WriteLine(
-                string.Format("object {0} with id {1} changed", 
-                new object[]{e.Model.ModelName, e.Model.Id}));
+            Console.WriteLine(string.Format("object {0} with id {1} changed", new object[]{e.Model.ModelName, e.Model.Id}));
         }
 
         /// <summary>
