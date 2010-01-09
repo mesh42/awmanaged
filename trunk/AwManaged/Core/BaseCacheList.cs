@@ -31,7 +31,11 @@ namespace AwManaged.Core
         {
             get
             {
-                return ((ICloneableT<T>) base[index]).Clone();
+                if (base[index] != null)
+                {
+                    return ((ICloneableT<T>) base[index]).Clone();
+                }
+                    return default(T);
             }
             set
             {
@@ -279,5 +283,6 @@ namespace AwManaged.Core
         public bool IsChanged{ get; internal set; }
 
         #endregion
+
     }
 }

@@ -12,6 +12,7 @@
 using System;
 using System.Text.RegularExpressions;
 using AW;
+using AwManaged.Core.Interfaces;
 using AwManaged.ExceptionHandling;
 using AwManaged.Math;
 using AwManaged.Scene;
@@ -101,6 +102,20 @@ namespace AwManaged.Converters
         #endregion
 
         #region Scene Node Castings
+
+        internal static void SetObject(Instance aw, Model o)
+        {
+            aw.SetString(Attributes.ObjectDescription, o.Description);
+            aw.SetString(Attributes.ObjectModel, o.ModelName);
+            aw.SetInt(Attributes.ObjectRoll, (int)o.Rotation.z);
+            aw.SetInt(Attributes.ObjectTilt, (int)o.Rotation.x);
+            aw.SetInt(Attributes.ObjectYaw, (int)o.Rotation.y);
+            aw.SetString(Attributes.ObjectAction, o.Action);
+            aw.SetInt(Attributes.ObjectX, (int)o.Position.x);
+            aw.SetInt(Attributes.ObjectY, (int)o.Position.y);
+            aw.SetInt(Attributes.ObjectZ, (int)o.Position.z);
+        }
+
 
         internal static Particle CastParticleObject(AW.Particle ret)
         {
@@ -219,8 +234,10 @@ namespace AwManaged.Converters
                                       (ObjectType) sender.GetInt(Attributes.ObjectType),
                                       sender.GetString(Attributes.ObjectModel),
                                       position, rotation, sender.GetString(Attributes.ObjectDescription),
-                                      sender.GetString(Attributes.ObjectAction), /*sender.GetInt(Attributes.ObjectNumber),*/
-                                      sender.GetString(Attributes.ObjectData));
+                                      sender.GetString(Attributes.ObjectAction)/*sender.GetInt(Attributes.ObjectNumber),*/
+                                      );
+
+                   // o.Hash = sender.GetInt(Attributes.ObjectCallbackReference);
 
                     return o;
                 }

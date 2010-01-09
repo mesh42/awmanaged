@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Hosting;
-using System.Runtime.Remoting;
-using System.Security.Policy;
 using System.Threading;
 using AW;
 using AwManaged.Configuration;
@@ -152,7 +149,7 @@ namespace AwManaged
                 SetString(Attributes.ObjectDescription, o.Description);
                 SetString(Attributes.ObjectAction, o.Action);
                 SetString(Attributes.ObjectModel, o.ModelName);
-                if (o.Data != null) SetString(Attributes.ObjectData, o.Data);
+                //if (o.Data != null) SetString(Attributes.ObjectData, o.Data);
                 switch (type)
                 {
                     case ObjectTransactionType.Add:

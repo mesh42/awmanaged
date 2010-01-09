@@ -70,5 +70,7 @@ namespace AwManaged.Scene.Interfaces
         /// </summary>
         /// <value>The huds.</value>
         ProtectedList<TParticle> Particles { get; }
+
+
     }
 }

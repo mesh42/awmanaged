@@ -11,27 +11,19 @@
  * **********************************************************************************/
 using System;
 using AwManaged.Core.Interfaces;
-using AwManaged.Scene;
 
 namespace AwManaged.EventHandling.BotEngine
 {
     [Serializable]
-    public delegate void ObjectEventScanCompletedDelegate(AwManaged.BotEngine sender, EventObjectScanCompletedEventArgs e);
+    public delegate void TransactionEventCompletedDelegate(AwManaged.BotEngine sender, EventTransactionCompletedArgs e);
 
-    /// <summary>
-    /// Raised when object scanning of a world has been completed.
-    /// </summary>
-    public sealed class EventObjectScanCompletedEventArgs : MarshalByRefObject
+    public sealed class EventTransactionCompletedArgs : MarshalByRefObject
     {
-        public EventObjectScanCompletedEventArgs(ICloneableT<SceneNodes> sceneNodes)
+        public EventTransactionCompletedArgs(ITransaction transaction)
         {
-            SceneNodes = sceneNodes.Clone(); // NOTE: this could be rather memory and time consuming.
+            Transaction = transaction;
         }
 
-        public SceneNodes SceneNodes
-        {
-            get;
-            internal set;
-        }
+        public ITransaction Transaction { get;private set; }
     }
 }

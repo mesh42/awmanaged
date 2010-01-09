@@ -11,14 +11,14 @@
  * **********************************************************************************/
 using System;
 using AW;
+using AwManaged.Core.Interfaces;
 using AwManaged.Math;
 
 namespace AwManaged.Scene.Interfaces
 {
-    public interface IModel<T> : ISceneNode<T>
+    public interface IModel<T> : ISceneNode<T>, ITransactionItem,IIntId
         where T : MarshalByRefObject
     {
-        int Id { get; }
         int Owner { get; set; }
         DateTime Timestamp { get; }
         ObjectType Type { get; }
@@ -27,7 +27,12 @@ namespace AwManaged.Scene.Interfaces
         Vector3 Rotation { get; set; }
         string Description { get; set; }
         string Action { get; set; }
-        string Data { get; set; }
+        //string Data { get; set; }
         //int Number { get; }
+    }
+
+    public interface IIntId
+    {
+        int Id { get; }
     }
 }

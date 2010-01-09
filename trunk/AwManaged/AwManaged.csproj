@@ -67,6 +67,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -100,13 +102,20 @@
     <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
     <Compile Include="Core\Interfaces\IObjectLifetime.cs" />
     <Compile Include="Core\Interfaces\IServicesManager.cs" />
+    <Compile Include="Core\Interfaces\ITransactionItem.cs" />
+    <Compile Include="Core\Interfaces\ITransaction.cs" />
+    <Compile Include="Core\Interfaces\TransactionItemType.cs" />
     <Compile Include="Core\Reflection\ReflectionCache.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCache.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCacheItem.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCacheItemField.cs" />
     <Compile Include="Core\Reflection\ReflectionHelpers.cs" />
     <Compile Include="Core\ServicesManager.cs" />
+    <Compile Include="Core\SimpleTransaction.cs" />
+    <Compile Include="Core\TransactionListT.cs">
+    </Compile>
     <Compile Include="EventHandling\BotEngine\EventBotSlaveStartedArgs.cs" />
+    <Compile Include="EventHandling\BotEngine\EventTransactionCompletedArgs.cs" />
     <Compile Include="EventHandling\BotEngine\Interfaces\IBotEngineEvents.cs" />
     <Compile Include="EventHandling\ChatTypes.cs" />
     <Compile Include="EventHandling\RemotingBotEngine\EventBotEntersWorldArgs.cs" />
@@ -355,9 +364,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AwManagedSignature.snk" />
+    <None Include="Security\RemoteBotEngine\dAuthorization.cd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Reflection\" />
+    <Folder Include="Scene\WorldRegistry\" />
     <Folder Include="Storage\BackupProvider\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

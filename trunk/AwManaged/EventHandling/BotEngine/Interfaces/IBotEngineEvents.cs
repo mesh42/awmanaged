@@ -24,5 +24,6 @@ namespace AwManaged.EventHandling.BotEngine.Interfaces
         event ObjectEventScanCompletedDelegate ObjectEventScanCompleted;
         event ChatEventDelegate ChatEvent;
         event ObjectEventChangeDelegate ObjectEventChange;
+        event TransactionEventCompletedDelegate TransactionEventCompleted;
     }
 }

@@ -13,4 +13,13 @@ obj
 *.aps
 *.eto
 App.config
+</Value></Property><Property><Name>svn:ignore</Name><Value>[Bb]in
+obj
+[Dd]ebug
+[Rr]elease
+*.user
+*.aps
+*.eto
+App.config
+Registry.txt
 </Value></Property></Properties></ItemProperties>

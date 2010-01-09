@@ -1,3 +1,15 @@
+Release 0.3.10 (unstable) maintenance/feature release
+* Testing bot object add/remove commands.
+* Introducing pending transactions for preventing Universe server disconnects on massive object updates.
+* Exluding Data field from Model, Data is only used in V4 objects.
+* setting Object Hash in the OBJECT CALLBACK REFERENCE for preperation of Atomic ObjectV3 Transactions.
+* Adding Several compiler defines, for including, or excluding test in the bot engine example. Please enable these at your convinience, they are liste below
+* DEFINE OBJECT_ADD : if you want the bot example to add objects to your world (it will clean them upon the next run, see documentation)
+* DEFINE BACKUP : if you want to bot engine example to test the backup faccility
+* DEFINE ACTION_INTERPRETER : if you want the bot engine example to interpret all action string in the world.
+* Adding EventTransactionCompleted for determining if multiple object changes/add/removes have finished.
+* Adding object hashing to the botengine, which identifies the bot add/removed or changed an object using the OBJECT CALLBACK REFERENCE, this is to prevent cyclic callbacks.
+
 Release 0.3.9 (unstable) optimizing release
 * Working some more on the action string interpreter
 * Removing old and new number from the model properties, they are not used in the managed environment.

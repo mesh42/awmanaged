@@ -13,9 +13,9 @@ using System;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Core.Interfaces;
+using AwManaged.EventHandling.BotEngine.Interfaces;
 using AwManaged.ExceptionHandling;
 using AwManaged.Scene.Interfaces;
-using AwManaged.Storage.Interfaces;
 
 namespace AwManaged.Interfaces
 {
@@ -25,6 +25,7 @@ namespace AwManaged.Interfaces
     /// in order to support a factory pattern.
     /// </summary>
     public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags,TConnectionInterface> : 
+        IBotEngineEvents,
         IHandleExceptionManaged,
         ISceneNodeCommands<TModel,TAvatar,THudBase>,
         IChatCommands<TAvatar>,
