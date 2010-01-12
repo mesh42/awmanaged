@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,14 +98,28 @@
     <Compile Include="AwHelpers\AwHelpers.cs" />
     <Compile Include="BotNode.cs">
     </Compile>
+    <Compile Include="BotLocalPlugin.cs" />
+    <Compile Include="ConsoleServices\CommandArgument.cs" />
+    <Compile Include="ConsoleServices\CommandFlag.cs" />
+    <Compile Include="ConsoleServices\CommandIndexedItem.cs" />
+    <Compile Include="ConsoleServices\CommandLine.cs" />
+    <Compile Include="ConsoleServices\CommandNameValuePair.cs" />
+    <Compile Include="ConsoleServices\ConsoleHelpers.cs" />
+    <Compile Include="ConsoleServices\Interfaces\ICommandPart.cs" />
+    <Compile Include="Core\CommandExecutionResult.cs" />
     <Compile Include="Core\EventHandling\ServiceStartedArgs.cs" />
+    <Compile Include="Core\Interfaces\ICommandExecute.cs" />
+    <Compile Include="Core\Interfaces\ICommandExecutionResult.cs" />
     <Compile Include="Core\Interfaces\IConnectionProperties.cs" />
+    <Compile Include="Core\Interfaces\ICommandItemBindingAttribute.cs" />
     <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
+    <Compile Include="Core\Interfaces\INeedBotEngineInstance.cs" />
     <Compile Include="Core\Interfaces\IObjectLifetime.cs" />
     <Compile Include="Core\Interfaces\IServicesManager.cs" />
     <Compile Include="Core\Interfaces\ITransactionItem.cs" />
     <Compile Include="Core\Interfaces\ITransaction.cs" />
     <Compile Include="Core\Interfaces\TransactionItemType.cs" />
+    <Compile Include="Core\Reflection\Attributes\PluginInfoAttribute.cs" />
     <Compile Include="Core\Reflection\ReflectionCache.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCache.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCacheItem.cs" />
@@ -192,7 +207,7 @@
     <Compile Include="Scene\ActionInterpreter\ACTag.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleport.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTexture.cs" />
-    <Compile Include="Scene\ActionInterpreter\ActionInterpreterService.cs" />
+    <Compile Include="Core\GenericInterpreterService.cs" />
     <Compile Include="Scene\ActionInterpreter\ACUnknown.cs" />
     <Compile Include="Scene\ActionInterpreter\ACUrl.cs" />
     <Compile Include="Scene\ActionInterpreter\ACWarp.cs" />
@@ -208,6 +223,7 @@
     <Compile Include="Scene\ActionInterpreter\Attributes\ACEnumBindingAttribute.cs" />
     <Compile Include="Scene\ActionInterpreter\Attributes\ACEnumTypeAttribute.cs" />
     <Compile Include="Scene\ActionInterpreter\Attributes\ACItemBindingAttribute.cs" />
+    <Compile Include="Core\CommandInterpretType.cs" />
     <Compile Include="Scene\ActionInterpreter\ATUnknown.cs" />
     <Compile Include="Scene\ActionInterpreter\CursorType.cs" />
     <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
@@ -380,6 +396,8 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>copy $(SolutionDir)\Dependencies\activeworlds.com\aw.dll $(TargetDir)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>copy "$(SolutionDir)\Dependencies\activeworlds.com\aw.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

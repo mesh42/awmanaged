@@ -9,6 +9,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System;
+using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests
@@ -29,6 +32,21 @@ namespace AwManaged.Tests.UnitTests
             foreach (var e in t.GetEvents())
             {
             }
+        }
+
+        [Test]
+        public void DiscoverBotPLuginsTest()
+        {
+            var types = BotLocalPlugin.Discover(new DirectoryInfo(Directory.GetCurrentDirectory()));
+            //var info = BotLocalPlugin.GetPluginInfo(types[0]);
+
+            //Assembly asm = Assembly.GetAssembly(types[0].Type);
+
+            // create instance.
+            //var constructor = asm.GetType(types[0].ToString()).GetConstructor(new[] { typeof(BotEngine) });
+            //var constructor = types[0].GetConstructor(new[] {typeof (BotEngine)});
+            //var plugin = constructor.Invoke(new object[]{null});
+
         }
     }
 }

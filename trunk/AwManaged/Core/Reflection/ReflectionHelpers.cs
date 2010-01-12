@@ -22,19 +22,40 @@ namespace AwManaged.Core.Reflection
     /// </summary>
     public sealed class ReflectionHelpers
     {
+        public static bool HasInterface(object o, Type @interface)
+        {
+            if(!@interface.IsInterface)
+                throw new Exception("Interface type expected");
+
+            //if (o.GetType().Name == )
+
+            return o.GetType().GetInterface(@interface.Name)!= null;
+        }
+
+        public static List<Type> GetTypes(Assembly assembly, Type implements)
+        {
+            var ret = new List<Type>();
+            foreach (var type in assembly.GetTypes())
+            {
+                if (type.BaseType == implements)
+                    ret.Add(type);
+            }
+            return ret;
+        }
+
         /// <summary>
         /// Gets the enumerations for a specific enum binding attributes and returns a reflection cache.
         /// </summary>
         /// <typeparam name="TEnumbindingAttribute">The type of the enumbinding attribute.</typeparam>
         /// <typeparam name="TEnumItemBindingAttribute">The type of the enum item binding attribute.</typeparam>
         /// <returns></returns>
-        public static ReflectionEnumCache GetEnums<TEnumbindingAttribute, TEnumItemBindingAttribute>()
+        public static ReflectionEnumCache GetEnums<TEnumbindingAttribute, TEnumItemBindingAttribute>(Assembly asm)
             where TEnumbindingAttribute : Attribute
             where TEnumItemBindingAttribute : Attribute, IACLiteralNames
         {
             var cacheEnumItems = new List<ReflectionEnumCacheItem>();
 
-            var asm = Assembly.GetAssembly(typeof(TEnumbindingAttribute));
+            //var asm = Assembly.GetAssembly(typeof(TEnumbindingAttribute));
             foreach (var type in asm.GetTypes())
             {
                 if (type.IsEnum)
@@ -65,9 +86,9 @@ namespace AwManaged.Core.Reflection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> GetInstancesOfInterface<T>()
+        public static List<T> GetInstancesOfInterface<T>(Assembly asm)
         {
-            var asm = Assembly.GetAssembly(typeof(T));
+            //var asm = Assembly.GetAssembly(typeof(T));
             var interpreters = new List<T>();
             foreach (var type in asm.GetTypes())
             {

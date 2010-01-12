@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,7 +36,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;noOBJECT_ADD noBACKUP noACTION_INTERPRETER</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -78,6 +79,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -91,6 +93,16 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="Commands\Attributes\CCEnumBindingAttribute.cs" />
+    <Compile Include="Commands\Attributes\CCEnumTypeAttribute.cs" />
+    <Compile Include="Commands\Attributes\CCItemBindingAttribute.cs" />
+    <Compile Include="Commands\Backup.cs" />
+    <Compile Include="Commands\BackupWorld.cs" />
+    <Compile Include="Commands\Down.cs" />
+    <Compile Include="Commands\Load.cs" />
+    <Compile Include="Commands\LoadPlugin.cs" />
+    <Compile Include="Commands\Unload.cs" />
+    <Compile Include="MessageEvents.cs" />
     <Compile Include="UnitTests\AwExceptionTests.cs" />
     <Compile Include="BotEngineExample.cs">
       <SubType>Code</SubType>
@@ -102,9 +114,11 @@
     </Compile>
     <Compile Include="UnitTests\AuthorizationTests.cs">
     </Compile>
+    <Compile Include="UnitTests\ConsoleCommandInterpreterTests.cs" />
     <Compile Include="UnitTests\NodeBalancingTests.cs">
     </Compile>
     <Compile Include="UnitTests\ObjectTests.cs" />
+    <Compile Include="UnitTests\PromptInterpreterTests.cs" />
     <Compile Include="UnitTests\ReflectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +146,11 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-    <PreBuildEvent>mkdir $(TargetDir)master
-copy $(SolutionDir)\Dependencies\activeworlds.com\aw.dll $(TargetDir)awtemp.dll</PreBuildEvent>
+    <PostBuildEvent>copy "$(SolutionDir)\Dependencies\activeworlds.com\aw.dll" "$(TargetDir)"
+copy "$(SolutionDir)\BotLocalPlugins\StandardBotPluginLibrary\$(OutDir)StandardBotPluginLibrary.pdb" "$(TargetDir)StandardBotPluginLibrary.pdb"
+copy "$(SolutionDir)\BotLocalPlugins\StandardBotPluginLibrary\$(OutDir)StandardBotPluginLibrary.dll" "$(TargetDir)StandardBotPluginLibrary.dll"
+</PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

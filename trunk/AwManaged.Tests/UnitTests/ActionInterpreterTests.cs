@@ -9,7 +9,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using AwManaged.Scene.ActionInterpreter;
+using System.Reflection;
+using AwManaged.Core;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests
@@ -22,7 +24,7 @@ namespace AwManaged.Tests.UnitTests
         [Test]
         public void ActionResolveTest()
         {
-            var svc = new ActionInterpreterService();
+            var svc = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute,ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute)));
             svc.Start();
 
            // var ret = svc.Interpret("activate envi res=512 type=1 upd=25 time=20 aspect=0.5 zoom=0.8, @key value=mykey");
