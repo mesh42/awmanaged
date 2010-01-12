@@ -105,11 +105,6 @@ namespace AwManaged.Storage
 
         #endregion
 
-        IObjectContainer ICloneableT<IObjectContainer>.Clone()
-        {
-            return _safeObjectContainer.GetNewInstance();
-        }
-
         #region IService Members
 
         public bool Stop()
@@ -146,6 +141,15 @@ namespace AwManaged.Storage
         public string TechnicalName
         {
             get; set;
+        }
+
+        #endregion
+
+        #region ICloneableT<IObjectContainer> Members
+
+        public IObjectContainer Clone()
+        {
+            return _safeObjectContainer.GetNewInstance();
         }
 
         #endregion

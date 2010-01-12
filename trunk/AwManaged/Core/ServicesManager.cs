@@ -28,6 +28,8 @@ namespace AwManaged.Core
             _services = new List<IService>();
         }
         
+
+
         #region IService Members
 
         /// <summary>
@@ -103,13 +105,22 @@ namespace AwManaged.Core
             _services.RemoveAll(p => p.TechnicalName == technicalName);
         }
 
+        public void StartService(string technicalName)
+        {
+            var service = _services.Find(p => p.TechnicalName == technicalName);
+            if (service == null)
+                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.TechnicalName));
+            if (service.IsRunning)
+                throw new Exception(string.Format("Could not start the {0} Service, as its already running.", service.TechnicalName));
+        }
+
         public void StopService(string technicalName)
         {
             var service = _services.Find(p => p.TechnicalName == technicalName);
             if (service == null)
                 throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.TechnicalName));
             if (!service.IsRunning)
-                throw new Exception(string.Format("Could not stop the {0} Service, as its currently bot running.", service.TechnicalName));
+                throw new Exception(string.Format("Could not stop the {0} Service, as its currently not running.", service.TechnicalName));
         }
 
         #endregion
@@ -152,6 +163,15 @@ namespace AwManaged.Core
 
 
         public event AwManaged.Core.EventHandling.ServiceStartedelegate OnServiceStarted;
+
+        #endregion
+
+        #region IServicesManager Members
+
+        public IList<IService> List()
+        {
+            return _services;
+        }
 
         #endregion
     }

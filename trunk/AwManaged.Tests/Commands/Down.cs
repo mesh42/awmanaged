@@ -9,24 +9,16 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-namespace AwManaged.EventHandling
+using AwManaged.Scene.ActionInterpreter.Attributes;
+
+namespace AwManaged.Tests.Commands
 {
     /// <summary>
-    /// Enumerates the different chat types that are available in the aw managed library.
+    /// Lists the directory.
     /// </summary>
-    public enum ChatType : byte
+    public class Down
     {
-        /// <summary>
-        /// A normal chat message from a certain avatar.
-        /// </summary>
-        Normal = 1,
-        /// <summary>
-        /// A chat message received from a public speaker.
-        /// </summary>
-        Broadcast = 3,
-        /// <summary>
-        /// A chat message sent only to you a certain avatar.
-        /// </summary>
-        Whisper = 2
+        [Attributes.CCItemBinding(CommandInterpretType.SingleArgument)]
+        public string ServiceName { get; set; }
     }
 }

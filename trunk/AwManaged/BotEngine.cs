@@ -30,7 +30,7 @@ using AwManaged.Math;
 using AwManaged.RemoteServices;
 using AwManaged.RemoteServices.Server;
 using AwManaged.Scene;
-using AwManaged.Scene.ActionInterpreter;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 using AWManaged.Security;
 using AwManaged.Security.RemoteBotEngine;
@@ -61,7 +61,7 @@ namespace AwManaged
         private Db4OStorageClient _authStorageClient;
         private Db4OStorageServer _storageServer;
         private Db4OStorageServer _authStorageServer;
-        private ActionInterpreterService _actionInterpreter;
+        private GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute> _actionInterpreter;
 
         private int BotHash = Guid.NewGuid().GetHashCode();
 
@@ -345,6 +345,7 @@ namespace AwManaged
                 {
                     o = AwConvert.CastModelObject(sender);
                     o.TransactionItemType = TransactionItemType.Add;
+                    _sceneNodes.Models.Add(o);
                     if (ObjectEventAdd != null)
                         ObjectEventAdd(this, new EventObjectAddArgs(o, GetAvatarByCitnum(o.Owner)));
                 }
@@ -385,6 +386,13 @@ namespace AwManaged
             }
         }
 
+        private TimeSpan _vrtTimeDifference;
+
+        public DateTime VrtTime()
+        {
+            return DateTime.Now.Add(_vrtTimeDifference);
+        }
+
         public void Start()
         {
             StartServices();
@@ -396,6 +404,10 @@ namespace AwManaged
                 aw.EventAvatarAdd += aw_EventAvatarAdd;
                 AwHelpers.AwHelpers.Login(aw, _universeConnection.Connection, false);
 
+
+                var time = AwConvert.ConvertFromUnixTimestamp(aw.GetInt(Attributes.UniverseTime)).AddHours(-2);
+                _vrtTimeDifference = (time - DateTime.Now);
+                
 
                 if (BotEventLoggedIn!=null)
                     BotEventLoggedIn(this, new EventBotLoggedInArgs(LoginConfiguration.Connection,0));
@@ -479,7 +491,7 @@ namespace AwManaged
 
         private void StartServices()
         {
-            _actionInterpreter = new ActionInterpreterService(){TechnicalName="ActionInterpreter"};
+            _actionInterpreter = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute))) { TechnicalName = "ActionInterpreter" };
             ServicesManager.AddService(_actionInterpreter);
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["UniverseConnection"]))
                 throw new Exception("No universe connection specified in your app.config.");
@@ -607,7 +619,7 @@ namespace AwManaged
                     var o = from p in _sceneNodes.Models where p.Id == sender.GetInt(Attributes.ObjectId) select p;
                     var avatar = from p in _sceneNodes.Avatars where p.Session == sender.GetInt(Attributes.AvatarSession) select p;
                     if (ObjectEventClick != null)
-                        ObjectEventClick.Invoke(this, new EventObjectClickArgs(o.ElementAt(0), avatar.ElementAt(0)));
+                        ObjectEventClick(this, new EventObjectClickArgs(o.ElementAt(0), avatar.ElementAt(0)));
                 }
                 catch (InstanceException ex)
                 {

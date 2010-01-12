@@ -11,19 +11,20 @@
  * **********************************************************************************/
 using System;
 using AwManaged.Core.Interfaces;
+using AwManaged.Scene.ActionInterpreter.Attributes;
 
-namespace AwManaged.Scene.ActionInterpreter.Attributes
+namespace AwManaged.Tests.Commands.Attributes
 {
     /// <summary>
     /// Contains information, on how to bind the command item in the action string to the Action object.
     /// </summary>
-    public sealed class ACItemBindingAttribute : Attribute, ICommandItemBindingAttribute
+    public sealed class CCItemBindingAttribute : Attribute, ICommandItemBindingAttribute
     {
         public CommandInterpretType Type { get; set; }
         public string LiteralName { get; set; }
         public char Delimiter { get; set; }
 
-        public ACItemBindingAttribute(string literalName, CommandInterpretType type)
+        public CCItemBindingAttribute(string literalName, CommandInterpretType type)
         {
             LiteralName = literalName;
             Type = type;
@@ -34,7 +35,7 @@ namespace AwManaged.Scene.ActionInterpreter.Attributes
         /// used for flag intepretation.
         /// </summary>
         /// <param name="type">The type.</param>
-        public ACItemBindingAttribute(CommandInterpretType type)
+        public CCItemBindingAttribute(CommandInterpretType type)
         {
             Type = type;
         }
@@ -48,7 +49,7 @@ namespace AwManaged.Scene.ActionInterpreter.Attributes
         /// <param name="literalName">Name of the literal.</param>
         /// <param name="delimiter">The delimiter.</param>
         /// <param name="type">The type.</param>
-        public ACItemBindingAttribute(string literalName, char delimiter, CommandInterpretType type)
+        public CCItemBindingAttribute(string literalName, char delimiter, CommandInterpretType type)
         {
             LiteralName = literalName;
             Delimiter = delimiter;

@@ -1,3 +1,17 @@
+Release 0.4.11 (unstable) feature/maintenance release
+* [Bug] Scene node models was not updated when a remote user adds a model to the world.
+* Adding a prompt to the bot engine console.
+* Adding a simple command interpreter to the bot engine console for manual commanding.
+* Generalizing the ActionInterpreter Service to the Core GenericInterpreter Service using Type parameters.
+* Adding ICommandExecute and ICommandExecutionResult for interpreted commands which can be executed.
+* Adding INeedBotInstance interface for custom interpreted commands, which need an instance of the bot engine to operate.
+* Adding "well known type" IEnumerable<IActionTrigger? for custom interpreted command which need to know about the commanding context.
+* Creating a bot plugin architecture whcih can be loaded through reflection
+* Adding a plugin project.
+* Changing som prebuild commands to post build, only when project output updates and putting the file paths between quotes
+* Putting the first GenericIntepreter commands in the Server Console for testing.
+* Adding a chat console to the server console.
+
 Release 0.3.10 (unstable) maintenance/feature release
 * Testing bot object add/remove commands.
 * Introducing pending transactions for preventing Universe server disconnects on massive object updates.

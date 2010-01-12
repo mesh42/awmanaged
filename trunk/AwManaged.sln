@@ -61,6 +61,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db4o", "db4o", "{EA4B30D5-5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.RemotingTests", "AwManaged.RemotingTests\AwManaged.RemotingTests.csproj", "{9430E045-833C-4BB3-B6D5-058042DECB48}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{5F3DB636-FF29-4F6E-A797-0B73F6B3CAA1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local", "Local", "{F709D410-7EDE-4E58-A664-8742D3B7BFB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBotPluginLibrary", "BotLocalPlugins\StandardBotPluginLibrary\StandardBotPluginLibrary.csproj", "{1716C209-1A84-4E75-8A61-963DECE97307}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +106,14 @@ Global
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|x86.ActiveCfg = Release|Any CPU
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|x86.ActiveCfg = Debug|x86
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|x86.Build.0 = Debug|x86
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Release|x86.ActiveCfg = Release|x86
+		{1716C209-1A84-4E75-8A61-963DECE97307}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +124,8 @@ Global
 		{02341E0F-3BB7-4C41-9CAE-2AF5329BC5E3} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{EA4B30D5-5B3C-40E5-B924-5CD464A18A02} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{F709D410-7EDE-4E58-A664-8742D3B7BFB1} = {5F3DB636-FF29-4F6E-A797-0B73F6B3CAA1}
+		{1716C209-1A84-4E75-8A61-963DECE97307} = {F709D410-7EDE-4E58-A664-8742D3B7BFB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = 
