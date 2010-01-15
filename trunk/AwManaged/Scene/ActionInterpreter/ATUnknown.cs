@@ -3,7 +3,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public sealed class ATUnknown : IActionTrigger
+    public sealed class ATUnknown : ICommandGroup
     {
         #region IActionTrigger Members
 

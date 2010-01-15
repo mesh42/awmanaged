@@ -1,3 +1,11 @@
+Release 0.4.12 (unstable feature/maintenance release
+* Adding Afk Bot Sample plugin
+* Adding Quote Bot Sample plugin
+* Adding Scheduling services to the core
+* Cleaning up code
+* Refactoring, abstracting interface implementations.
+* Adding Application Web Server services.
+
 Release 0.4.11 (unstable) feature/maintenance release
 * [Bug] Scene node models was not updated when a remote user adds a model to the world.
 * Adding a prompt to the bot engine console.

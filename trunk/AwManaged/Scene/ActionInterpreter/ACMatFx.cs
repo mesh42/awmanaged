@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Core.Commanding;
 using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
@@ -134,6 +135,16 @@ namespace AwManaged.Scene.ActionInterpreter
         public string LiteralAction
         {
             get { return "matfx"; }
+        }
+
+        #endregion
+
+        #region ICommandGroups Members
+
+        public System.Collections.Generic.IList<ICommandGroup> CommandGroups
+        {
+            get;
+            set;
         }
 
         #endregion

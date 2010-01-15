@@ -18,14 +18,18 @@ using System.Linq;
 using System.Reflection;
 using AwManaged.ConsoleServices;
 using AwManaged.Core;
+using AwManaged.Core.Commanding.Attributes;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.Reflection;
+using AwManaged.Core.ServicesManaging;
+using AwManaged.Core.ServicesManaging.Interfaces;
 using AwManaged.EventHandling;
 using AwManaged.EventHandling.BotEngine;
+using AwManaged.ExceptionHandling;
 using AwManaged.Math;
 using AwManaged.Scene;
 using AwManaged.Scene.ActionInterpreter.Interface;
-using AwManaged.Tests.Commands.Attributes;
+using AwManaged.Tests.Commands;
 using Db4objects.Db4o.Linq;
 
 namespace AwManaged.Tests
@@ -85,78 +89,100 @@ namespace AwManaged.Tests
 
         public void ProcessChatMessage(string message)
         {
-            if (message.StartsWith("/"))
+            try
             {
-                var cmd = new CommandLine(message);
-                if (cmd.Flags.Count == 0)
+
+
+                if (message.StartsWith("/"))
                 {
-                    ConsoleHelpers.WriteLine(ConsoleColor.Red, "Error: unknown flag.");
-                    ConsoleHelpers.ReadLine();
-                    return;
-                }
-                switch (cmd.Flags[0].Name.Value)
-                {
-                    case "h" : case "help" :
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "Supported chat mode commands:");
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "/w <name>  : enter whisper mode with the specified citizen name ");
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "/s         : enter send mode (public chat)");
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "/l         : List available citizen names.");
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "/x         : Exit chat mode.");
-                        break;
-                    case "l": case "list" :
-                        string text = string.Empty;
-                        for (int i = 0; i < 20;i++ )
-                            foreach (var av in SceneNodes.Avatars)
-                            {
-                                text += av.Name.PadRight(12);
-                            }
-                        ConsoleHelpers.WriteLine(ConsoleColor.Green,text);
-                        break;
-                    case "x": case "exit":
-                        _chatType = ChatType.Normal;
-                        base.ChatEvent -= ChatMode_ChatEvent;
-                        ConsoleHelpers.ParseCommandLine = ProcessCommandLine;
-                        ConsoleHelpers.GetPromptTarget = Prompt;
-                        ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "Exiting chat mode.");
-                        break;
-                    case "w": case "whisper":
-                        if (cmd.Arguments.Count != 1)
-                        {
-                            ConsoleHelpers.WriteLine(ConsoleColor.Red,"Error: The /w (whisper command needs 1 argument <citizen name>");
-                            ConsoleHelpers.ReadLine();
-                            return;
-                        }
-                        var avatar = SceneNodes.Avatars.Find(p => p.Name.ToLower() == cmd.Arguments[0].Value.Value.ToLower());
-                        if (avatar == null)
-                        {
-                            ConsoleHelpers.WriteLine(ConsoleColor.Red, string.Format("Error: No such avatar to whisper to <{0}>", cmd.Arguments[0].Value.Value));
-                            ConsoleHelpers.ReadLine();
-                            return;
-                        }
-                        _chatType = ChatType.Whisper;
-                        _whisperTo = avatar;
-                        break;
-                    case "s": case "send":
-                        _chatType = ChatType.Normal;
-                        break;
-                    default:
+                    var cmd = new CommandLine(message);
+                    if (cmd.Flags.Count == 0)
+                    {
                         ConsoleHelpers.WriteLine(ConsoleColor.Red, "Error: unknown flag.");
-                        break;
+                        ConsoleHelpers.ReadLine();
+                        return;
+                    }
+                    switch (cmd.Flags[0].Name.Value)
+                    {
+                        case "h":
+                        case "help":
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "Supported chat mode commands:");
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen,
+                                                     "/w <name>  : enter whisper mode with the specified citizen name ");
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen,
+                                                     "/s         : enter send mode (public chat)");
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen,
+                                                     "/l         : List available citizen names.");
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "/x         : Exit chat mode.");
+                            break;
+                        case "l":
+                        case "list":
+                            string text = string.Empty;
+                            for (int i = 0; i < 20; i++)
+                                foreach (var av in SceneNodes.Avatars)
+                                {
+                                    text += av.Name.PadRight(12);
+                                }
+                            ConsoleHelpers.WriteLine(ConsoleColor.Green, text);
+                            break;
+                        case "x":
+                        case "exit":
+                            _chatType = ChatType.Normal;
+                            base.ChatEvent -= ChatMode_ChatEvent;
+                            ConsoleHelpers.ParseCommandLine = ProcessCommandLine;
+                            ConsoleHelpers.GetPromptTarget = Prompt;
+                            ConsoleHelpers.WriteLine(ConsoleColor.DarkGreen, "Exiting chat mode.");
+                            break;
+                        case "w":
+                        case "whisper":
+                            if (cmd.Arguments.Count != 1)
+                            {
+                                ConsoleHelpers.WriteLine(ConsoleColor.Red,
+                                                         "Error: The /w (whisper command needs 1 argument <citizen name>");
+                                ConsoleHelpers.ReadLine();
+                                return;
+                            }
+                            var avatar =
+                                SceneNodes.Avatars.Find(p => p.Name.ToLower() == cmd.Arguments[0].Value.Value.ToLower());
+                            if (avatar == null)
+                            {
+                                ConsoleHelpers.WriteLine(ConsoleColor.Red,
+                                                         string.Format("Error: No such avatar to whisper to <{0}>",
+                                                                       cmd.Arguments[0].Value.Value));
+                                ConsoleHelpers.ReadLine();
+                                return;
+                            }
+                            _chatType = ChatType.Whisper;
+                            _whisperTo = avatar;
+                            break;
+                        case "s":
+                        case "send":
+                            _chatType = ChatType.Normal;
+                            break;
+                        default:
+                            ConsoleHelpers.WriteLine(ConsoleColor.Red, "Error: unknown flag.");
+                            break;
+                    }
                 }
-            }
-            else
-            {
-                switch (_chatType)
+                else
                 {
-                    case ChatType.Whisper:
-                        Whisper(_whisperTo,message);
-                        break;
-                    case ChatType.Normal:
-                        Say(message);
-                        break;
+                    switch (_chatType)
+                    {
+                        case ChatType.Whisper:
+                            Whisper(_whisperTo, message);
+                            break;
+                        case ChatType.Normal:
+                            Say(message);
+                            break;
+                    }
+
                 }
-                
             }
+            catch (AwException ex)
+            {
+                ConsoleHelpers.WriteLine(ConsoleColor.Red,ex.Message);
+            }
+
             ConsoleHelpers.ReadLine();
         }
 
@@ -172,11 +198,26 @@ namespace AwManaged.Tests
                     {
                         if (ReflectionHelpers.HasInterface(cmd, typeof(ICommandExecute)))
                         {
-                            if (ReflectionHelpers.HasInterface(cmd, typeof(INeedBotEngineInstance<BotEngine>)))
-                                ((INeedBotEngineInstance<BotEngine>)cmd).BotEngine = this;
-                            ICommandExecutionResult result = ((ICommandExecute)cmd).ExecuteCommand();
-                            ConsoleHelpers.WriteLine(result.DisplayMessage);
-                            isInterpreted = true;
+                            if (cmd.GetType() == typeof(Help))
+                            {
+                                // special attention to this. Help commands are interpeted through reflecting other commands
+                            }
+                            else
+                            {
+                                if (ReflectionHelpers.HasInterface(cmd, typeof (INeedBotEngineInstance<BotEngine>)))
+                                    ((INeedBotEngineInstance<BotEngine>) cmd).BotEngine = this;
+                                try
+                                {
+                                    ICommandExecutionResult result = ((ICommandExecute) cmd).ExecuteCommand();
+                                    ConsoleHelpers.WriteLine(result.DisplayMessage);
+                                }
+                                catch (Exception ex)
+                                {
+                                    ConsoleHelpers.WriteLine(ConsoleColor.Red,ex.Message);
+                                }
+
+                                isInterpreted = true;
+                            }
                         }
                     }
                 }
@@ -199,7 +240,7 @@ namespace AwManaged.Tests
                     ConsoleHelpers.WriteLine(ConsoleColor.Green,text);
                     break;
                 case "list plugins":
-                    foreach (var type in BotLocalPlugin.Discover(new DirectoryInfo(Directory.GetCurrentDirectory())))
+                    foreach (var type in LocalBotPluginServicesManager.PluginDiscovery)
                     {
                         ConsoleHelpers.WriteLine(ConsoleColor.Green,string.Format("{0} :{1}",type.PluginInfo.TechnicalName.PadRight(24), type.PluginInfo.Description));
                     }
@@ -259,17 +300,14 @@ namespace AwManaged.Tests
         /// </summary>
         public BotEngineExample()
         {
-            _commandInterpeter = new GenericInterpreterService<CCEnumTypeAttribute, CCEnumBindingAttribute, CCItemBindingAttribute>(Assembly.GetAssembly(typeof(CCEnumBindingAttribute)))
-                                     {TechnicalName = "Server Console interpeter"};
-            ServicesManager.AddService(_commandInterpeter);
-            ServicesManager.StartService(_commandInterpeter.TechnicalName);
-
+            //ServicesManager.StartService(_commandInterpeter.TechnicalName);
             ConsoleHelpers.ParseCommandLine = ProcessCommandLine;
             Console.Title = string.Format("Managed Bot Engine Server {0}\r\n", base.Version());
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.Clear();
 
-            ServicesManager.OnServiceStarted += new AwManaged.Core.EventHandling.ServiceStartedelegate(ServicesManager_OnServiceStarted);
+            ServicesManager.OnServiceStarted += ServicesManager_OnServiceStarted;
+            LocalBotPluginServicesManager.OnServiceStarted += LocalBotPluginServicesManager_OnServiceStarted;
             BotEventSlaveStarted += HandleBotEventSlaveStarted;
             BotEventLoggedIn += HandleBotEventLoggedIn;
             BotEventEntersWorld += HandleBotEventEntersWorld;
@@ -280,6 +318,16 @@ namespace AwManaged.Tests
             _sw1.Start();
             // ensure creation of remote client test account for the AwManaged.RemotingTests console application.
             Start();
+
+            _commandInterpeter = new GenericInterpreterService<CCEnumTypeAttribute, CCEnumBindingAttribute, CCItemBindingAttribute>
+                (Assembly.GetAssembly(GetType())) { TechnicalName = "Server Console interpeter" };
+            ServicesManager.AddService(_commandInterpeter);
+            ServicesManager.StartService(_commandInterpeter.TechnicalName);
+        }
+
+        void LocalBotPluginServicesManager_OnServiceStarted(IServicesManager sender, AwManaged.Core.EventHandling.ServiceStartedArgs e)
+        {
+            ConsoleHelpers.WriteLine(string.Format("Service {0} started. ({1}).", e.Service.TechnicalName, e.Service.DisplayName));
         }
 
         void HandleBotEventSlaveStarted(BotEngine sender, EventBotSlaveStartedArgs e)
@@ -289,7 +337,7 @@ namespace AwManaged.Tests
 
         void ServicesManager_OnServiceStarted(IServicesManager sender, AwManaged.Core.EventHandling.ServiceStartedArgs e)
         {
-            ConsoleHelpers.WriteLine(string.Format("Service {0} started. ({1}).",e.Service.TechnicalName,e.Service.DisplayName));
+            ConsoleHelpers.WriteLine(string.Format("Service {0} started. ({1}).", e.Service.TechnicalName, e.Service.DisplayName));
         }
 
         /// <summary>
@@ -299,25 +347,7 @@ namespace AwManaged.Tests
         /// <param name="e">The e.</param>
         void HandleObjectEventClick(BotEngine sender, EventObjectClickArgs e)
         {
-            using (var db = sender.Storage.Clone())
-            {
-                // store the number of clicks on this object in the storage provider.
-                ModelClickStatistics stat;
-                var query = from ModelClickStatistics p in db where p.ModelId == e.Model.Id select p;
-                if (query.Count() == 0)
-                    stat = new ModelClickStatistics() {Clicks = 0, ModelId = e.Model.Id};
-                else
-                    stat = query.Single();
-                lock (this)
-                {
-                    stat.Clicks++;
-                    db.Store(stat);
-                    db.Commit();
-
-                    ConsoleHelpers.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.",
-                                                    e.Model.ModelName, e.Model.Id, e.Avatar.Name, stat.Clicks));
-                }
-            }
+            // moved to plugin statsbot.
         }
         /// <summary>
         /// Handles the object event remove.

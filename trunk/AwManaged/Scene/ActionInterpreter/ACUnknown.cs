@@ -23,5 +23,15 @@ namespace AwManaged.Scene.ActionInterpreter
         }
 
         #endregion
+
+
+        #region ICommandGroups Members
+
+        public System.Collections.Generic.IList<ICommandGroup> CommandGroups
+        {
+            get; set;
+        }
+
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public sealed class ATExitZone : IActionTrigger
+    public sealed class ATExitZone : ICommandGroup
     {
         #region ITrigger Members
 

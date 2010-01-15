@@ -21,10 +21,14 @@ using AwManaged.Configuration.Interfaces;
 using AwManaged.Converters;
 using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Scheduling;
+using AwManaged.Core.ServicesManaging;
+using AwManaged.Core.ServicesManaging.Interfaces;
 using AwManaged.EventHandling;
 using AwManaged.EventHandling.BotEngine; /* Use event handlers for exact implementation of the botengine */
 using AwManaged.ExceptionHandling;
 using AwManaged.Interfaces;
+using AwManaged.LocalServices;
 using AwManaged.Logging;
 using AwManaged.Math;
 using AwManaged.RemoteServices;
@@ -37,7 +41,6 @@ using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
 using Camera=AwManaged.Scene.Camera;
 using Mover=AwManaged.Scene.Mover;
-using Particle=AwManaged.Scene.Particle;
 using Zone=AwManaged.Scene.Zone;
 
 namespace AwManaged
@@ -45,7 +48,7 @@ namespace AwManaged
     /// <summary>
     /// Exact abstract type implementation of an active worlds "master" bot.
     /// </summary>
-    public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection>
+    public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection, LocalBotPluginServicesManager>
     {
         #region Fields
         private const int _maxFlushItems = 255;
@@ -61,11 +64,16 @@ namespace AwManaged
         private Db4OStorageClient _authStorageClient;
         private Db4OStorageServer _storageServer;
         private Db4OStorageServer _authStorageServer;
+
         private GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute> _actionInterpreter;
 
         private int BotHash = Guid.NewGuid().GetHashCode();
 
         public Db4OStorageClient Storage { get { return _storageClient; }}
+
+        public SchedulingService SchedulingService;
+        private WebServerService _webServerService;
+
 
         private int Nodes = 0;
         private int CurrentNode;
@@ -484,13 +492,18 @@ namespace AwManaged
         //    _universeConnection = loginConfiguration;
         //}
 
-        public IEnumerable<IActionTrigger> Interpret(string action)
+        public IEnumerable<ICommandGroup> Interpret(string action)
         {
             return _actionInterpreter.Interpret(action);
         }
 
         private void StartServices()
         {
+            SchedulingService = new SchedulingService();
+            ServicesManager.Start();
+            LocalBotPluginServicesManager.Start();
+            ServicesManager.AddService(SchedulingService);
+
             _actionInterpreter = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute))) { TechnicalName = "ActionInterpreter" };
             ServicesManager.AddService(_actionInterpreter);
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["UniverseConnection"]))
@@ -500,7 +513,6 @@ namespace AwManaged
 
             _universeConnection = new LoginConfiguration(ConfigurationManager.AppSettings["UniverseConnection"]);
 
-            
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageServerConnection"]))
             {
                 _storageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["StorageServerConnection"]){TechnicalName = "StorageServerConnection"};
@@ -522,6 +534,13 @@ namespace AwManaged
                 _authStorageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["AuthStorageClientConnection"]){TechnicalName = "AuthStorageClientConnection"};
                 ServicesManager.AddService(_authStorageClient);
             }
+
+            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["WebServerConnection"]))
+            {
+                _webServerService = new WebServerService(ConfigurationManager.AppSettings["WebServerConnection"]);
+                ServicesManager.AddService(_webServerService);
+            }
+
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["RemotingServerConnection"]))
             {
                 if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageClientConnection"]))
@@ -531,7 +550,7 @@ namespace AwManaged
                 ServicesManager.AddService(_remotingServer);
             }
 
-            ServicesManager.Start();
+            ServicesManager.StartServices();
         }
 
         /// <summary>
@@ -541,13 +560,9 @@ namespace AwManaged
         public BotEngine()
         {
             ServicesManager = new ServicesManager();
-            //AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            LocalBotPluginServicesManager = new LocalBotPluginServicesManager(this);
         }
 
-        //Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        //{
-        //    //throw new NotImplementedException();
-        //}
 
         private RemotingServer<RemotingBotEngine> _remotingServer;
 
@@ -1197,5 +1212,15 @@ namespace AwManaged
 
         #endregion
 
+
+        #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Particle,ParticleFlags,Db4OConnection> Members
+
+
+        public LocalBotPluginServicesManager LocalBotPluginServicesManager
+        {
+            get; internal set;
+        }
+
+        #endregion
     }
 }

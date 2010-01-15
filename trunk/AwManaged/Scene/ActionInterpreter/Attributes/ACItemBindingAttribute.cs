@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System;
+using AwManaged.Core.Commanding;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Scene.ActionInterpreter.Attributes

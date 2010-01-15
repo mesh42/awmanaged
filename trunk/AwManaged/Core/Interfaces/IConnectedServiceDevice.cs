@@ -9,6 +9,8 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using AwManaged.Core.Services.Interfaces;
+
 namespace AwManaged.Core.Interfaces
 {
     /// <summary>

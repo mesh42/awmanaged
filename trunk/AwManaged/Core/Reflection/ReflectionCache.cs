@@ -21,14 +21,14 @@ namespace AwManaged.Core.Reflection
         where TEnumBindingAttribute : Attribute, IACLiteralNames
     {
         private readonly Assembly _assembly;
-        public List<IActionTrigger> TriggerInterpreters;
+        public List<ICommandGroup> TriggerInterpreters;
         public List<IActionCommand> CommandInterpreters;
         public ReflectionEnumCache EnumCache;
        
         public ReflectionCache(Assembly assembly)
         {
             _assembly = assembly;
-            TriggerInterpreters = ReflectionHelpers.GetInstancesOfInterface<IActionTrigger>(assembly);
+            TriggerInterpreters = ReflectionHelpers.GetInstancesOfInterface<ICommandGroup>(assembly);
             CommandInterpreters = ReflectionHelpers.GetInstancesOfInterface<IActionCommand>(assembly);
             EnumCache = ReflectionHelpers.GetEnums<TEnumTypeAttribute, TEnumBindingAttribute>(assembly);
         }

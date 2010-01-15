@@ -11,8 +11,8 @@
  * **********************************************************************************/
 using System;
 using AwManaged.Configuration.Interfaces;
-using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Services;
 using AwManaged.Math;
 using AWManaged.Security;
 

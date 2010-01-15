@@ -10,7 +10,7 @@
  *
  * **********************************************************************************/
 using System.Reflection;
-using AwManaged.Core;
+using AwManaged.Core.ServicesManaging;
 using AwManaged.Scene.ActionInterpreter.Attributes;
 using NUnit.Framework;
 

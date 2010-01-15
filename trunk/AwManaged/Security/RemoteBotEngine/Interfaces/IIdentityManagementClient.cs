@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Services.Interfaces;
 using AwManaged.Storage.Interfaces;
 
 namespace AwManaged.Security.RemoteBotEngine.Interfaces

@@ -1,44 +1,80 @@
-﻿using AwManaged;
+﻿/* **********************************************************************************
+ *
+ * Copyright (c) TCPX. All rights reserved.
+ *
+ * This source code is subject to terms and conditions of the Microsoft Public
+ * License (Ms-PL). A copy of the license can be found in the license.txt file
+ * included in this distribution.
+ *
+ * You must not remove this notice, or any other, from this software.
+ *
+ * **********************************************************************************/
+using AwManaged;
 using AwManaged.Core.Reflection.Attributes;
-using AwManaged.Math;
+using AwManaged.EventHandling.BotEngine;
 using AwManaged.Scene;
 
 namespace StandardBotPluginLibrary.GreeterBot
 {
-    [PluginInfo("gbot","This is a simple greeterbot.")]
+    /// <summary>
+    /// Simple greeter bot. To demonstrate The Local Plugin Provider
+    /// Part of the Standard Bot Plugin Library.
+    /// </summary>
+    [PluginInfo("gbot","This is a simple greeterbot.")] /* plugin information for the plugin provider */
     public class GreeterBotPlugin :  BotLocalPlugin
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GreeterBotPlugin"/> class.
+        /// </summary>
+        /// <param name="bot">The bot.</param>
         public GreeterBotPlugin(BotEngine bot) : base(bot)
         {
-            bot.AvatarEventAdd += bot_AvatarEventAdd;
-            bot.AvatarEventRemove += bot_AvatarEventRemove;
+            // The bot needs to attach to two events for operation.
+            bot.AvatarEventAdd += AvatarEventAdd;
+            bot.AvatarEventRemove += AvatarEventRemove;
         }
 
-        void bot_AvatarEventRemove(BotEngine sender, AwManaged.EventHandling.BotEngine.EventAvatarRemoveArgs e)
+        /// <summary>
+        /// Fired when an avatar leaves the world
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void AvatarEventRemove(BotEngine sender, EventAvatarRemoveArgs e)
         {
-            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist, e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
+            // Wait 5 seconds, before the leave message is sent. The message will not be send if the avatar reenters the world within that time.
+            // This is to prevent message flooding.
+            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist,
+                e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
         }
 
-        void bot_AvatarEventAdd(BotEngine sender, AwManaged.EventHandling.BotEngine.EventAvatarAddArgs e)
+        /// <summary>
+        /// Fired when an avatar enters the world.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        static void AvatarEventAdd(BotEngine sender, EventAvatarAddArgs e)
         {
-            // don't perform actions when the bot has been logged in shorter than 10 seconds (prevent greeting flood).
-            //if (sender.ElapsedMilliseconds > 10000)
-            //{
-            // transport the avatar to a certain location.
-            var teleport = new Vector3(500, 500, 500);
-            //sender.Teleport(e.Avatar, 500, 500, 500, 45);
-            // send a message that the user has entered the world and has been teleported to a certain location (with a time delay).
-            var message = string.Format("Teleported {0} to location {1},{2},{3}",
-                                        new[]
-                                                {
-                                                    e.Avatar.Name, teleport.x.ToString(), teleport.y.ToString(),
-                                                    teleport.z.ToString()
-                                                });
-            sender.Say(5000, SessionArgumentType.AvatarSessionMustExist, e.Avatar,
-                       string.Format("{0} enters.", e.Avatar.Name));
-            sender.Say(6000, SessionArgumentType.AvatarSessionMustExist, e.Avatar, message);
-            //}
+            // Wait 5 seconds, before the greeting message is sent. The message will not be send if the avatar doesn't exist anymore at that time.
+            // This is to prevent message flooding.
+            sender.Say(5000, SessionArgumentType.AvatarSessionMustExist,
+                e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
+        }
 
+        public override void PluginInitialized()
+        {
+            base.PluginInitialized();
+        }
+
+        /// <summary>
+        /// Called by the plugin services manager.
+        /// Releases unmanaged and - optionally - managed resources.
+        /// You should clean up your references to Bot here.
+        /// </summary>
+        public override void Dispose()
+        {
+            Bot.AvatarEventAdd -= AvatarEventAdd;
+            Bot.AvatarEventRemove -= AvatarEventRemove;
+            base.Dispose();
         }
     }
 }

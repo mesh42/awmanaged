@@ -10,8 +10,8 @@
  *
  * **********************************************************************************/
 using System;
-using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Services;
 using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
 

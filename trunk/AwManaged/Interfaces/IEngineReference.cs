@@ -11,11 +11,13 @@
  * **********************************************************************************/
 using System;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.ServicesManaging.Interfaces;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Interfaces
 {
-    public interface IEngineReference<TAvatar,TModel,TCamera,TMover,TZone,THudBase,TParticle,TParticleFlags, TConnectionInterface>
+    public interface IEngineReference<TAvatar, TModel, TCamera, TMover, TZone, THudBase, TParticle, TParticleFlags,
+                                      TConnectionInterface, TLocalBotServicesManager>
         where TModel : MarshalByRefObject, IModel<TModel>
         where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
         where TCamera : MarshalByRefObject, ICamera<TCamera>
@@ -25,7 +27,8 @@ namespace AwManaged.Interfaces
         where TParticle : MarshalByRefObject, IParticle<TParticle, TParticleFlags>
         where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
         where TConnectionInterface : IConnection<TConnectionInterface>
+        where TLocalBotServicesManager : IServicesManager
     {
-        IBotEngine<TAvatar,TModel,TCamera,TZone,TMover,THudBase,TParticle,TParticleFlags, TConnectionInterface> Engine { get; }
+        IBotEngine<TAvatar,TModel,TCamera,TZone,TMover,THudBase,TParticle,TParticleFlags, TConnectionInterface,TLocalBotServicesManager> Engine { get; }
     }
 }

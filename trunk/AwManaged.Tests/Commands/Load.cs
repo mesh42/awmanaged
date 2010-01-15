@@ -14,7 +14,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Tests.Commands
 {
-    public sealed class Load : IActionTrigger
+    public sealed class Load : ICommandGroup
     {
         #region ITrigger Members
 
@@ -31,9 +31,7 @@ namespace AwManaged.Tests.Commands
         {
             get;set;}
 
-        public List<IActionCommand> Commands
-        {
-            get;set;}
+        public List<IActionCommand> Commands{get;set;}
 
         #endregion
 

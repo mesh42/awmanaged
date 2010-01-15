@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,8 +68,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -106,7 +104,22 @@
     <Compile Include="ConsoleServices\CommandNameValuePair.cs" />
     <Compile Include="ConsoleServices\ConsoleHelpers.cs" />
     <Compile Include="ConsoleServices\Interfaces\ICommandPart.cs" />
-    <Compile Include="Core\CommandExecutionResult.cs" />
+    <Compile Include="Core\Commanding\Attributes\CCEnumBindingAttribute.cs" />
+    <Compile Include="Core\Commanding\Attributes\CCEnumTypeAttribute.cs" />
+    <Compile Include="Core\Commanding\Attributes\CCGroupBindingAttribute.cs" />
+    <Compile Include="Core\Commanding\Attributes\CCHelpDescriptionAttribute.cs" />
+    <Compile Include="Core\Commanding\Attributes\CCItemBindingAttribute.cs" />
+    <Compile Include="Core\Scheduling\Interfaces\ISchedulingApi.cs" />
+    <Compile Include="Core\Scheduling\Interfaces\ISchedulingIntervals.cs" />
+    <Compile Include="Core\Scheduling\Interfaces\ISchedulingItem.cs" />
+    <Compile Include="Core\Scheduling\Interfaces\ISchedulingService.cs" />
+    <Compile Include="Core\Scheduling\SchedulingIntervals.cs" />
+    <Compile Include="Core\Scheduling\Enumerations\SchedulingItemStateType.cs" />
+    <Compile Include="Core\ServicesManaging\BaseServicesManager.cs" />
+    <Compile Include="Core\Commanding\CommandExecutionResult.cs" />
+    <Compile Include="Core\Services\BaseConnectedServiceDevice.cs" />
+    <Compile Include="Core\Services\BaseConnection.cs" />
+    <Compile Include="Core\Services\DummyService.cs" />
     <Compile Include="Core\EventHandling\ServiceStartedArgs.cs" />
     <Compile Include="Core\Interfaces\ICommandExecute.cs" />
     <Compile Include="Core\Interfaces\ICommandExecutionResult.cs" />
@@ -115,7 +128,7 @@
     <Compile Include="Core\Interfaces\IHaveToCleanUpMyShit.cs" />
     <Compile Include="Core\Interfaces\INeedBotEngineInstance.cs" />
     <Compile Include="Core\Interfaces\IObjectLifetime.cs" />
-    <Compile Include="Core\Interfaces\IServicesManager.cs" />
+    <Compile Include="Core\ServicesManaging\Interfaces\IServicesManager.cs" />
     <Compile Include="Core\Interfaces\ITransactionItem.cs" />
     <Compile Include="Core\Interfaces\ITransaction.cs" />
     <Compile Include="Core\Interfaces\TransactionItemType.cs" />
@@ -125,9 +138,16 @@
     <Compile Include="Core\Reflection\ReflectionEnumCacheItem.cs" />
     <Compile Include="Core\Reflection\ReflectionEnumCacheItemField.cs" />
     <Compile Include="Core\Reflection\ReflectionHelpers.cs" />
-    <Compile Include="Core\ServicesManager.cs" />
-    <Compile Include="Core\SimpleTransaction.cs" />
-    <Compile Include="Core\TransactionListT.cs">
+    <Compile Include="Core\Scheduling\Enumerations\ReschedulingType.cs" />
+    <Compile Include="Core\Scheduling\SchedulingApi.cs" />
+    <Compile Include="Core\Scheduling\SchedulingItem.cs" />
+    <Compile Include="Core\Scheduling\SchedulingItemContext.cs" />
+    <Compile Include="Core\Scheduling\SchedulingService.cs" />
+    <Compile Include="Core\Scheduling\SchedulingTimeHelpers.cs" />
+    <Compile Include="Core\ServicesManaging\ServicesManager.cs" />
+    <Compile Include="Core\Services\BaseService.cs" />
+    <Compile Include="Core\Patterns\SimpleTransaction.cs" />
+    <Compile Include="Core\Patterns\TransactionListT.cs">
     </Compile>
     <Compile Include="EventHandling\BotEngine\EventBotSlaveStartedArgs.cs" />
     <Compile Include="EventHandling\BotEngine\EventTransactionCompletedArgs.cs" />
@@ -168,10 +188,14 @@
     <Compile Include="Core\Interfaces\IConnectedServiceDevice.cs" />
     <Compile Include="ExceptionHandling\ActionException.cs" />
     <Compile Include="ExceptionHandling\NetworkException.cs" />
+    <Compile Include="LocalServices\LocalBotPluginServicesManager.cs" />
+    <Compile Include="LocalServices\WebServerConnection.cs" />
+    <Compile Include="LocalServices\WebServerService.cs" />
     <Compile Include="RemoteServices\RemotingBotClient.cs" />
     <Compile Include="RemoteServices\RemotingBotEngine.cs" />
     <Compile Include="RemoteServices\Client\RemotingClient.cs" />
     <Compile Include="RemoteServices\Client\RemotingClientConnection.cs" />
+    <Compile Include="RemoteServices\RemotingBotServerConnection.cs" />
     <Compile Include="RemoteServices\RemotingConnectionProperties.cs" />
     <Compile Include="RemoteServices\RemotingProtocol.cs" />
     <Compile Include="RemoteServices\Server\RemotingServerConnection.cs" />
@@ -207,7 +231,7 @@
     <Compile Include="Scene\ActionInterpreter\ACTag.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleport.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTexture.cs" />
-    <Compile Include="Core\GenericInterpreterService.cs" />
+    <Compile Include="Core\ServicesManaging\GenericInterpreterService.cs" />
     <Compile Include="Scene\ActionInterpreter\ACUnknown.cs" />
     <Compile Include="Scene\ActionInterpreter\ACUrl.cs" />
     <Compile Include="Scene\ActionInterpreter\ACWarp.cs" />
@@ -223,7 +247,7 @@
     <Compile Include="Scene\ActionInterpreter\Attributes\ACEnumBindingAttribute.cs" />
     <Compile Include="Scene\ActionInterpreter\Attributes\ACEnumTypeAttribute.cs" />
     <Compile Include="Scene\ActionInterpreter\Attributes\ACItemBindingAttribute.cs" />
-    <Compile Include="Core\CommandInterpretType.cs" />
+    <Compile Include="Core\Commanding\CommandInterpretType.cs" />
     <Compile Include="Scene\ActionInterpreter\ATUnknown.cs" />
     <Compile Include="Scene\ActionInterpreter\CursorType.cs" />
     <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
@@ -236,7 +260,7 @@
     <Compile Include="Scene\ActionInterpreter\Interface\IActionInterpreter.cs" />
     <Compile Include="Scene\ActionInterpreter\ACTeleportX.cs" />
     <Compile Include="Scene\ActionInterpreter\Interface\ILiteralAction.cs" />
-    <Compile Include="Scene\ActionInterpreter\Interface\IActionTrigger.cs" />
+    <Compile Include="Scene\ActionInterpreter\Interface\ICommandGroup.cs" />
     <Compile Include="Scene\ActionInterpreter\LightFxType.cs" />
     <Compile Include="Scene\ActionInterpreter\LightType.cs" />
     <Compile Include="Scene\ActionInterpreter\MatFxType.cs" />
@@ -268,17 +292,17 @@
     <Compile Include="Configuration\Interfaces\IConfiguration.cs" />
     <Compile Include="Configuration\LoginConfiguration.cs" />
     <Compile Include="Configuration\UniverseConnectionProperties.cs" />
-    <Compile Include="Core\BaseCacheList.cs" />
-    <Compile Include="Core\CallbackStructT.cs" />
-    <Compile Include="Core\Differential.cs">
+    <Compile Include="Core\Patterns\BaseCacheList.cs" />
+    <Compile Include="Core\Patterns\CallbackStructT.cs" />
+    <Compile Include="Core\Patterns\Differential.cs">
     </Compile>
-    <Compile Include="Core\DependendObject.cs">
+    <Compile Include="Core\Patterns\DependendObject.cs">
     </Compile>
     <Compile Include="Core\Interfaces\ICallbackStructT.cs" />
     <Compile Include="Core\Interfaces\IChanged.cs" />
     <Compile Include="Core\Interfaces\ICloneableListT.cs" />
-    <Compile Include="Core\Interfaces\IService.cs" />
-    <Compile Include="Core\ProtectedList.cs" />
+    <Compile Include="Core\Services\Interfaces\IService.cs" />
+    <Compile Include="Core\Patterns\ProtectedList.cs" />
     <Compile Include="EventHandling\Templated\EventObjectChange.cs" />
     <Compile Include="EventHandling\Templated\EventObjectRemoveArgs.cs" />
     <Compile Include="EventHandling\Interfaces\IEventObjectChangeArgs.cs" />
@@ -356,7 +380,7 @@
     <Compile Include="ExceptionHandling\ReasonCodeReturnType.cs" />
     <Compile Include="Converters\AwConvert.cs" />
     <Compile Include="Scene\World.cs" />
-    <Compile Include="Core\ConnectionStringHelper.cs" />
+    <Compile Include="Core\Services\ConnectionStringHelper.cs" />
     <Compile Include="Storage\Db4OConnection.cs" />
     <Compile Include="Storage\Interfaces\IDb4OConnection.cs" />
     <Compile Include="Storage\Db4OStorageClient.cs">
@@ -383,7 +407,12 @@
     <None Include="Security\RemoteBotEngine\dAuthorization.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Reflection\" />
+    <ProjectReference Include="..\Dependencies\cassinidev\CassiniDev.csproj">
+      <Project>{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}</Project>
+      <Name>CassiniDev %28Dependencies\cassinidev\CassiniDev%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Scene\WorldRegistry\" />
     <Folder Include="Storage\BackupProvider\Interfaces\" />
   </ItemGroup>

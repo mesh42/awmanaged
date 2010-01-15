@@ -13,8 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using AwManaged.ConsoleServices;
 using AwManaged.Core.Reflection;
 using AwManaged.Core.Reflection.Attributes;
+using AwManaged.Core.Services.Interfaces;
 
 namespace AwManaged
 {
@@ -24,8 +26,10 @@ namespace AwManaged
         public Type Type;
     }
 
-    public class BotLocalPlugin
+    public abstract class BotLocalPlugin : IDisposable, IService
     {
+        #region static Reflection Helpers
+
         private static PluginContext GetPluginContext(Type type)
         {
             //var asm = Assembly.GetAssembly(type);
@@ -54,11 +58,74 @@ namespace AwManaged
             return ret;
         }
 
+        #endregion
+
         public BotEngine Bot { get; internal set; }
 
-        public BotLocalPlugin(BotEngine engineReference)
+        private readonly PluginContext _pluginContext;
+
+        protected BotLocalPlugin(BotEngine engineReference)
         {
             Bot = engineReference;
+            _pluginContext = GetPluginContext(GetType());
         }
+
+        public virtual void PluginInitialized()
+        {
+            ConsoleHelpers.WriteLine(string.Format("{0}: Plugin Intialized.", _pluginContext.PluginInfo.TechnicalName));
+        }
+
+        #region IDisposable Members
+
+        public virtual void Dispose()
+        {
+            ConsoleHelpers.WriteLine(string.Format("{0}: Plugin Terminated.", _pluginContext.PluginInfo.TechnicalName));
+        }
+
+        #endregion
+
+        #region IService Members
+
+        public bool Stop()
+        {
+            if (!IsRunning)
+                throw new Exception("can't stop, the plugin is currently not running.");
+            IsRunning = false;
+            return true;
+        }
+
+        public bool Start()
+        {
+            if (IsRunning)
+                throw new Exception("can't start, the plugin is currently not running.");
+            IsRunning = true;
+            return true;
+        }
+
+        public bool IsRunning
+        {
+            get; private set;
+        }
+
+        #endregion
+
+        #region IIdentifiable Members
+
+        public string DisplayName
+        {
+            get { return _pluginContext.PluginInfo.Description; }
+        }
+
+        public Guid Id
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public string TechnicalName
+        {
+            get { return _pluginContext.PluginInfo.TechnicalName; }
+        }
+
+        #endregion
     }
 }
