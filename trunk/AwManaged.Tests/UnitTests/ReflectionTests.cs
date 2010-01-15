@@ -12,6 +12,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using AwManaged.Core.Scheduling;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests
@@ -32,6 +33,16 @@ namespace AwManaged.Tests.UnitTests
             foreach (var e in t.GetEvents())
             {
             }
+        }
+
+        private class ScheduledClass
+        {
+        }
+
+        public void CanceleSchedulingTest()
+        {
+            SchedulingService svc = new SchedulingService();
+
         }
 
         [Test]

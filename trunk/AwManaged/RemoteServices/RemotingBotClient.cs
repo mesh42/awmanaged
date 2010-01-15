@@ -19,6 +19,7 @@ namespace AwManaged.RemoteServices
     [Serializable]
     public abstract class RemotingBotClient
     {
+
         public BotEngine Remote;
 
         public RemotingBotClient(string server, int port)

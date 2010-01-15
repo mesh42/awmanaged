@@ -14,7 +14,7 @@ using AwManaged.Storage.Interfaces;
 
 namespace AwManaged.Storage
 {
-    public class Db4OConnection : IConnection<Db4OConnection>
+    public sealed class Db4OConnection : IConnection<Db4OConnection>
     {
         #region IDb4OConnection Members
 

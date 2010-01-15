@@ -11,15 +11,16 @@
  * **********************************************************************************/
 using System;
 using System.Diagnostics;
-using AwManaged.Core;
+using AwManaged.Core.Commanding;
+using AwManaged.Core.Commanding.Attributes;
 using AwManaged.Core.Interfaces;
-using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 using AwManaged.Storage.BackupProvider;
-using AwManaged.Tests.Commands.Attributes;
 
 namespace AwManaged.Tests.Commands
 {
+    [CCGroupBinding(new[] {typeof(Backup)})]
+    [CCHelpDescription("Backup the contents of a world.")]
     public sealed class BackupWorld : IActionCommand, ICommandExecute, INeedBotEngineInstance<BotEngine>
     {
         public BackupRecord Record { get; set; }
@@ -82,6 +83,16 @@ namespace AwManaged.Tests.Commands
         public BotEngine BotEngine
         {
             get; set;
+        }
+
+        #endregion
+
+        #region ICommandGroups Members
+
+        public System.Collections.Generic.IList<ICommandGroup> CommandGroups
+        {
+            get;
+            set;
         }
 
         #endregion

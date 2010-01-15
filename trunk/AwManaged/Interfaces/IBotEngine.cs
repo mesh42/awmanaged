@@ -13,8 +13,10 @@ using System;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.ServicesManaging.Interfaces;
 using AwManaged.EventHandling.BotEngine.Interfaces;
 using AwManaged.ExceptionHandling;
+using AwManaged.LocalServices;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Interfaces
@@ -24,7 +26,7 @@ namespace AwManaged.Interfaces
     /// The interface is build up as such, that a bot implementation can use different types of implementations 
     /// in order to support a factory pattern.
     /// </summary>
-    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags,TConnectionInterface> : 
+    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags,TConnectionInterface, TLocalBotServicesManager> : 
         IBotEngineEvents,
         IHandleExceptionManaged,
         ISceneNodeCommands<TModel,TAvatar,THudBase>,
@@ -39,8 +41,11 @@ namespace AwManaged.Interfaces
         where TParticle : MarshalByRefObject, IParticle<TParticle,TParticleFlags>
         where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
         where TConnectionInterface : IConnection<TConnectionInterface>
+        where TLocalBotServicesManager : IServicesManager
     {
         IServicesManager ServicesManager { get; }
+        TLocalBotServicesManager LocalBotPluginServicesManager { get; }
+
         /// <summary>
         /// Gets the scene nodes.
         /// </summary>

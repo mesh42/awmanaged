@@ -9,8 +9,9 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Diagnostics;
 using System.Linq;
-using AwManaged.Core;
+using AwManaged.Core.ServicesManaging;
 using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
 using Db4objects.Db4o.Linq;
@@ -22,11 +23,35 @@ namespace AwManaged.Tests.UnitTests
     public class AuthorizationTests
     {
         [Test]
+        public void TestPerformance()
+        {
+            var server = new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=performancetest.dat") { TechnicalName = "server" };
+            var client = new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") { TechnicalName = "client" };
+            var svc = new ServicesManager();
+            svc.Start();
+            svc.AddService(server);
+            svc.AddService(client);
+            svc.StartServices();
+            var sw = new Stopwatch();
+            sw.Start();
+            for (int i = 0; i < 1000;i++ )
+            {
+                User user = new User("User"+i,"Password","Test@Test.com");
+                client.Db.Store(user);
+            }
+            client.Db.Commit();
+            sw.Stop();
+            svc.Stop();
+        }
+
+
+        [Test]
         public void TestAuthorization()
         {
-            var server =new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=authorization.dat"){TechnicalName = "client"};
-            var client =new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") {TechnicalName = "service"};
+            var server =new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=authorization.dat"){TechnicalName = "server"};
+            var client =new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") {TechnicalName = "client"};
             var svc = new ServicesManager();
+            svc.Start();
             svc.AddService(server);
             svc.AddService(client);
             svc.Start();

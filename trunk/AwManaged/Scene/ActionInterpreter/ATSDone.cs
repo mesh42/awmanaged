@@ -14,7 +14,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public sealed class ATSDone : IActionTrigger
+    public sealed class ATSDone : ICommandGroup
     {
         #region ITrigger Members
 

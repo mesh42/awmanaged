@@ -10,19 +10,14 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using AwManaged.Core;
+using AwManaged.Core.Commanding;
+using AwManaged.Core.Commanding.Attributes;
 using AwManaged.Core.Interfaces;
-using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
-using AwManaged.Tests.Commands.Attributes;
 
 namespace AwManaged.Tests.Commands
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    [CCGroupBinding(new []{typeof(Load),typeof(Unload)})]
     public class LoadPlugin : IActionCommand, IActionCommandName, ICommandExecute, INeedBotEngineInstance<BotEngine>
     {
         private string _name;
@@ -37,7 +32,7 @@ namespace AwManaged.Tests.Commands
             _name = name;
         }
 
-        public List<IActionTrigger> Interpreted
+        public List<ICommandGroup> Interpreted
         {
             get; set;
         }
@@ -69,21 +64,17 @@ namespace AwManaged.Tests.Commands
         {
             if (Interpreted[0].GetType() == typeof(Load))
             {
-                var pluginContexts = BotLocalPlugin.Discover(new DirectoryInfo(Directory.GetCurrentDirectory()));
-                var q = from PluginContext p in pluginContexts where p.PluginInfo.TechnicalName == Name select p;
-                if (q.Count() == 0)
-                {
-                    return new CommandExecutionResult() {DisplayMessage = string.Format("Plugin '{0}' not found.", Name)};
-                }
-                var context = q.Single();
-                var constructor = context.Type.GetConstructor(new[] {typeof (BotEngine)});
-                var plugin = constructor.Invoke(new object[]{BotEngine}); // todo: should load this into the botengine's service manager.
-                return new CommandExecutionResult() {DisplayMessage = string.Format("Plugin '{0}' loaded.", Name)};
+                BotEngine.LocalBotPluginServicesManager.AddService(Name);
+                BotEngine.LocalBotPluginServicesManager.StartService(Name);
+                return new CommandExecutionResult() { DisplayMessage = string.Format("Plugin '{0}' loaded.", Name) };
             }
             if (Interpreted[0].GetType() == typeof(Unload))
             {
+                BotEngine.LocalBotPluginServicesManager.StopService(Name);
+                BotEngine.LocalBotPluginServicesManager.RemoveService(Name);
                 return new CommandExecutionResult() {DisplayMessage = string.Format("Plugin '{0}' unloaded.", Name)};
             }
+
             return new CommandExecutionResult()
                        {
                            DisplayMessage = string.Format("Command '{0}' is not part of command group '{1}'.", LiteralAction, Interpreted[0].LiteralAction)
@@ -95,6 +86,15 @@ namespace AwManaged.Tests.Commands
         #region INeedBotEngineInstance<BotEngine> Members
 
         public BotEngine BotEngine
+        {
+            get; set;
+        }
+
+        #endregion
+
+        #region ICommandGroups Members
+
+        public System.Collections.Generic.IList<ICommandGroup> CommandGroups
         {
             get; set;
         }

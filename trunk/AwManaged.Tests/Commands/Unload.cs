@@ -3,7 +3,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Tests.Commands
 {
-    public sealed class Unload : IActionTrigger
+    public sealed class Unload : ICommandGroup
     {
         #region ITrigger Members
 

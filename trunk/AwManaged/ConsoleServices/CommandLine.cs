@@ -14,6 +14,9 @@ using System.Text.RegularExpressions;
 
 namespace AwManaged.ConsoleServices
 {
+    /// <summary>
+    ///  A quick and dirty general command line parser. Because I am lazy :)
+    /// </summary>
     public sealed class CommandLine
     {
         public string Command { get; internal set; }
@@ -57,55 +60,50 @@ namespace AwManaged.ConsoleServices
 
             return false;
         }
-
+        /// <summary>
+        /// Disects the literal command line.
+        /// </summary>
         private void Disect()
         {
-            var mcmd = Regex.Match(Literal, "[//,a-z,0-9]{1,}");
+            var mcmd = Regex.Match(Literal, "[!,//,a-z,0-9]{1,}");
             var mquote = Regex.Matches(Literal, "\"(?<value>[a-z,0-9,\\s]{0,})\"");
             var arg = Regex.Matches(Literal, " (?<value>[a-z,0-9,\\s]{0,})");
             var valuepairs = Regex.Matches(Literal, "(?<name>[a-z,0-9]{1,})[\\s]{0,}=[\\s]{0,}(?<value>[a-z,0-9]{1,})");
             var quotedvaluepairs = Regex.Matches(Literal, "(?<name>[a-z,0-9]{1,})[\\s]{0,}=[\\s]{0,}\"(?<value>[a-z,0-9,\\s]{1,})\"");
             var flags = Regex.Matches(Literal, "/(?<name>[a-z,0-9]{1,})");
 
+            Command = mcmd.Value;
+
+            // give preference to value pairs.
             for (int i = 0; i < valuepairs.Count; i++)
             {
                 Pairs.Add(new CommandNameValuePair() { Name = new CommandIndexedItem(valuepairs[i].Groups["name"]), Value = new CommandIndexedItem(valuepairs[i].Groups["value"]) });
             }
+            // then to quoted value pairs.
             for (int i = 0; i < quotedvaluepairs.Count; i++)
             {
                 Pairs.Add(new CommandNameValuePair() { Name = new CommandIndexedItem(quotedvaluepairs[i].Groups["name"]), Value = new CommandIndexedItem(quotedvaluepairs[i].Groups["value"]) });
             }
 
+            // then to flags.
             for (int i =0; i<flags.Count; i++)
             {
                 Flags.Add(new CommandFlag(){Name=new CommandIndexedItem(flags[i].Groups["name"])});
             }
 
+            // then to quoted arguments.
             for (int i = 0; i < mquote.Count; i++)
             {
                 if (!IsInterpreted(mquote[i].Groups["value"].Index))
                     Arguments.Add(new CommandArgument() { Value = new CommandIndexedItem(mquote[i].Groups["value"]) });
-
-                //var m = Pairs.Find(p => p.Value.Index == mquote[i].Groups["value"].Index);
-                //if (m == null)
-                //    Arguments.Add(new CommandArgument() { Value = new CommandIndexedItem(mquote[i].Groups["value"]) });
-
             }
 
+            // and then to unquoted arguments.
             for (int i = 0; i < arg.Count; i++)
             {
                 if (!IsInterpreted(arg[i].Groups["value"].Index))
                     Arguments.Add(new CommandArgument() { Value = new CommandIndexedItem(arg[i].Groups["value"]) });
 
-                //var m = Pairs.Find(p => p.Value.Index == arg[i].Groups["value"].Index);
-                //if (m == null)
-                //{
-                //    var n = Flags.Find(p => p.Name.Index == arg[i].Groups["value"].Index);
-                //    if (n == null)
-                //    {
-                //        Arguments.Add(new CommandArgument() { Value = new CommandIndexedItem(arg[i].Groups["value"]) });
-                //    }
-                //}
             }
         }
     }

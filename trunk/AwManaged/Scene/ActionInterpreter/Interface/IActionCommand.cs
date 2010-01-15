@@ -9,9 +9,16 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Collections.Generic;
+
 namespace AwManaged.Scene.ActionInterpreter.Interface
 {
-    public interface IActionCommand : ILiteralAction
+    public interface IActionCommand : ILiteralAction, ICommandGroups
     {
+    }
+
+    public interface ICommandGroups
+    {
+        IList<ICommandGroup> CommandGroups { get; }
     }
 }

@@ -10,11 +10,13 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using AwManaged.Core.Commanding.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Tests.Commands
 {
-    public sealed class Backup : IActionTrigger
+    [CCHelpDescription("Backup command group, providing access to several backup providers.")]
+    public sealed class Backup : ICommandGroup
     {
         #region ITrigger Members
 

@@ -17,8 +17,8 @@ using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Serialization.Formatters;
-using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Services;
 
 namespace AwManaged.RemoteServices.Client
 {

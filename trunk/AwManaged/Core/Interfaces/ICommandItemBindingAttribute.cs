@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using AwManaged.Scene.ActionInterpreter.Attributes;
+using AwManaged.Core.Commanding;
 
 namespace AwManaged.Core.Interfaces
 {

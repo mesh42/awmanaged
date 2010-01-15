@@ -10,10 +10,10 @@
  *
  * **********************************************************************************/
 using System.Reflection;
-using AwManaged.Core;
+using AwManaged.Core.Commanding.Attributes;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.Reflection;
-using AwManaged.Tests.Commands.Attributes;
+using AwManaged.Core.ServicesManaging;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests

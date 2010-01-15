@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,12 +93,11 @@
     <Compile Include="..\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
-    <Compile Include="Commands\Attributes\CCEnumBindingAttribute.cs" />
-    <Compile Include="Commands\Attributes\CCEnumTypeAttribute.cs" />
-    <Compile Include="Commands\Attributes\CCItemBindingAttribute.cs" />
     <Compile Include="Commands\Backup.cs" />
     <Compile Include="Commands\BackupWorld.cs" />
     <Compile Include="Commands\Down.cs" />
+    <Compile Include="Commands\Help.cs">
+    </Compile>
     <Compile Include="Commands\Load.cs" />
     <Compile Include="Commands\LoadPlugin.cs" />
     <Compile Include="Commands\Unload.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="BotEngineExample.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ModelClickStatistics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\ActionInterpreterTests.cs">
@@ -120,6 +118,7 @@
     <Compile Include="UnitTests\ObjectTests.cs" />
     <Compile Include="UnitTests\PromptInterpreterTests.cs" />
     <Compile Include="UnitTests\ReflectionTests.cs" />
+    <Compile Include="UnitTests\WebServerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AwManaged\AwManaged.csproj">

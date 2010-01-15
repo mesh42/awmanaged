@@ -11,6 +11,7 @@
  * **********************************************************************************/
 using System;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.ServicesManaging.Interfaces;
 
 namespace AwManaged.Core.EventHandling
 {

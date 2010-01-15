@@ -14,7 +14,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 
 namespace AwManaged.Scene.ActionInterpreter
 {
-    public sealed class ATBump : IActionTrigger
+    public sealed class ATBump : ICommandGroup
     {
 
         #region ITrigger Members

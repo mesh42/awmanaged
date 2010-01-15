@@ -9,16 +9,18 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using AwManaged.Scene.ActionInterpreter.Attributes;
+using AwManaged.Core.Commanding;
+using AwManaged.Core.Commanding.Attributes;
 
 namespace AwManaged.Tests.Commands
 {
     /// <summary>
-    /// Lists the directory.
+    /// Brings the server down and exits immediately.
     /// </summary>
+    [CCHelpDescription("Brings the server down and exits immediately.")]
     public class Down
     {
-        [Attributes.CCItemBinding(CommandInterpretType.SingleArgument)]
+        [CCItemBinding(CommandInterpretType.SingleArgument)]
         public string ServiceName { get; set; }
     }
 }

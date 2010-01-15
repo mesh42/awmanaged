@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System.Collections.Generic;
+using AwManaged.Core.Commanding;
 using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
 
@@ -53,6 +54,16 @@ namespace AwManaged.Scene.ActionInterpreter
         }
 
         public string LiteralPart { get; set; }
+
+        #endregion
+
+        #region ICommandGroups Members
+
+        public System.Collections.Generic.IList<ICommandGroup> CommandGroups
+        {
+            get;
+            set;
+        }
 
         #endregion
     }
