@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 using AW;
 using AwManaged.Core.Interfaces;
@@ -21,61 +22,58 @@ namespace AwManaged.Scene
 {
     public sealed class Model : MarshalByRefObject, IModel<Model>
     {
-        [Indexed]
-        private int _id;
-        [Indexed]
-        private int _owner;
-        [Indexed]
-        private DateTime _timestamp;
-        [Indexed]
-        private ObjectType _type;
-        [Indexed]
-        private string _modelName;
-        [Indexed]
-        private Vector3 _position;
-        [Indexed]
-        private Vector3 _rotation;
-        [Indexed]
-        private string _description;
-        [Indexed]
-        private string _action;
-        [Indexed]
-        private int _number;
-        //[Indexed]
-        //private string _data;
+        [Indexed] private int _id;
+        [Indexed] private int _owner;
+        [Indexed] private DateTime _timestamp;
+        [Indexed] private ObjectType _type;
+        [Indexed] private string _modelName;
+        [Indexed] private Vector3 _position;
+        [Indexed] private Vector3 _rotation;
+        [Indexed] private string _description;
+        [Indexed] private string _action;
+        [Indexed] private int _number;
 
-        //private int _id;
-        //private int _owner;
-        //private DateTime _timestamp;
-        //private ObjectType _type;
-        //private string _modelName;
-        //private Vector3 _position;
-        //private Vector3 _rotation;
-        //private string _description;
-        //private string _action;
-        //private int _number;
-        //private string _data;
+        [Browsable(true)]
+        [Category("Identification")]
+        [Description("A vector containing the x and z coordinates of the cell this object is currently in.")]
+        [ReadOnly(true)]
+        public int Id { get { return _id; } internal set { _id = value; } }
+        [Browsable(true)]
+        [Category("Identification")]
+        [Description("The citizen number of the owner of this object")]
+        [ReadOnly(true)]
+        public int Owner { get { return _owner; } set { _owner = value; } }
+        [Browsable(true)]
+        [Category("Other")]
+        [Description("A vector containing the x and z coordinates of the cell this object is currently in.")]
+        [ReadOnly(true)]
+        public DateTime Timestamp { get { return _timestamp; } internal set { _timestamp = value; } }
+        [Browsable(true)]
+        [Category("Behavior")]
+        [Description("The type of the object")]
+        [ReadOnly(true)]
+        public ObjectType Type { get { return _type; } internal set { _type = value; } }
+        [Browsable(true)]
+        [Category("Behavior")]
+        [Description("The RWX model name of the object")]
+        public string ModelName { get { return _modelName; } set { _modelName = value; } }
+        [Browsable(true)]
+        [Category("Positioning")]
+        [Description("The position vector of the object.")]
+        public Vector3 Position { get { return _position; } set { _position = value; } }
+        [Browsable(true)]
+        [Category("Positioning")]
+        [Description("The rotation vector of the object.")]
+        public Vector3 Rotation { get { return _rotation; } set { _rotation = value; } }
+        [Browsable(true)]
+        [Category("Identification")]
+        [Description("The description of the object.")]
+        public string Description { get { return _description; } set { _description = value; } }
+        [Browsable(true)]
+        [Category("Behavior")]
+        [Description("The action string of the object")]
+        public string Action { get { return _action; } set { _action = value; } }
 
-        [XmlAttribute]
-        public int Id { get { return _id; } internal set{ _id = value;} }
-        [XmlAttribute]
-        public int Owner { get { return _owner; } set { _owner = value;} }
-        [XmlAttribute]
-        public DateTime Timestamp { get { return _timestamp;} internal set { _timestamp = value;} }
-        [XmlAttribute]
-        public ObjectType Type { get { return _type;} internal set { _type = value;} }
-        [XmlAttribute]
-        public string ModelName { get { return _modelName; } set { _modelName = value;} }
-        public Vector3 Position { get { return _position; } set { _position = value;} }
-        public Vector3 Rotation { get { return _rotation; } set { _rotation = value;} }
-        [XmlAttribute]
-        public string Description { get { return _description; } set { _description = value;} }
-        [XmlAttribute]
-        public string Action { get{ return _action;} set { _action = value;} }
-        //[XmlAttribute]
-        //public int Number { get { return _number;} internal set { _number = Number;} }
-        //[XmlAttribute]
-        //public string Data { get { return _data;} set { _data = value;}  }
         /// <summary>
         /// Indicates if the object is being changed.
         /// </summary>
@@ -119,12 +117,14 @@ namespace AwManaged.Scene
 
         public event AwManaged.Core.Interfaces.ChangedEventDelegate<Model> OnChanged;
 
-        public bool IsChanged{get; internal set;}
+        [Browsable(false)]
+        public bool IsChanged { get; internal set; }
 
         #endregion
 
         #region ITransactionItem Members
 
+        [Browsable(false)]
         public int Hash
         {
             get; set;
@@ -134,7 +134,7 @@ namespace AwManaged.Scene
 
         #region ITransactionItem Members
 
-
+        [Browsable(false)]
         public bool IsComitted
         {
             get; set;
@@ -145,6 +145,7 @@ namespace AwManaged.Scene
         #region ITransactionItem Members
 
 
+        [Browsable(false)]
         public TransactionItemType TransactionItemType
         {
             get; internal set;
@@ -155,6 +156,7 @@ namespace AwManaged.Scene
         #region ITransactionItem Members
 
 
+        [Browsable(false)]
         public int TransactionId
         {
             get; set;
@@ -164,12 +166,44 @@ namespace AwManaged.Scene
 
         #region ITransactionItem Members
 
-
+        [Browsable(false)]
         public bool IsRuntimeTransaction
         {
             get;set;
         }
 
         #endregion
+
+
+        #region IIdentifiable Members
+
+        [Browsable(false)]
+        public string IdentifyableDisplayName
+        {
+            get { return _id.ToString(); }
+        }
+
+        [Browsable(false)]
+        public Guid IdentifyableId
+        {
+            get; set;
+        }
+
+        [Browsable(false)]
+        public string IdentifyableTechnicalName
+        {
+            get; set;
+        }
+
+        #endregion
+
+        [Browsable(true)]
+        [Category("Positioning")]
+        [Description("A vector containing the x and z coordinates of the cell this object is currently in.")]
+        public Vector3 Cell
+        {
+            get { return new Vector3((int) Position.x/1000, 0, (int) Position.z/1000); }
+        }
+
     }
 }

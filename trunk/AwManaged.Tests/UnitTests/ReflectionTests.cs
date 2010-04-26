@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using AwManaged.Core.Scheduling;
@@ -33,6 +34,35 @@ namespace AwManaged.Tests.UnitTests
             foreach (var e in t.GetEvents())
             {
             }
+        }
+
+        [Test]
+        public void ConvertConsoleColorTest()
+        {
+            KnownColor form = KnownColor.DarkRed;
+
+            ConsoleColor consoleColor = ConsoleColor.DarkRed;
+
+            var l = (int) consoleColor;
+            var m = (int) form;
+            
+
+            //foreach (FieldInfo fi in typeof(ConsoleColor).GetFields(BindingFlags.Public | BindingFlags.Static))
+            //{
+                foreach (FieldInfo fc in typeof(KnownColor).GetFields(BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (fc.Name == consoleColor.ToString())
+                    {
+                       foreach (FieldInfo fi in typeof(ConsoleColor).GetFields(BindingFlags.Public | BindingFlags.Static))
+                       {
+                            //if (fi.n)           
+                       }
+                       form = (KnownColor) consoleColor;
+
+                    }
+                }
+            //}
+
         }
 
         private class ScheduledClass

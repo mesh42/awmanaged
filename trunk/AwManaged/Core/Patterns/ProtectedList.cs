@@ -11,7 +11,7 @@
  * **********************************************************************************/
 using AwManaged.Core.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     /// <summary>
     /// Provides a list with minimal functionality exposed to prevent abuse of the AWManaged cache's.

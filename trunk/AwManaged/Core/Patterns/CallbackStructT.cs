@@ -11,7 +11,7 @@
  * **********************************************************************************/
 using AwManaged.Core.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     public sealed class CallbackStructT<T> : ICallbackStructT<T> where T : ICloneableT<T>
     {

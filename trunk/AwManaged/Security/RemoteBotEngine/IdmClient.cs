@@ -49,17 +49,17 @@ namespace AwManaged.Security.RemoteBotEngine
 
         #endregion
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get { throw new NotImplementedException(); }
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get { throw new NotImplementedException(); }
         }

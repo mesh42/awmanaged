@@ -11,6 +11,7 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -18,9 +19,10 @@ using System.Threading;
 using AW;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
+using AwManaged.ConsoleServices;
 using AwManaged.Converters;
-using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Patterns;
 using AwManaged.Core.Scheduling;
 using AwManaged.Core.ServicesManaging;
 using AwManaged.Core.ServicesManaging.Interfaces;
@@ -29,6 +31,7 @@ using AwManaged.EventHandling.BotEngine; /* Use event handlers for exact impleme
 using AwManaged.ExceptionHandling;
 using AwManaged.Interfaces;
 using AwManaged.LocalServices;
+using AwManaged.LocalServices.WebServer;
 using AwManaged.Logging;
 using AwManaged.Math;
 using AwManaged.RemoteServices;
@@ -50,36 +53,35 @@ namespace AwManaged
     /// </summary>
     public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection, LocalBotPluginServicesManager>
     {
+
+
+        public ConsoleHelpers Console = new ConsoleHelpers();
+
         #region Fields
         private const int _maxFlushItems = 255;
         private LoginConfiguration _universeConnection;
         private Instance aw { get; set; }
         private Timer _timer;
-        //private ProtectedList<Model> _model = new ProtectedList<Model>();
         private Model _modelRemoved;
         private SceneNodes _sceneNodes = new SceneNodes();
         private SceneNodes _sceneNodesNew = new SceneNodes();
-
         private Db4OStorageClient _storageClient;
         private Db4OStorageClient _authStorageClient;
         private Db4OStorageServer _storageServer;
         private Db4OStorageServer _authStorageServer;
-
         private GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute> _actionInterpreter;
-
         private int BotHash = Guid.NewGuid().GetHashCode();
-
-        public Db4OStorageClient Storage { get { return _storageClient; }}
-
-        public SchedulingService SchedulingService;
         private WebServerService _webServerService;
-
-
         private int Nodes = 0;
         private int CurrentNode;
         private List<BotNode<UniverseConnectionProperties, Model>> BotNodes = new List<BotNode<UniverseConnectionProperties, Model>>();
 
         #endregion
+
+        [Browsable(false)]
+        public Db4OStorageClient Storage { get { return _storageClient; } }
+        [Browsable(false)]
+        public SchedulingService SchedulingService;
 
         #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>> Members
 
@@ -87,6 +89,7 @@ namespace AwManaged
         /// Gets a cloned version of the scene nodes. Avoid using this as it is both time and memory consuming.
         /// </summary>
         /// <value>The scene nodes.</value>
+        [Browsable(false)]
         public AwManaged.Scene.Interfaces.ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar, Scene.Particle, Scene.ParticleFlags> SceneNodes
         {
             get { lock (this){return _sceneNodes.Clone();}}
@@ -329,8 +332,6 @@ namespace AwManaged
             }
         }
 
-
-
         void aw_EventObjectAdd(Instance sender)
         {
             lock (this)
@@ -353,7 +354,7 @@ namespace AwManaged
                 {
                     o = AwConvert.CastModelObject(sender);
                     o.TransactionItemType = TransactionItemType.Add;
-                    _sceneNodes.Models.Add(o);
+                    _sceneNodes.Models.InternalAdd(o);
                     if (ObjectEventAdd != null)
                         ObjectEventAdd(this, new EventObjectAddArgs(o, GetAvatarByCitnum(o.Owner)));
                 }
@@ -494,7 +495,15 @@ namespace AwManaged
 
         public IEnumerable<ICommandGroup> Interpret(string action)
         {
-            return _actionInterpreter.Interpret(action);
+            try
+            {
+                return _actionInterpreter.Interpret(action);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ConsoleMessageType.Error, ex.Message);
+                return null;
+            }
         }
 
         private void StartServices()
@@ -504,7 +513,7 @@ namespace AwManaged
             LocalBotPluginServicesManager.Start();
             ServicesManager.AddService(SchedulingService);
 
-            _actionInterpreter = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute))) { TechnicalName = "ActionInterpreter" };
+            _actionInterpreter = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute))) { IdentifyableTechnicalName = "ActionInterpreter" };
             ServicesManager.AddService(_actionInterpreter);
             if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["UniverseConnection"]))
                 throw new Exception("No universe connection specified in your app.config.");
@@ -515,29 +524,29 @@ namespace AwManaged
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["StorageServerConnection"]))
             {
-                _storageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["StorageServerConnection"]){TechnicalName = "StorageServerConnection"};
+                _storageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["StorageServerConnection"]){IdentifyableTechnicalName = "StorageServerConnection"};
                 ServicesManager.AddService(_storageServer);
             }
 
-            _storageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["StorageClientConnection"]) { TechnicalName = "StorageClientConnection" };
+            _storageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["StorageClientConnection"]) { IdentifyableTechnicalName = "StorageClientConnection" };
             ServicesManager.AddService(_storageClient);
 
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageServerConnection"]))
             {
-                _authStorageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["AuthStorageServerConnection"]){TechnicalName = "AuthStorageServerConnection"};
+                _authStorageServer = new Db4OStorageServer(ConfigurationManager.AppSettings["AuthStorageServerConnection"]){IdentifyableTechnicalName = "AuthStorageServerConnection"};
                 ServicesManager.AddService(_authStorageServer);
             }
 
             if (!String.IsNullOrEmpty("AuthStorageClientConnection"))
             {
-                _authStorageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["AuthStorageClientConnection"]){TechnicalName = "AuthStorageClientConnection"};
+                _authStorageClient = new Db4OStorageClient(ConfigurationManager.AppSettings["AuthStorageClientConnection"]){IdentifyableTechnicalName = "AuthStorageClientConnection"};
                 ServicesManager.AddService(_authStorageClient);
             }
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["WebServerConnection"]))
             {
-                _webServerService = new WebServerService(ConfigurationManager.AppSettings["WebServerConnection"]);
+                _webServerService = new WebServerService(ConfigurationManager.AppSettings["WebServerConnection"]){IdentifyableTechnicalName="w3svc"};
                 ServicesManager.AddService(_webServerService);
             }
 
@@ -545,8 +554,8 @@ namespace AwManaged
             {
                 if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["AuthStorageClientConnection"]))
                     throw new Exception("To successfully run a remoting server connection, there must be an authentication storage client connection available.");
-                var _idm = new IdmClient<Db4OConnection>(_authStorageClient);
-                _remotingServer = new RemotingServer<RemotingBotEngine>(ConfigurationManager.AppSettings["RemotingServerConnection"],_idm) { TechnicalName = "RemotingServerConnection" };
+                var idm = new IdmClient<Db4OConnection>(_authStorageClient);
+                _remotingServer = new RemotingServer<RemotingBotEngine>(ConfigurationManager.AppSettings["RemotingServerConnection"],idm) { IdentifyableTechnicalName = "RemotingServerConnection" };
                 ServicesManager.AddService(_remotingServer);
             }
 
@@ -583,7 +592,6 @@ namespace AwManaged
                 _sequence[sector_z + 1, sector_x + 1] = sender.GetInt(Attributes.CellSequence);
             }
         }
-
         void aw_EventAvatarAdd(Instance sender)
         {
             lock (this)
@@ -607,15 +615,12 @@ namespace AwManaged
 //                _objectLock.IsLocked = false;
             }
         }
-
         private bool IsLocalChange(int callbackHash)
         {
             if (callbackHash == BotHash || _transaction.ContainsHash(callbackHash))
                 return true;
             return false;
         }
-
-
         private Avatar GetAvatarByCitnum(int citnum)
         {
             var avatar= _sceneNodes.Avatars.Find(p => p.Citizen == citnum);
@@ -750,7 +755,6 @@ namespace AwManaged
                 }
             }
         }
-
         private void aw_addParticleObject(Instance sender)
         {
             lock(this)
@@ -767,8 +771,6 @@ namespace AwManaged
                 }
             }
         }
-
-
         void aw_EventAvatarChange(Instance sender)
         {
             lock (this)
@@ -985,9 +987,12 @@ namespace AwManaged
 
         #region IBaseBotEngine Members
 
-
+        [Browsable(true)]
+        [Category("Behavior")]
+        [Description("When set to true, the bot will echo messages send into the chat room. It requires the world attribute echo chat setting to be turned of.")]
         public bool IsEchoChat { get; set;}
 
+        [Browsable(false)]
         public LoginConfiguration LoginConfiguration
         {
             get { return _universeConnection; }
@@ -997,6 +1002,7 @@ namespace AwManaged
 
         #region IConfigurable Members
 
+        [Browsable(false)]
         public IConfiguration Configuration
         {
             get
@@ -1008,13 +1014,14 @@ namespace AwManaged
                 _universeConnection = (LoginConfiguration)value;
             }
         }
-
+        [Browsable(false)]
         public IList<IConfigurable> Children { get; set; }
 
         #endregion
 
         #region ICanLog Members
 
+        [Browsable(false)]
         public ILogger logger { get; set; }
 
         public void WriteLine(string text)
@@ -1045,11 +1052,6 @@ namespace AwManaged
 
         #region IAvatarCommands<Avatar> Members
 
-        /// <summary>
-        /// Gets the avatar.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        /// <returns></returns>
         public Avatar GetAvatar(int session)
         {
             var avatar = from p in _sceneNodes.Avatars where (p.Session == session) select p;
@@ -1057,7 +1059,6 @@ namespace AwManaged
                 return avatar.ElementAt(0);
             return null;
         }
-
         public void Teleport(Avatar avatar, Vector3 position, float yaw)
         {
             try
@@ -1074,7 +1075,6 @@ namespace AwManaged
                 HandleExceptionManaged(ex);
             }
         }
-
         public string GetCizitenNameByNumber(int citizen)
         {
             if (citizen == 0)
@@ -1103,9 +1103,6 @@ namespace AwManaged
             Utility.Wait(3000);
             return name;
         }
-
-
-
         public void Teleport(Avatar avatar, float x, float y, float z, float yaw)
         {
             Teleport(avatar, new Vector3(x, y, z), yaw);
@@ -1115,6 +1112,8 @@ namespace AwManaged
 
         #region IBaseBotEngine Members
 
+        [Browsable(true)]
+        [Category("Behavior")]
         public bool IsEnterGlobal { get; private set; }
 
         #endregion
@@ -1203,22 +1202,42 @@ namespace AwManaged
 
  #endregion
 
-        #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Particle,ParticleFlags,Db4OConnection> Members
-
+        [Browsable(false)]
         public IServicesManager ServicesManager
         {
             get; internal set;
         }
 
-        #endregion
-
-
-        #region IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Particle,ParticleFlags,Db4OConnection> Members
-
-
+        [Browsable(false)]
         public LocalBotPluginServicesManager LocalBotPluginServicesManager
         {
             get; internal set;
+        }
+
+        #region IIdentifiable Members
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Category("Identification")]
+        public string IdentifyableDisplayName
+        {
+            get; set;
+        }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Category("Identification")]
+        public Guid IdentifyableId
+        {
+            get; set;
+        }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Category("Identification")]
+        public string IdentifyableTechnicalName
+        {
+            get; set;
         }
 
         #endregion

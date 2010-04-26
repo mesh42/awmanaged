@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Security;
 using AwManaged.Core.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     /// <summary>
     /// Cachelist reimplements List<typeparamref name="T"/> and internalizes several methods and properties
@@ -35,7 +35,7 @@ namespace AwManaged.Core
                 {
                     return ((ICloneableT<T>) base[index]).Clone();
                 }
-                    return default(T);
+                return default(T);
             }
             set
             {

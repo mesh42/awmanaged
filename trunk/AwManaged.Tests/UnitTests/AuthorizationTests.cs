@@ -25,8 +25,8 @@ namespace AwManaged.Tests.UnitTests
         [Test]
         public void TestPerformance()
         {
-            var server = new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=performancetest.dat") { TechnicalName = "server" };
-            var client = new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") { TechnicalName = "client" };
+            var server = new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=performancetest.dat") { IdentifyableTechnicalName = "server" };
+            var client = new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") { IdentifyableTechnicalName = "client" };
             var svc = new ServicesManager();
             svc.Start();
             svc.AddService(server);
@@ -48,8 +48,8 @@ namespace AwManaged.Tests.UnitTests
         [Test]
         public void TestAuthorization()
         {
-            var server =new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=authorization.dat"){TechnicalName = "server"};
-            var client =new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") {TechnicalName = "client"};
+            var server =new Db4OStorageServer("provider=db4o;user=awmanaged;password=awmanaged;port=4572;file=authorization.dat"){IdentifyableTechnicalName = "server"};
+            var client =new Db4OStorageClient("provider=db4o;user=awmanaged;password=awmanaged;port=4572;server=localhost") {IdentifyableTechnicalName = "client"};
             var svc = new ServicesManager();
             svc.Start();
             svc.AddService(server);

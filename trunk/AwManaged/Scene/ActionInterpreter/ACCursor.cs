@@ -20,13 +20,13 @@ namespace AwManaged.Scene.ActionInterpreter
     /// </summary>
     public sealed class ACCursor : IActionCommand
     {
-        private CursorType _flag;
+        private AwBooleanType _flag;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionCommandCursor"/> class.
         /// </summary>
         /// <param name="flag">The flag.</param>
-        public ACCursor(CursorType flag)
+        public ACCursor(AwBooleanType flag)
         {
             _flag = flag;
         }
@@ -38,7 +38,7 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The flag.</value>
         [ACItemBinding(CommandInterpretType.Flag)]
-        public CursorType Flag
+        public AwBooleanType Flag
         {
             get { return _flag; }
             set { _flag = value; }

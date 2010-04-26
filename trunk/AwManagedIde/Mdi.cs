@@ -1,6 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using AW;
+using AwManaged;
+using AwManaged.Configuration;
+using AwManaged.Core.Interfaces;
+using AwManaged.Core.Patterns.Tree;
+using AwManaged.Math;
+using AwManaged.Scene;
 using AwManagedIde.ToolWindows;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -18,6 +26,8 @@ namespace AwManagedIde
 
         #endregion
 
+        public Tree Tree = new Tree();
+
         public Mdi()
         {
             InitializeComponent();
@@ -30,6 +40,71 @@ namespace AwManagedIde
             m_projectToolWindow.Dock = DockStyle.Right;
             string configFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "DockPanel.config");
             m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
+            m_projectToolWindow.PropertiesWindow = m_propertiesToolWindow;
+            var engine = new BotEngine() {IdentifyableDisplayName = "Masterbot", IdentifyableId = Guid.NewGuid()};
+            var connection = new UniverseConnectionProperties() { LoginName = "awmanaged", World = "zebrakey", IdentifyableId = Guid.NewGuid() };
+            connection.IdentifyableDisplayName = connection.LoginName + "@" + connection.World;
+            m_projectToolWindow.AddRoot(engine);
+            m_projectToolWindow.AddChild(engine,connection);
+
+            var pluginFolder = new FolderNode("Plugins");
+
+            m_projectToolWindow.AddChild(connection, pluginFolder);
+            m_projectToolWindow.AddChild(connection, new FolderNode("Scene"));
+
+            //List<Vector3> cells = new List<Vector3>();
+            var cellFolders = new List<CellFolder>();
+            for (int i=0;i<5000;i++)
+            {
+                var m = new Model(i, i, DateTime.Now, ObjectType.V3, "rwx01", new Vector3(i*10, i*10, i*10), new Vector3(i*10, i*10, i*10),
+                                  "description for " + i, "action for " + i) {IdentifyableId = Guid.NewGuid()};
+
+                var cellFolder = cellFolders.Find(p => p.Cell.x == m.Cell.x && p.Cell.z == m.Cell.z);
+                // check if the cell folder exists: m.Cell 
+                if (cellFolder ==null)
+                {
+                    var newCellFolder = new CellFolder(m.Cell);
+                    cellFolders.Add(newCellFolder);
+                    m_projectToolWindow.AddChild(pluginFolder,newCellFolder.FolderNode);
+                    m_projectToolWindow.AddChild(newCellFolder.FolderNode,m);
+                }
+                else
+                {
+                    m_projectToolWindow.AddChild(cellFolder.FolderNode, m);
+                }
+            }
+        }
+
+        private class CellFolder : IIdentifiable
+        {
+            public Vector3 Cell;
+            public FolderNode FolderNode;
+
+            public CellFolder(Vector3 cell)
+            {
+                Cell = cell;
+                FolderNode = new FolderNode(string.Format("cell {0},{1}", Cell.x, Cell.z));
+                //IdentifyableId = Guid.NewGuid();
+            }
+
+            #region IIdentifiable Members
+
+            public string IdentifyableDisplayName
+            {
+                get { return "Cell Folder"; }
+            }
+
+            public Guid IdentifyableId
+            { 
+                get; set;
+            }
+
+            public string IdentifyableTechnicalName
+            {
+                get { return "CellFolder"; }
+            }
+
+            #endregion
         }
 
         private void toolStripContainer1_TopToolStripPanel_Click(object sender, EventArgs e)
@@ -43,27 +118,6 @@ namespace AwManagedIde
                 return m_propertiesToolWindow;
 
             return null;
-
-            //else
-            //{
-            //    // DummyDoc overrides GetPersistString to add extra information into persistString.
-            //    // Any DockContent may override this value to add any needed information for deserialization.
-
-            //    //string[] parsedStrings = persistString.Split(new char[] { ',' });
-            //    //if (parsedStrings.Length != 3)
-            //    //    return null;
-
-            //    //if (parsedStrings[0] != typeof(DummyDoc).ToString())
-            //    //    return null;
-
-            //    //DummyDoc dummyDoc = new DummyDoc();
-            //    //if (parsedStrings[1] != string.Empty)
-            //    //    dummyDoc.FileName = parsedStrings[1];
-            //    //if (parsedStrings[2] != string.Empty)
-            //    //    dummyDoc.Text = parsedStrings[2];
-
-            //    //return dummyDoc;
-            //}
         }
 
         private void toolStripContainer1_ContentPanel_Load(object sender, EventArgs e)
@@ -88,6 +142,11 @@ namespace AwManagedIde
                 dockPanel.SaveAsXml(configFile);
             else if (File.Exists(configFile))
                 File.Delete(configFile);
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

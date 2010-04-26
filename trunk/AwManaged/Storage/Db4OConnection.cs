@@ -10,7 +10,6 @@
  *
  * **********************************************************************************/
 using AwManaged.Core.Interfaces;
-using AwManaged.Storage.Interfaces;
 
 namespace AwManaged.Storage
 {

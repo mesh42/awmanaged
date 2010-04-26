@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.ComponentModel;
 using AwManaged.Core.Commanding;
 using AwManaged.Scene.ActionInterpreter.Attributes;
 using AwManaged.Scene.ActionInterpreter.Interface;
@@ -56,6 +57,8 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The blend.</value>
         [ACItemBinding("blend", CommandInterpretType.NameValuePairs)]
+        [Description("The blend argument is only used for dual texturing. It defines the blending mode. It sets the source and destination blend function used in blended transparency and antialiasing operations. The source function specifies the factor that is multiplied by the source color; this value is added to the product of the destination factor and the destination color. The source is the underlaying texture and the destination is the overlayed texture.")]
+        [Browsable(true)]
         public TextureBlendType Blend
         {
             get { return _blend; }
@@ -67,6 +70,8 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The tag.</value>
         [ACItemBinding("tag", CommandInterpretType.NameValuePairs)]
+        [Description("The tag argument specifies the tag number of the surface to render on. Any tag that exists on the used object can be used, including tags of jointed avatars. A value of 0 (zero), also the default value, means to apply the material effect onto all surfaces of the geometry.")]
+        [Browsable(true)]
         public int Tag
         {
             get { return _tag; }
@@ -77,7 +82,9 @@ namespace AwManaged.Scene.ActionInterpreter
         /// The global argument will cause triggers to initiate the command for all users have the object in view. Without it, the command will be triggered exclusively for the user who activates the trigger (bump, activate, adone). By default, commands are not global.
         /// </summary>
         /// <value><c>true</c> if this instance is global; otherwise, <c>false</c>.</value>
-        [ACItemBinding("", CommandInterpretType.Flag)]
+        [ACItemBinding("global", CommandInterpretType.Flag)]
+        [Description("The global argument will cause triggers to initiate the command for all users have the object in view. Without it, the command will be triggered exclusively for the user who activates the trigger (bump, activate, adone). By default, commands are not global.")]
+        [Browsable(true)]
         public bool IsGlobal
         {
             get { return _isGlobal; }
@@ -89,6 +96,8 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The name.</value>
         [ACItemBinding("name", CommandInterpretType.NameValuePairs)]
+        [Description("The name argument can be used for remote control, applying the matfx command onto the named object within view of the same owner.")]
+        [Browsable(true)]
         public string Name
         {
             get { return _name; }
@@ -100,6 +109,8 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The coef.</value>
         [ACItemBinding("coef", CommandInterpretType.NameValuePairs)]
+        [Description("The coef argument sets the coefficient for the used effect, which means the strength of the effect. It can have a value between 0.05 and 1.0. The default coefficient is 0.333.")]
+        [Browsable(true)]
         public float Coef
         {
             get { return _coef; }
@@ -111,6 +122,8 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The texture.</value>
         [ACItemBinding("texture", CommandInterpretType.NameValuePairs)]
+        [Description("The tex argument specifies an optional texture to use for the selected material effect. It can be either a environment map, a bump map or an onverlayed texture, depending on the used type. The texture must be found in the textures subfolder of the worlds object path. The keyword self used as texture name will use the material's original texture, if any, for the material effect. If self is chosen and the object has no texture specified, no effect will be generated. If the tex argument is not given, the default texture in the subfolder of the browser's installation directory (/default/textures/gloss.png) is used.")]
+        [Browsable(true)]
         public string Texture
         {
             get { return _texture; }
@@ -122,16 +135,20 @@ namespace AwManaged.Scene.ActionInterpreter
         /// </summary>
         /// <value>The type.</value>
         [ACItemBinding("type", CommandInterpretType.NameValuePairs)]
+        [Description(" The type argument is an integer value that can be either in the range from 0 to 4 or in the range from 10 to 14. If no type option is specified, type 1 is used as default.")]
+        [Browsable(true)]
         public MatFxType Type
         {
             get { return _type; }
             set { _type = value; }
         }
 
+        [Browsable(false)]
         public string LiteralPart { get; set; }
 
         #region ILiteralAction Members
 
+        [Browsable(false)]
         public string LiteralAction
         {
             get { return "matfx"; }
@@ -141,6 +158,7 @@ namespace AwManaged.Scene.ActionInterpreter
 
         #region ICommandGroups Members
 
+        [Browsable(false)]
         public System.Collections.Generic.IList<ICommandGroup> CommandGroups
         {
             get;

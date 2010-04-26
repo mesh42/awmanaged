@@ -22,6 +22,28 @@ namespace AwManaged.Core.Reflection
     /// </summary>
     public sealed class ReflectionHelpers
     {
+        public class Info<TAttribute,TMember>
+        {
+            public TAttribute Attribute;
+            public TMember Member;
+        }
+
+        public List<Info<TAttribute, MethodInfo>> GetMethods<TAttribute>(Type @class, TAttribute attribute)
+            where TAttribute : Attribute
+        {
+            var ret = new List<Info<TAttribute,MethodInfo>>();
+
+            foreach(var item in @class.GetMethods())
+            {
+                var attributes = @class.GetCustomAttributes(typeof(TAttribute), false);
+                if (attributes != null && attributes.Length == 1)
+                {
+                    ret.Add(new Info<TAttribute, MethodInfo>(){Attribute=(TAttribute)attributes[0],Member = item});
+                }
+            }
+            return ret;
+        }
+
         public static bool HasInterface(object o, Type @interface)
         {
             if(!@interface.IsInterface)
@@ -125,7 +147,15 @@ namespace AwManaged.Core.Reflection
             {
                 foreach (var cachedInstance in instancesCache)
                 {
-                    if (cachedInstance.LiteralAction.ToLower() != actionItem.Trim().ToLower().Substring(0, cachedInstance.LiteralAction.Length)) continue;
+                    try
+                    {
+                        if (cachedInstance.LiteralAction.ToLower() !=
+                            actionItem.Trim().ToLower().Substring(0, cachedInstance.LiteralAction.Length)) continue;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                     var newInstance = (TInterface)Activator.CreateInstance(cachedInstance.GetType());
                     newInstance.LiteralPart = actionItem.Trim().Substring(cachedInstance.LiteralAction.Length).Trim();
                     newInstances.Add(newInstance);

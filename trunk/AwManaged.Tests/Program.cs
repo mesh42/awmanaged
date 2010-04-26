@@ -10,16 +10,11 @@
  *
  * **********************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using AwManaged.ConsoleServices;
-using AwManaged.Core;
 using AwManaged.Scene;
-using AWManaged.Security;
-using NetMatters;
 
 namespace AwManaged.Tests
 {
@@ -81,6 +76,10 @@ namespace AwManaged.Tests
 
         #endregion
 
+        private static NotifyIcon Tray;
+
+        static ConsoleHelpers Console = new ConsoleHelpers();
+
         static void ProcessCommandLine(string commandLine)
         {
 
@@ -88,17 +87,17 @@ namespace AwManaged.Tests
             {
                 if (commandLine == "boot")
                 {
-                    ConsoleHelpers.GetPromptTarget = null;
-                    ConsoleHelpers.ParseCommandLine = null;
-                    var bot = new BotEngineExample();
+                    Console.GetPromptTarget = null;
+                    Console.ParseCommandLine = null;
+                    var bot = new ServerConsole();
                     return;
                 }
             }
             else
             {
-                ConsoleHelpers.WriteLine("?Error");
+                Console.WriteLine("?Error");
             }
-            ConsoleHelpers.ReadLine();
+            Console.ReadLine();
         }
 
         static string GetPrompt()
@@ -106,14 +105,20 @@ namespace AwManaged.Tests
             return "[BOT OS>: ";
         }
 
-        static void Main(string[] args)
+        public static void Main(object args)
+        {
+            Main((string[])args);
+        }
+
+        public static void Main(string[] args)
         {
             Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
-            Console.CursorSize = 100;
-            Console.WindowWidth = 120;
-            Console.WindowHeight = 48;
-            Console.BufferHeight = 48;
+            System.Console.Clear();
+            System.Console.CursorSize = 100;
+            System.Console.WindowWidth = 120;
+            System.Console.WindowHeight = 48;
+            System.Console.BufferHeight = 48;
+            System.Console.Clear();
 
             WINDOWPLACEMENT wp = new WINDOWPLACEMENT();
 
@@ -142,25 +147,25 @@ namespace AwManaged.Tests
             {
                 if (args[0] == "/autoboot")
                 {
-                    var bot = new BotEngineExample();
+                    var bot = new ServerConsole();
                 }
                 else
                 {
 
-                    ConsoleHelpers.GetPromptTarget = GetPrompt;
-                    ConsoleHelpers.ParseCommandLine = ProcessCommandLine;
-                    ConsoleHelpers.WriteLine("Bot operating system.");
-                    ConsoleHelpers.ReadLine();
+                    Console.GetPromptTarget = GetPrompt;
+                    Console.ParseCommandLine = ProcessCommandLine;
+                    Console.WriteLine("Bot operating system.");
+                    Console.ReadLine();
                 }
             }
             else
             {
 
                 //GetWindowPlacement(hMenu, ref wp);
-                ConsoleHelpers.GetPromptTarget = GetPrompt;
-                ConsoleHelpers.ParseCommandLine = ProcessCommandLine;
-                ConsoleHelpers.WriteLine("Bot operating system.");
-                ConsoleHelpers.ReadLine();
+                Console.GetPromptTarget = GetPrompt;
+                Console.ParseCommandLine = ProcessCommandLine;
+                Console.WriteLine("Bot operating system.");
+                Console.ReadLine();
             }
 
             //// TODO: update this with your own privileges.

@@ -58,17 +58,17 @@ namespace AwManaged.LocalServices
 
         #region IIdentifiable Members
 
-        public override string DisplayName
+        public override string IdentifyableDisplayName
         {
             get { return "Local bot plugin service."; }
         }
 
-        public override System.Guid Id
+        public override System.Guid IdentifyableId
         {
             get { return new Guid("{B1769AA4-ABEB-4d02-A8E3-467CD9C7B23F}"); }
         }
 
-        public override string TechnicalName
+        public override string IdentifyableTechnicalName
         {
             get { return "localbotpluginsvc";  }
         }
@@ -92,7 +92,7 @@ namespace AwManaged.LocalServices
             if (contexts.Count() == 0)
                 throw new Exception(string.Format("Plugin with technical name {0} not found.",technicalName));
             var context = contexts.Single();
-            var service = new DummyService() {TechnicalName = context.PluginInfo.TechnicalName};
+            var service = new DummyService() {IdentifyableTechnicalName = context.PluginInfo.TechnicalName};
             base.AddService(service);
         }
 
@@ -113,7 +113,7 @@ namespace AwManaged.LocalServices
         public override void StopService(string technicalName)
         {
             base.StopService(technicalName);
-            var instances = from BotLocalPlugin p in _pluginInstances where (p.TechnicalName == technicalName) select p;
+            var instances = from BotLocalPlugin p in _pluginInstances where (p.IdentifyableTechnicalName == technicalName) select p;
             var instance = instances.Single();
             _pluginInstances.Remove(instance);
             instance.Dispose();

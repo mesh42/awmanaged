@@ -11,7 +11,7 @@
  * **********************************************************************************/
 using AwManaged.Core.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     public sealed class DependendObject<TParent, TChild> : ICloneableT<DependendObject<TParent, TChild>>
         where TParent : ICloneableT<TParent>

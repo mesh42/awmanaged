@@ -17,6 +17,7 @@ using AW;
 using AwManaged.Configuration;
 using AwManaged.Core.Interfaces;
 using AwManaged.ExceptionHandling;
+using AwManaged.Scene;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged
@@ -147,7 +148,7 @@ namespace AwManaged
         {
             lock (this)
             {
-                SetInt(Attributes.ObjectId, o.Id);
+                SetInt(Attributes.ObjectId,o.Id);
                 SetInt(Attributes.ObjectOldNumber, 0);
                 SetInt(Attributes.ObjectOwner, o.Owner);
                 SetInt(Attributes.ObjectType, (int)o.Type);

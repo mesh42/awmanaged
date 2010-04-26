@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using AwManaged;
-using AwManaged.ConsoleServices;
+using AwManaged.Core.Commanding;
 using AwManaged.Core.Reflection.Attributes;
 using AwManaged.EventHandling.BotEngine;
 using AwManaged.Scene;
@@ -115,7 +115,7 @@ namespace StandardBotPluginLibrary.AfkBot
                             return;
                         }
                         var seen = offline.Single();
-                        sender.Whisper(e.Avatar, string.Format("Citizen {0} was last seen on {1}", cmd.Arguments[0].Value.Value,seen.LastSeen.ToLongDateString()));
+                        sender.Whisper(e.Avatar, string.Format("Citizen {0} was last seen on {1} at {2}", cmd.Arguments[0].Value.Value, seen.LastSeen.ToLongDateString(), seen.LastSeen.ToLongTimeString()));
                         return;
                     }
                     break;

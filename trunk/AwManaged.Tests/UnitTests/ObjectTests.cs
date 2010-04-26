@@ -16,7 +16,7 @@ using System.Security;
 using System.Xml.Serialization;
 using AW;
 using AwManaged.Converters;
-using AwManaged.Core;
+using AwManaged.Core.Patterns;
 using AwManaged.Math;
 using AwManaged.Scene;
 using NUnit.Framework;

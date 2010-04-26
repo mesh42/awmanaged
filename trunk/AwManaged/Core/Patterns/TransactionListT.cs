@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using AwManaged.Core.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     public delegate void CallbackCapacityReached<T>(TransactionListT<T> sender, EventArgs e)
         where T : ITransactionItem, ICloneableT<T>, IIdentifiable;
 
     public delegate void CallbackTransactionCompleted<T>(TransactionListT<T> sender, EventArgs e)
-    where T : ITransactionItem, ICloneableT<T>, IIdentifiable;
-
+        where T : ITransactionItem, ICloneableT<T>, IIdentifiable;
 
     public class TransactionListT<T>
         where T : ITransactionItem, ICloneableT<T>,IIdentifiable

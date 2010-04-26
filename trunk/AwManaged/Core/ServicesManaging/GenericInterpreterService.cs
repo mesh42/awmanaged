@@ -74,6 +74,15 @@ namespace AwManaged.Core.ServicesManaging
 
                 }
             }
+
+            // bool flag.
+            if (property.PropertyType == typeof(bool))
+            {
+                property.SetValue(instance, true, null);
+                return true;
+            }
+
+
             if (property.PropertyType == typeof(int))
             {
                 property.SetValue(instance, int.Parse(uncastedValue), null);
@@ -138,6 +147,9 @@ namespace AwManaged.Core.ServicesManaging
                 case CommandInterpretType.SingleArgument:
                     return new Regex("\\s(?<value>" + literalCommandPart + ")\\s",
                                      RegexOptions.IgnoreCase).Match(" " + literalCommandPart + " ");
+                case CommandInterpretType.FlagSlash:
+                    return new Regex("\\s/(?<value>" + attribute.LiteralName + ")\\s",
+                                     RegexOptions.IgnoreCase).Match(" " + literalCommandPart + " ");
                 case CommandInterpretType.Flag:
                     var en = from ReflectionEnumCacheItem p in Cache.EnumCache.Enumerations where p.EnumerationType == property.PropertyType select p;
                     foreach (var field in en.Single().ItemFields)
@@ -184,10 +196,11 @@ namespace AwManaged.Core.ServicesManaging
         /// <returns></returns>
         public IEnumerable<ICommandGroup> Interpret(string action)
         {
-            if (!IsRunning)
-                throw new Exception(string.Format("Service {0} can't interpret action string. The service is not running.", DisplayName));
-            try
-            {
+            //try
+            //{
+           if (!IsRunning)
+                throw new Exception(string.Format("Service {0} can't interpret action string. The service is not running.", IdentifyableDisplayName));
+ 
                 var actionTriggers = ReflectionHelpers.Interpret(Cache.TriggerInterpreters, action, ';');
                 foreach (var actionTrigger in actionTriggers)
                 {
@@ -195,6 +208,7 @@ namespace AwManaged.Core.ServicesManaging
                                                                          actionTrigger.LiteralPart, ',');
                     foreach (var command in actionTrigger.Commands)
                     {
+                        var tempLiteral = command.LiteralPart;
                         // Bind to properties which cary the ACItemBinding Attribute.
                         // todo: put the binding properties in a reflection cache from improved speed.
                         foreach (var property in command.GetType().GetProperties())
@@ -213,7 +227,7 @@ namespace AwManaged.Core.ServicesManaging
                                 Match match = null;
                                 try
                                 {
-                                    match = GetMatchForCommandInterpretType(command.LiteralPart, attribute, property);
+                                    match = GetMatchForCommandInterpretType(tempLiteral, attribute, property);
                                 }
                                 catch
                                 {
@@ -221,7 +235,15 @@ namespace AwManaged.Core.ServicesManaging
                                 }
                                 if (match != null && match.Success)
                                 {
-                                    CastValueToProperty(command, property, attribute, match.Groups["value"].Value);
+                                    try
+                                    {
+                                        tempLiteral = tempLiteral.Replace(match.Value.Trim(), "");
+                                    }
+                                    catch
+                                    {
+                                        
+                                    }
+                                    CastValueToProperty(command, property, attribute, match.Groups["value"].Value.Trim());
                                 }
                             }
                             //foreach (var attribute in property.Attributes) 
@@ -229,11 +251,11 @@ namespace AwManaged.Core.ServicesManaging
                     }
                 }
                 return actionTriggers;
-            }
-            catch
-            {
-                return null; // TODO: implement partial interpretation.
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return null; // TODO: implement partial interpretation.
+            //}
         }
 
         #region IService Members
@@ -241,7 +263,7 @@ namespace AwManaged.Core.ServicesManaging
         public bool Stop()
         {
             if (!IsRunning)
-                throw new Exception(string.Format("The {0} can't stop, it is not running.", DisplayName));
+                throw new Exception(string.Format("The {0} can't stop, it is not running.", IdentifyableDisplayName));
             Cache = null;
             IsRunning = false;
             return true;
@@ -250,7 +272,7 @@ namespace AwManaged.Core.ServicesManaging
         public bool Start()
         {
             if (IsRunning)
-                throw new Exception(string.Format("The {0} can't start, is already started.",DisplayName));
+                throw new Exception(string.Format("The {0} can't start, is already started.",IdentifyableDisplayName));
             Cache = new ReflectionCache<TEnumTypeAttribute, TEnumBindingAttribute>(_assembly);
             IsRunning = true;
             return true;
@@ -265,17 +287,17 @@ namespace AwManaged.Core.ServicesManaging
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get { return "Generic Interpreter Service"; }
         }
 
-        public System.Guid Id
+        public System.Guid IdentifyableId
         {
             get { throw new System.NotImplementedException(); }
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; set;
         }
@@ -286,7 +308,6 @@ namespace AwManaged.Core.ServicesManaging
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
         }
 
         #endregion

@@ -75,20 +75,20 @@ namespace AwManaged.RemoteServices
             return new RemotingBotEngine();
         }
 
-        public override string DisplayName
+        public override string IdentifyableDisplayName
         {
             get { return "Remoting Bot Service."; }
         }
 
-        public override Guid Id
+        public override Guid IdentifyableId
         {
             get { return new Guid("{7C8A778A-EE22-4e39-B568-FF8295974513}"); }
         }
 
-        public override string TechnicalName
-        {
-            get { return ProviderName; }
-        }
+        //public override string TechnicalName
+        //{
+        //    get { return ProviderName; }
+        //}
 
         public override void Dispose()
         {
@@ -111,6 +111,7 @@ namespace AwManaged.RemoteServices
         public override bool Start()
         {
             return base.Start();
+
         }
 
         public override bool Stop()

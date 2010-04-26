@@ -12,6 +12,7 @@
 using System;
 using System.ComponentModel;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Patterns.Tree;
 using AwManaged.Math;
 using AWManaged.Security;
 
@@ -20,7 +21,7 @@ namespace AwManaged.Configuration.Interfaces
     /// <summary>
     /// Login Configuration for a bot.
     /// </summary>
-    public interface IUniverseConnectionProperties<TConnectionProperties> : ICloneableT<TConnectionProperties>
+    public interface IUniverseConnectionProperties<TConnectionProperties> : ITreeNode, ICloneableT<TConnectionProperties>
     {
         /// <summary>
         /// Gets or sets the authorization.

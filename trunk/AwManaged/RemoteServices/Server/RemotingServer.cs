@@ -13,7 +13,7 @@ using AwManaged.Security.RemoteBotEngine.Interfaces;
 
 namespace AwManaged.RemoteServices.Server
 {
-    public class RemotingServer<TRemotingBotEngine> : IConnectedServiceDevice<RemotingServerConnection>
+    public class RemotingServer<TRemotingBotEngine> : BaseConnectedServiceDevice<RemotingServerConnection>
     {
         private BinaryClientFormatterSinkProvider clientProvider;
         private BinaryServerFormatterSinkProvider serverProvider;
@@ -23,7 +23,7 @@ namespace AwManaged.RemoteServices.Server
 
         private IIdentityManagementObjects _idmService;
 
-        public string ProviderName
+        public override string ProviderName
         {
             get { return "awmremoting"; }
         }
@@ -35,6 +35,10 @@ namespace AwManaged.RemoteServices.Server
             return null;            
         }
 
+        public RemotingServer(string connection) : base(connection)
+        {
+        }
+
         public RemoteServices.RemotingBotEngine Login(User user)
         {
             if (user.IsAuthenticated(_idmService.Db))
@@ -42,12 +46,7 @@ namespace AwManaged.RemoteServices.Server
             return null; // no access to services.
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RemotingServer&lt;TRemotingBotEngine&gt;"/> class.
-        /// </summary>
-        /// <param name="remotingConnection">The remoting connection.</param>
-        /// <param name="idmManagement">The idm management.</param>
-        public RemotingServer(string remotingConnection, IIdentityManagementObjects idmManagement)
+        public RemotingServer(string remotingConnection, IIdentityManagementObjects idmManagement) : base(remotingConnection)
         {
             _idmService = idmManagement;
                 //throw new Exception("The remoting server needs an authentication / authorization manegement object to operate.");
@@ -86,7 +85,7 @@ namespace AwManaged.RemoteServices.Server
             EvaluateConnectionProperties();
         }
 
-        private void EvaluateConnectionProperties()
+        internal override void EvaluateConnectionProperties()
         {
             if (Connection.Protocol == RemotingProtocol.Unspecified)
                 throw new ArgumentException("Connection string does not contain mandatory protocol type.");
@@ -94,17 +93,12 @@ namespace AwManaged.RemoteServices.Server
                 throw new ArgumentException("A port number has not been specified or should be a positive number.");
         }
 
-        static void ThrowIncorrectConnectionStringException()
-        {
-            throw new ArgumentException("Connectionstring is in the incorrect format");
-        }
 
         #region IService Members
 
         public bool Stop()
         {
-            if (!IsRunning)
-                throw new ArgumentException("Remoting Server could not be stopped as it is not running.");
+            base.Stop();
             switch (Connection.Protocol)
             {
                 case RemotingProtocol.Ipc:
@@ -125,8 +119,7 @@ namespace AwManaged.RemoteServices.Server
 
         public bool Start()
         {
-            if (IsRunning)
-                throw new ArgumentException("Remoting Server already started.");
+            base.Start();
             serverProvider = new BinaryServerFormatterSinkProvider { TypeFilterLevel = TypeFilterLevel.Full };
             props["port"] = Connection.Port;
             props["typeFilterLevel"] = TypeFilterLevel.Full;
@@ -146,13 +139,7 @@ namespace AwManaged.RemoteServices.Server
                     break;
             }
             RemotingConfiguration.RegisterWellKnownServiceType(typeof(TRemotingBotEngine), "RemotingBotEngine", WellKnownObjectMode.Singleton);
-            IsRunning = true; // todo make this smarter.
             return true;
-        }
-
-        public bool IsRunning
-        {
-            get; private set;
         }
 
         #endregion
@@ -167,26 +154,27 @@ namespace AwManaged.RemoteServices.Server
 
         #endregion
 
-        public string DisplayName
+        public override string IdentifyableDisplayName
         {
             get { return "Remoting Server"; }
         }
 
-        public Guid Id
+        public override Guid IdentifyableId
         {
-            get; internal set;
+            get { return new Guid("{94E26F19-9255-41c5-9CFC-0C9EDFE33E07}"); }
         }
 
-        public string TechnicalName
+        public override string IdentifyableTechnicalName
         {
-            get; internal set;
+            get; set;
         }
+
 
         #region IDisposable Members
 
-        public void Dispose()
+        public override void Dispose()
         {
-            // TODO: Cleanup.
+            Stop();
         }
 
         #endregion

@@ -37,7 +37,7 @@ namespace StandardBotPluginLibrary.QuoteBot
 
             // Add scheduling for displaying a random quote.
             _quoteSchedulingItem = new SchedulingItem();
-            _quoteSchedulingItem.Run.From(DateTime.Now.AddSeconds(30)).Every.Seconds(15);
+            _quoteSchedulingItem.Run.From(DateTime.Now.AddSeconds(30)).Every.Minutes(5);
             Bot.SchedulingService.Submit(_quoteSchedulingItem, QuoteSchedulingCallback);
             RssSchedulingCallback(null);
         }
@@ -48,7 +48,7 @@ namespace StandardBotPluginLibrary.QuoteBot
         /// <param name="schedule">The schedule.</param>
         private void RssSchedulingCallback(SchedulingItem schedule)
         {
-            ConsoleHelpers.WriteLine(string.Format("QuoteBot: Polling Rss service."));
+            Bot.Console.WriteLine(string.Format("QuoteBot: Polling Rss service."));
             try
             {
                 _rss.Refresh();
@@ -63,9 +63,9 @@ namespace StandardBotPluginLibrary.QuoteBot
             }
             catch (Exception ex)
             {
-                ConsoleHelpers.WriteLine(ConsoleColor.Red, string.Format("QuoteBot: " + ex.Message));
+                Bot.Console.WriteLine(ConsoleMessageType.Error, string.Format("QuoteBot: " + ex.Message));
             }
-            ConsoleHelpers.WriteLine(string.Format("QuoteBot: {0} quotes available in database.", _totalQuotes));
+            Bot.Console.WriteLine(string.Format("QuoteBot: {0} quotes available in database.", _totalQuotes));
         }
         /// <summary>
         /// Quote Scheduling callback.
@@ -77,7 +77,7 @@ namespace StandardBotPluginLibrary.QuoteBot
             // fetch a random quote (simple, could be better by introducing statistics).
             var quote = (from QuoteItem p in _db where p.Id == id select p);
             var text = quote.Single().Quote;
-            ConsoleHelpers.WriteLine(string.Format("QuoteBot: {0}", text));
+            Bot.Console.WriteLine(string.Format("QuoteBot: {0}", text));
             Bot.Say(text);
         }
 

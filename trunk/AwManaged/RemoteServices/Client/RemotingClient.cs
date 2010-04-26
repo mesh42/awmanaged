@@ -163,17 +163,17 @@ namespace AwManaged.RemoteServices.Client
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get; internal set;
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get; internal set;
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; internal set;
         }

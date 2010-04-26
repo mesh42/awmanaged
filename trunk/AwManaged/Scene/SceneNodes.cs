@@ -10,8 +10,8 @@
  *
  * **********************************************************************************/
 using System;
-using AwManaged.Core;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Patterns;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
