@@ -11,9 +11,11 @@
  * **********************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Resources;
 using AwManaged.Core.EventHandling;
 using AwManaged.Core.Services.Interfaces;
 using AwManaged.Core.ServicesManaging.Interfaces;
+using AwManaged.Properties;
 
 namespace AwManaged.Core.ServicesManaging
 {
@@ -28,54 +30,54 @@ namespace AwManaged.Core.ServicesManaging
         public void AddService(IService service)
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' not running.", TechnicalName));
-            if (string.IsNullOrEmpty(service.TechnicalName))
-                throw new Exception("A service must have a technical name in order to run it in the service manager.");
-            var svc = _services.Find(p => p.TechnicalName == service.TechnicalName);
+                throw new Exception(string.Format(Resources.services_manager_not_running, IdentifyableTechnicalName));
+            if (string.IsNullOrEmpty(service.IdentifyableTechnicalName))
+                throw new Exception(Resources.err7_service_error_technical_name);
+            var svc = _services.Find(p => p.IdentifyableTechnicalName == service.IdentifyableTechnicalName);
             if (svc != null)
-                throw new Exception(string.Format("Could not add the {0} Service to the service manager. A service with an identical technical name already exists.", service.TechnicalName));
+                throw new Exception(string.Format("Could not add the {0} Service to the service manager. A service with an identical technical name already exists.", service.IdentifyableTechnicalName));
             _services.Add(service);
         }
 
         public void RemoveService(string technicalName)
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' not running.", TechnicalName));
+                throw new Exception(string.Format("Services manager '{0}' not running.", IdentifyableTechnicalName));
             if (String.IsNullOrEmpty(technicalName))
                 throw new Exception("Please provide a technical valid service name.");
-            var service = _services.Find(p => p.TechnicalName == technicalName);
+            var service = _services.Find(p => p.IdentifyableTechnicalName == technicalName);
             if (service == null)
-                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.TechnicalName));
+                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.IdentifyableTechnicalName));
             if (service.IsRunning)
-                throw new Exception(string.Format("Could not remove the {0} Service, as its currently running please stop the service first.", service.TechnicalName));
-            _services.RemoveAll(p => p.TechnicalName == technicalName);
+                throw new Exception(string.Format("Could not remove the {0} Service, as its currently running please stop the service first.", service.IdentifyableTechnicalName));
+            _services.RemoveAll(p => p.IdentifyableTechnicalName == technicalName);
         }
 
         public virtual IService StartService(string technicalName)
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' not running.", TechnicalName));
-            var service = _services.Find(p => p.TechnicalName == technicalName);
+                throw new Exception(string.Format(Resources.services_manager_not_running, IdentifyableTechnicalName));
+            var service = _services.Find(p => p.IdentifyableTechnicalName == technicalName);
             if (service == null)
-                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.TechnicalName));
+                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.IdentifyableTechnicalName));
             if (service.IsRunning)
-                throw new Exception(string.Format("Could not start the {0} Service, as its already running.", service.TechnicalName));
+                throw new Exception(string.Format("Could not start the {0} Service, as its already running.", service.IdentifyableTechnicalName));
             if (!service.Start())
-                throw new Exception(string.Format("Could not start the {0} Service, because of its internal state.", service.TechnicalName));
+                throw new Exception(string.Format("Could not start the {0} Service, because of its internal state.", service.IdentifyableTechnicalName));
             return service;
         }
 
         public virtual void StopService(string technicalName)
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' not running.", TechnicalName));
-            var service = _services.Find(p => p.TechnicalName == technicalName);
+                throw new Exception(string.Format("Services manager '{0}' not running.", IdentifyableTechnicalName));
+            var service = _services.Find(p => p.IdentifyableTechnicalName == technicalName);
             if (service == null)
-                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.TechnicalName));
+                throw new Exception(string.Format("Could not find the {0} Service in the service manager.", service.IdentifyableTechnicalName));
             if (!service.IsRunning)
-                throw new Exception(string.Format("Could not stop the {0} Service, as its currently not running.", service.TechnicalName));
+                throw new Exception(string.Format("Could not stop the {0} Service, as its currently not running.", service.IdentifyableTechnicalName));
             if (!service.Stop())
-                throw new Exception(string.Format("Could not stop the {0} Service, because of its internal state.", service.TechnicalName));
+                throw new Exception(string.Format("Could not stop the {0} Service, because of its internal state.", service.IdentifyableTechnicalName));
         }
 
         #endregion
@@ -101,11 +103,11 @@ namespace AwManaged.Core.ServicesManaging
         public virtual bool Stop()
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' not running.", TechnicalName));
+                throw new Exception(string.Format("Services manager '{0}' not running.", IdentifyableTechnicalName));
             for (var i = _services.Count-1;i>-1;i--)
             {
                 if (!_services[i].IsRunning)
-                    throw new Exception(string.Format("Can't stop the {0} Service, service is not running.", _services[i].TechnicalName));
+                    throw new Exception(string.Format("Can't stop the {0} Service, service is not running.", _services[i].IdentifyableTechnicalName));
                 _services[i].Stop();
             }
             _services.Clear();
@@ -121,7 +123,7 @@ namespace AwManaged.Core.ServicesManaging
         public virtual bool Start()
         {
             if (IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' already running.",TechnicalName));
+                throw new Exception(string.Format("Services manager '{0}' already running.",IdentifyableTechnicalName));
             _services = new List<IService>();
             IsRunning = true;
             return true;
@@ -143,11 +145,11 @@ namespace AwManaged.Core.ServicesManaging
 
         #region IIdentifiable Members
 
-        public virtual string DisplayName { get; set; }
+        public virtual string IdentifyableDisplayName { get; set; }
 
-        public virtual Guid Id { get; set; }
+        public virtual Guid IdentifyableId { get; set; }
 
-        public virtual string TechnicalName { get; set; }
+        public virtual string IdentifyableTechnicalName { get; set; }
 
         #endregion
 
@@ -175,11 +177,11 @@ namespace AwManaged.Core.ServicesManaging
         public virtual bool StartServices()
         {
             if (!IsRunning)
-                throw new Exception(string.Format("Services manager '{0}' is not running.", TechnicalName));
+                throw new Exception(string.Format("Services manager '{0}' is not running.", IdentifyableTechnicalName));
             foreach (var service in _services)
             {
                 if (service.IsRunning)
-                    throw new Exception(string.Format("Can't start the {0} Service, service is already running.", service.TechnicalName));
+                    throw new Exception(string.Format("Can't start the {0} Service, service is already running.", service.IdentifyableTechnicalName));
                 service.Start();
                 if (OnServiceStarted != null)
                     OnServiceStarted.Invoke(this, new ServiceStartedArgs(service));

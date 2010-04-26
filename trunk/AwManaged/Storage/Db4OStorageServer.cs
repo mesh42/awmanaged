@@ -108,17 +108,17 @@ namespace AwManaged.Storage
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get { return "Storage Server."; }
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get; internal set;
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; set;
         }

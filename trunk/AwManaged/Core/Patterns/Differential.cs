@@ -12,7 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-namespace AwManaged.Core
+
+namespace AwManaged.Core.Patterns
 {
     public static class Differential
     {

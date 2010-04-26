@@ -81,44 +81,6 @@ namespace AwManaged.Configuration
                 throw new ArgumentException("A port number has not been specified or should be a positive number.");
         }
 
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="LoginConfiguration"/> class.
-        ///// </summary>
-        ///// <param name="authorization">The authorization.</param>
-        ///// <param name="domain">The domain.</param>
-        ///// <param name="port">The port.</param>
-        ///// <param name="owner">The owner.</param>
-        ///// <param name="privilegePassword">The privilege password.</param>
-        ///// <param name="loginName">Name of the login.</param>
-        ///// <param name="world">The world.</param>
-        ///// <param name="position">The position.</param>
-        ///// <param name="rotation">The rotation.</param>
-        //public LoginConfiguration(Authorization authorization, string domain, int port, int owner, string privilegePassword, string loginName, string world, Vector3 position, Vector3 rotation)
-        //{
-        //    Authorization = authorization;
-        //    Domain = domain;
-        //    Port = port;
-        //    Owner = owner;
-        //    PrivilegePassword = privilegePassword;
-        //    LoginName = loginName;
-        //    World = world;
-        //    Position = position;
-        //    Rotation = rotation;
-        //}
-
-        //private void initialize(LoginConfiguration loginConfiguration)
-        //{
-        //    Authorization = loginConfiguration.Authorization;
-        //    Domain = loginConfiguration.Domain;
-        //    Port = loginConfiguration.Port;
-        //    Owner = loginConfiguration.Owner;
-        //    PrivilegePassword = loginConfiguration.PrivilegePassword;
-        //    LoginName = loginConfiguration.LoginName;
-        //    World = loginConfiguration.World;
-        //    Position = loginConfiguration.Position;
-        //    Rotation = loginConfiguration.Rotation;
-        //}
-
         #region IConnectionProviderIdentity Members
 
         public string ProviderName
@@ -144,17 +106,17 @@ namespace AwManaged.Configuration
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get; internal set;
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get; internal set;
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; internal set;
         }

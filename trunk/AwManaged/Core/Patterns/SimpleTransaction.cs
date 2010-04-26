@@ -4,7 +4,7 @@ using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.BotEngine;
 using AwManaged.Scene.Interfaces;
 
-namespace AwManaged.Core
+namespace AwManaged.Core.Patterns
 {
     /// <summary>
     /// A Simple transaction context, not atomic save, not persistable accross domain app boundaries.

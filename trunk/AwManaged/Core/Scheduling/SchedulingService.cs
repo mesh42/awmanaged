@@ -300,17 +300,17 @@ namespace AwManaged.Core.Scheduling
 
         #region IIdentifiable Members
 
-        public override string DisplayName
+        public override string IdentifyableDisplayName
         {
             get { return "Scheduling Service"; }
         }
 
-        public override Guid Id
+        public override Guid IdentifyableId
         {
             get { return new Guid("{7341CA72-100F-427f-9C0F-22766994AB08}"); }
         }
 
-        public override string TechnicalName
+        public override string IdentifyableTechnicalName
         {
             get { return "schedulingsvc"; }
         }

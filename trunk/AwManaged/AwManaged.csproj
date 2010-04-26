@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -15,6 +15,25 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +53,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +65,7 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -54,15 +76,24 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AW.Core, Version=0.1.7.77, Culture=neutral, PublicKeyToken=a6783cdcd2651288, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\activeworlds.com\AW.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Cecil.FlowAnalysis, Version=0.1.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\db4o\Cecil.FlowAnalysis.dll</HintPath>
+    </Reference>
     <Reference Include="Db4objects.Db4o, Version=7.4.58.11547, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\db4o\Db4objects.Db4o.dll</HintPath>
+    </Reference>
+    <Reference Include="Db4objects.Db4o.CS, Version=7.12.126.14142, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\db4o\Db4objects.Db4o.CS.dll</HintPath>
     </Reference>
     <Reference Include="Db4objects.Db4o.Linq, Version=7.4.58.11547, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -84,6 +115,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Threading, Version=1.0.3058.34407, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -97,18 +129,27 @@
     <Compile Include="BotNode.cs">
     </Compile>
     <Compile Include="BotLocalPlugin.cs" />
-    <Compile Include="ConsoleServices\CommandArgument.cs" />
-    <Compile Include="ConsoleServices\CommandFlag.cs" />
-    <Compile Include="ConsoleServices\CommandIndexedItem.cs" />
-    <Compile Include="ConsoleServices\CommandLine.cs" />
-    <Compile Include="ConsoleServices\CommandNameValuePair.cs" />
+    <Compile Include="Core\Commanding\CommandArgument.cs" />
+    <Compile Include="Core\Commanding\CommandFlag.cs" />
+    <Compile Include="Core\Commanding\CommandIndexedItem.cs" />
+    <Compile Include="Core\Commanding\CommandLine.cs" />
+    <Compile Include="Core\Commanding\CommandNameValuePair.cs" />
+    <Compile Include="ConsoleServices\ConsoleFactory.cs" />
     <Compile Include="ConsoleServices\ConsoleHelpers.cs" />
-    <Compile Include="ConsoleServices\Interfaces\ICommandPart.cs" />
+    <Compile Include="ConsoleServices\ConsoleMessageType.cs" />
+    <Compile Include="ConsoleServices\Interfaces\IConsoleSystem.cs" />
+    <Compile Include="Core\Commanding\Interfaces\ICommandPart.cs" />
+    <Compile Include="ConsoleServices\WinFormConsole.cs">
+    </Compile>
     <Compile Include="Core\Commanding\Attributes\CCEnumBindingAttribute.cs" />
     <Compile Include="Core\Commanding\Attributes\CCEnumTypeAttribute.cs" />
     <Compile Include="Core\Commanding\Attributes\CCGroupBindingAttribute.cs" />
     <Compile Include="Core\Commanding\Attributes\CCHelpDescriptionAttribute.cs" />
     <Compile Include="Core\Commanding\Attributes\CCItemBindingAttribute.cs" />
+    <Compile Include="Core\Interfaces\IPersist.cs" />
+    <Compile Include="Core\Patterns\Tree\TreeNodeT.cs" />
+    <Compile Include="Core\Patterns\Tree\TreeT.cs" />
+    <Compile Include="Core\ResourceHelper.cs" />
     <Compile Include="Core\Scheduling\Interfaces\ISchedulingApi.cs" />
     <Compile Include="Core\Scheduling\Interfaces\ISchedulingIntervals.cs" />
     <Compile Include="Core\Scheduling\Interfaces\ISchedulingItem.cs" />
@@ -148,6 +189,11 @@
     <Compile Include="Core\Services\BaseService.cs" />
     <Compile Include="Core\Patterns\SimpleTransaction.cs" />
     <Compile Include="Core\Patterns\TransactionListT.cs">
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="EventHandling\BotEngine\EventBotSlaveStartedArgs.cs" />
     <Compile Include="EventHandling\BotEngine\EventTransactionCompletedArgs.cs" />
@@ -190,7 +236,8 @@
     <Compile Include="ExceptionHandling\NetworkException.cs" />
     <Compile Include="LocalServices\LocalBotPluginServicesManager.cs" />
     <Compile Include="LocalServices\WebServerConnection.cs" />
-    <Compile Include="LocalServices\WebServerService.cs" />
+    <Compile Include="LocalServices\WebServer\Attributes\WebFormFieldAttribute.cs" />
+    <Compile Include="LocalServices\WebServer\WebServerService.cs" />
     <Compile Include="RemoteServices\RemotingBotClient.cs" />
     <Compile Include="RemoteServices\RemotingBotEngine.cs" />
     <Compile Include="RemoteServices\Client\RemotingClient.cs" />
@@ -249,7 +296,7 @@
     <Compile Include="Scene\ActionInterpreter\Attributes\ACItemBindingAttribute.cs" />
     <Compile Include="Core\Commanding\CommandInterpretType.cs" />
     <Compile Include="Scene\ActionInterpreter\ATUnknown.cs" />
-    <Compile Include="Scene\ActionInterpreter\CursorType.cs" />
+    <Compile Include="Scene\ActionInterpreter\AwBooleanType.cs" />
     <Compile Include="Scene\ActionInterpreter\EnviType.cs" />
     <Compile Include="Scene\ActionInterpreter\ExtendedActions\ACEKey.cs" />
     <Compile Include="Scene\ActionInterpreter\GlobalType.cs" />
@@ -413,8 +460,33 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Forms\" />
+    <Folder Include="Core\Patterns\Tree\Interfaces\" />
     <Folder Include="Scene\WorldRegistry\" />
     <Folder Include="Storage\BackupProvider\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

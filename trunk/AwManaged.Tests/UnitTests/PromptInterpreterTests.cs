@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using AwManaged.ConsoleServices;
+using AwManaged.Core.Commanding;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests

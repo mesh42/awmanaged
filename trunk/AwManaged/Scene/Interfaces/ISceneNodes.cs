@@ -10,7 +10,7 @@
  *
  * **********************************************************************************/
 using System;
-using AwManaged.Core;
+using AwManaged.Core.Patterns;
 
 namespace AwManaged.Scene.Interfaces
 {

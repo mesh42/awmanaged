@@ -10,7 +10,6 @@
  *
  * **********************************************************************************/
 using System;
-using AwManaged.Core.Interfaces;
 using AwManaged.Core.Services;
 using AwManaged.Storage.Interfaces;
 using Db4objects.Db4o;
@@ -128,17 +127,17 @@ namespace AwManaged.Storage
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get { return "Storage Client";}
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; set;
         }

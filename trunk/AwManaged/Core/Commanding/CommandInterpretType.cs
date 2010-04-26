@@ -33,6 +33,10 @@ namespace AwManaged.Core.Commanding
         /// </summary>
         Flag,
         /// <summary>
+        /// Property is a literal /flag which binds to a boolean property.
+        /// </summary>
+        FlagSlash,
+        /// <summary>
         /// Command has a single argument. for example: crate group groupname.
         /// groupname will be bound to the property decorated as single argument.
         /// </summary>

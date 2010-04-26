@@ -16,7 +16,7 @@ using AwManaged.Math;
 
 namespace AwManaged.Scene.Interfaces
 {
-    public interface IModel<T> : ISceneNode<T>, ITransactionItem,IIntId
+    public interface IModel<T> : ISceneNode<T>, ITransactionItem,IIntId,IIdentifiable
         where T : MarshalByRefObject
     {
         int Owner { get; set; }

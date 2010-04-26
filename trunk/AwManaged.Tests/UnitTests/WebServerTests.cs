@@ -1,4 +1,4 @@
-﻿using AwManaged.LocalServices;
+﻿using AwManaged.LocalServices.WebServer;
 using NUnit.Framework;
 
 namespace AwManaged.Tests.UnitTests
@@ -11,7 +11,6 @@ namespace AwManaged.Tests.UnitTests
         {
             var www = new WebServerService("provider=webserver;port=89");
             www.Start();
-
         }
     }
 }

@@ -23,7 +23,8 @@ namespace AwManaged.Core.Interfaces
         [Description("Displayed name of the object for user interface purposes.")]
         [Category("Identification")]
         [ReadOnly(true)]
-        string DisplayName { get; }
+        [Browsable(false)]
+        string IdentifyableDisplayName { get; }
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -31,7 +32,8 @@ namespace AwManaged.Core.Interfaces
         [Description("Globally unique identification of the object.")]
         [Category("Identifiaction")]
         [ReadOnly(true)]
-        Guid Id { get; }
+        [Browsable(false)]
+        Guid IdentifyableId { get; }
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
@@ -39,7 +41,8 @@ namespace AwManaged.Core.Interfaces
         [Description("Technical name of the object.")]
         [Category("Identifiaction")]
         [ReadOnly(true)]
-        string TechnicalName { get; }
+        [Browsable(false)]
+        string IdentifyableTechnicalName { get; }
 
 
     }

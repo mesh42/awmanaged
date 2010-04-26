@@ -43,17 +43,17 @@ namespace AwManaged.Core.Services
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get; set;
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get; set;
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get; set;
         }

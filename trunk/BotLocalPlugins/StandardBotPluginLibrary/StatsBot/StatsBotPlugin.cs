@@ -11,7 +11,6 @@
  * **********************************************************************************/
 using System.Linq;
 using AwManaged;
-using AwManaged.ConsoleServices;
 using AwManaged.Core.Reflection.Attributes;
 using AwManaged.EventHandling.BotEngine;
 using Db4objects.Db4o;
@@ -58,7 +57,7 @@ namespace StandardBotPluginLibrary.StatsBot
                     _db.Store(stat);
                     _db.Commit();
 
-                    ConsoleHelpers.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.",
+                    sender.Console.WriteLine(string.Format("object {0} with id {1} clicked by {2}. Total clicks {3}.",
                                                            e.Model.ModelName, e.Model.Id, e.Avatar.Name, stat.Clicks));
                 }
             }

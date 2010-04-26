@@ -9,22 +9,25 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using AwManaged.Core.Interfaces;
+using AwManaged.Core.Services;
 
 namespace AwManaged.RemoteServices.Server
 {
-    public sealed class RemotingServerConnection : IConnection<RemotingServerConnection>
+    public sealed class RemotingServerConnection : BaseConnection<RemotingServerConnection>
     {
         public int Port { get; internal set; }
         public RemotingProtocol Protocol { get; internal set; }
 
-        #region IConnection<RemotingServerConnection> Members
-
-        public string ConnectionString
+        public RemotingServerConnection()
+            : base(null)
         {
-            get; internal set;
+
         }
 
-        #endregion
+        public RemotingServerConnection(string connection)
+            : base(connection)
+        {
+        }
+
     }
 }

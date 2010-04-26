@@ -1,3 +1,21 @@
+Release 0.5.13 (unstable) major maintenance release
+* Upgraded to Visual Studio 2010
+* Adding Diagram photoshop artwork for the codeplex wiki.
+* Adding time indication to the afkbot, next to date indication.
+* Setting Thread Culture to US/en.
+* Adding the /persist flag to load/unload plugin command, for persisting plugin loading/umloading at next startup.
+* Adding factory Pattern to support multiple console types i.e. Remote Console (console and winform)
+* Cleaning up code.
+* Adding Service project so awmanaged can be tested to run as a Local System windows service.
+* Abstracting services and services managers.
+* Upgrading db4o 7.2 to db4o 7.12
+* Adding test code for a generic form generator for the web server services.
+* Encapsulating web server with BaseService so it can be maintained by the service managers.
+* Fixing minor bug in the Quote bot plugin (duplicate quotes).
+* Renaming BotEngineExample to ServerConsole in the AwManaged.Tests
+* Adding tree system for the IDE reflecting on IIdentifiable
+* Adding design time information to objects.
+
 Release 0.4.12 (unstable feature/maintenance release
 * Adding Afk Bot Sample plugin
 * Adding Quote Bot Sample plugin

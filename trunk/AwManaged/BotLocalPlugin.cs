@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using AwManaged.ConsoleServices;
 using AwManaged.Core.Reflection;
 using AwManaged.Core.Reflection.Attributes;
 using AwManaged.Core.Services.Interfaces;
@@ -72,14 +71,15 @@ namespace AwManaged
 
         public virtual void PluginInitialized()
         {
-            ConsoleHelpers.WriteLine(string.Format("{0}: Plugin Intialized.", _pluginContext.PluginInfo.TechnicalName));
+            Bot.Console.WriteLine(string.Format("{0}: Plugin Intialized.", _pluginContext.PluginInfo.TechnicalName));
         }
 
         #region IDisposable Members
 
         public virtual void Dispose()
         {
-            ConsoleHelpers.WriteLine(string.Format("{0}: Plugin Terminated.", _pluginContext.PluginInfo.TechnicalName));
+            Bot.Console.WriteLine(string.Format("{0}: Plugin Terminated.", _pluginContext.PluginInfo.TechnicalName));
+            GC.Collect();
         }
 
         #endregion
@@ -111,17 +111,17 @@ namespace AwManaged
 
         #region IIdentifiable Members
 
-        public string DisplayName
+        public string IdentifyableDisplayName
         {
             get { return _pluginContext.PluginInfo.Description; }
         }
 
-        public Guid Id
+        public Guid IdentifyableId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public string TechnicalName
+        public string IdentifyableTechnicalName
         {
             get { return _pluginContext.PluginInfo.TechnicalName; }
         }
