@@ -1,3 +1,10 @@
+Release 0.5.14 (unstable) feature/maintenance release
+* Unifying build targets to x86.
+* Adding A simple RWX analyzer, i needed for my RWX Megapath web site.
+* Adding Vector2 to math, primarliy used for UV coordinates on the simple RWX analyzer.
+* Adding Polygon to math, also used primarily by the simple RWX analyzer.
+* Adding a commmand line tool, that dumps the RWX statistics under /Tools solution folder.
+
 Release 0.5.13 (unstable) major maintenance release
 * Upgraded to Visual Studio 2010
 * Adding Diagram photoshop artwork for the codeplex wiki.
