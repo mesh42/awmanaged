@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AwManaged</RootNamespace>
     <AssemblyName>AwManaged</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>AwManagedSignature.snk</AssemblyOriginatorKeyFile>
@@ -34,6 +34,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\db4o\Db4objects.Db4o.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\Dependencies\NUnit.org\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -114,7 +118,6 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Threading, Version=1.0.3058.34407, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -190,6 +193,8 @@
     <Compile Include="Core\Patterns\SimpleTransaction.cs" />
     <Compile Include="Core\Patterns\TransactionListT.cs">
     </Compile>
+    <Compile Include="Math\Polygon.cs" />
+    <Compile Include="Math\Vector2.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -247,6 +252,13 @@
     <Compile Include="RemoteServices\RemotingProtocol.cs" />
     <Compile Include="RemoteServices\Server\RemotingServerConnection.cs" />
     <Compile Include="RemoteServices\Server\RemotingServer.cs" />
+    <Compile Include="RwxTools\RwxPolygon.cs" />
+    <Compile Include="RwxTools\RwxMaterial.cs" />
+    <Compile Include="RwxTools\RwxQuad.cs" />
+    <Compile Include="RwxTools\RwxSimpleStatistics.cs" />
+    <Compile Include="RwxTools\RwxTriangle.cs" />
+    <Compile Include="RwxTools\RwxVertex.cs" />
+    <Compile Include="RwxTools\UnitTests\SimpleStatisticsTests.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAnimate.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAStart.cs" />
     <Compile Include="Scene\ActionInterpreter\ACAStop.cs" />
@@ -451,6 +463,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AwManagedSignature.snk" />
+    <None Include="RwxTools\UnitTests\UnitTestModel.rwx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Security\RemoteBotEngine\dAuthorization.cd" />
   </ItemGroup>
   <ItemGroup>

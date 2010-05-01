@@ -1,10 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged", "AwManaged\AwManaged.csproj", "{5A015714-4A31-4054-B251-F705353CA91D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.Tests", "AwManaged.Tests\AwManaged.Tests.csproj", "{F5F71781-DA47-4C95-BCF0-18B524A23927}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{6196DA34-B6C3-45DE-9E66-EBF1A648D042}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "activeworlds.com", "activeworlds.com", "{A4D46A01-0AD4-4FF9-BBE1-F7DA75E55296}"
@@ -27,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		AssemblyInfo.Shared.cs = AssemblyInfo.Shared.cs
 		ChangeLog.txt = ChangeLog.txt
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManagedIde", "AwManagedIde\AwManagedIde.csproj", "{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dockpanel", "dockpanel", "{02341E0F-3BB7-4C41-9CAE-2AF5329BC5E3}"
 	ProjectSection(SolutionItems) = preProject
@@ -59,19 +53,45 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db4o", "db4o", "{EA4B30D5-5
 		Dependencies\db4o\Db4objects.Db4o.Linq.dll = Dependencies\db4o\Db4objects.Db4o.Linq.dll
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.RemotingTests", "AwManaged.RemotingTests\AwManaged.RemotingTests.csproj", "{9430E045-833C-4BB3-B6D5-058042DECB48}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{5F3DB636-FF29-4F6E-A797-0B73F6B3CAA1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Local", "Local", "{F709D410-7EDE-4E58-A664-8742D3B7BFB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBotPluginLibrary", "BotLocalPlugins\StandardBotPluginLibrary\StandardBotPluginLibrary.csproj", "{1716C209-1A84-4E75-8A61-963DECE97307}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cassinidev", "cassinidev", "{888BCB59-51A8-4785-8D1A-6A69FBC92DE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Artwork", "Artwork", "{118548AD-A42F-4532-8629-B749F8A25136}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{70B23772-382C-4712-8300-14007EAA61B9}"
+	ProjectSection(SolutionItems) = preProject
+		Artwork\Diagrams\AwManagedArchitectureMain.psd = Artwork\Diagrams\AwManagedArchitectureMain.psd
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged", "AwManaged\AwManaged.csproj", "{5A015714-4A31-4054-B251-F705353CA91D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.Tests", "AwManaged.Tests\AwManaged.Tests.csproj", "{F5F71781-DA47-4C95-BCF0-18B524A23927}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManagedIde", "AwManagedIde\AwManagedIde.csproj", "{FB1E54A3-BC22-4639-90FC-2FB00ECA9D6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.RemotingTests", "AwManaged.RemotingTests\AwManaged.RemotingTests.csproj", "{9430E045-833C-4BB3-B6D5-058042DECB48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandardBotPluginLibrary", "BotLocalPlugins\StandardBotPluginLibrary\StandardBotPluginLibrary.csproj", "{1716C209-1A84-4E75-8A61-963DECE97307}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CassiniDev", "Dependencies\cassinidev\CassiniDev.csproj", "{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.WebTest", "AwManaged.WebTest\AwManaged.WebTest.csproj", "{17107DEC-6DC2-4818-B2DC-ED6215B2B806}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationTest", "WebApplicationTest\WebApplicationTest.csproj", "{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwManaged.Service", "AwManaged.Service\AwManaged.Service.csproj", "{4EAFE255-AA72-41BC-B444-152EE96A6BF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Icons", "Icons", "{CB06F48D-A5DD-4FE1-A383-01F9E8934217}"
+	ProjectSection(SolutionItems) = preProject
+		Artwork\Icons\terminal16.png = Artwork\Icons\terminal16.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{15F09334-66DC-4DFB-81E7-E20ECCFE9CFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RwxStatistics", "RwxStatistics\RwxStatistics.csproj", "{24FC2065-4F29-49C9-8E92-C34B122271D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,7 +131,8 @@ Global
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Debug|x86.Build.0 = Debug|x86
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|x86.ActiveCfg = Release|Any CPU
+		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|x86.ActiveCfg = Release|x86
+		{9430E045-833C-4BB3-B6D5-058042DECB48}.Release|x86.Build.0 = Release|x86
 		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1716C209-1A84-4E75-8A61-963DECE97307}.Debug|x86.ActiveCfg = Debug|x86
@@ -126,14 +147,38 @@ Global
 		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Debug|x86.Build.0 = Debug|x86
 		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Release|x86.ActiveCfg = Release|Any CPU
+		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Release|x86.ActiveCfg = Release|x86
+		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}.Release|x86.Build.0 = Release|x86
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Debug|x86.ActiveCfg = Debug|x86
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Debug|x86.Build.0 = Debug|x86
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Release|x86.ActiveCfg = Release|Any CPU
+		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Release|x86.ActiveCfg = Release|x86
+		{17107DEC-6DC2-4818-B2DC-ED6215B2B806}.Release|x86.Build.0 = Release|x86
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Debug|x86.ActiveCfg = Debug|x86
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Debug|x86.Build.0 = Debug|x86
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Release|x86.ActiveCfg = Release|x86
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8}.Release|x86.Build.0 = Release|x86
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Debug|x86.ActiveCfg = Debug|x86
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Debug|x86.Build.0 = Debug|x86
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Release|x86.ActiveCfg = Release|x86
+		{4EAFE255-AA72-41BC-B444-152EE96A6BF8}.Release|x86.Build.0 = Release|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Debug|x86.ActiveCfg = Debug|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Debug|x86.Build.0 = Debug|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Release|Any CPU.ActiveCfg = Release|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Release|x86.ActiveCfg = Release|x86
+		{24FC2065-4F29-49C9-8E92-C34B122271D2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,10 +190,15 @@ Global
 		{9F1876E7-0BFE-43D1-A97F-843E1C4AB1D8} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{EA4B30D5-5B3C-40E5-B924-5CD464A18A02} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
 		{888BCB59-51A8-4785-8D1A-6A69FBC92DE1} = {6196DA34-B6C3-45DE-9E66-EBF1A648D042}
+		{118548AD-A42F-4532-8629-B749F8A25136} = {353DD003-2CBC-434A-BD61-B9C1C5F45426}
 		{F709D410-7EDE-4E58-A664-8742D3B7BFB1} = {5F3DB636-FF29-4F6E-A797-0B73F6B3CAA1}
 		{1716C209-1A84-4E75-8A61-963DECE97307} = {F709D410-7EDE-4E58-A664-8742D3B7BFB1}
 		{17107DEC-6DC2-4818-B2DC-ED6215B2B806} = {F709D410-7EDE-4E58-A664-8742D3B7BFB1}
+		{B0B8329B-16FA-4D00-BE1F-41D0FB8342C8} = {F709D410-7EDE-4E58-A664-8742D3B7BFB1}
 		{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C} = {888BCB59-51A8-4785-8D1A-6A69FBC92DE1}
+		{70B23772-382C-4712-8300-14007EAA61B9} = {118548AD-A42F-4532-8629-B749F8A25136}
+		{CB06F48D-A5DD-4FE1-A383-01F9E8934217} = {118548AD-A42F-4532-8629-B749F8A25136}
+		{24FC2065-4F29-49C9-8E92-C34B122271D2} = {15F09334-66DC-4DFB-81E7-E20ECCFE9CFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = 
