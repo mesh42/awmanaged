@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.Services;
 using AwManaged.Core.Services.Interfaces;
@@ -34,7 +35,7 @@ namespace AwManaged.LocalServices
         public LocalBotPluginServicesManager(BotEngine botEngine)
         {
             BotEngine = botEngine;
-            _pluginDiscovery = BotLocalPlugin.Discover(new DirectoryInfo(Directory.GetCurrentDirectory()));
+            _pluginDiscovery = BotLocalPlugin.Discover(new DirectoryInfo(Path.GetDirectoryName(Application.ExecutablePath)));
         }
 
         public override bool Stop()

@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AwManaged.Tests</RootNamespace>
-    <AssemblyName>AwManaged.Tests</AssemblyName>
+    <AssemblyName>Console</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>

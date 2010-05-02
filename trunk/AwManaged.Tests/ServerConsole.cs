@@ -317,7 +317,19 @@ namespace AwManaged.Tests
             Console.ReadLine();
             _sw1.Start();
             // ensure creation of remote client test account for the AwManaged.RemotingTests console application.
-            Start();
+            Console.WriteLine("Connecting to your Universe");
+            try
+            {
+                Start();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ConsoleMessageType.Error,ex.Message);
+                Console.WriteLine(ConsoleMessageType.Information, "Please check your application configuration universe connection settings.");
+                Console.WriteLine(ConsoleMessageType.Information, "Press enter to exit.");
+                System.Console.ReadLine();
+                Environment.Exit(0);       
+            }
 
             _commandInterpeter = new GenericInterpreterService<CCEnumTypeAttribute, CCEnumBindingAttribute, CCItemBindingAttribute>
                 (Assembly.GetAssembly(GetType())) { IdentifyableTechnicalName = "Server Console interpeter" };
