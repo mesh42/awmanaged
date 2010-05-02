@@ -10,9 +10,11 @@
  *
  * **********************************************************************************/
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using AwManaged.Configuration;
 using AwManaged.ConsoleServices;
 using AwManaged.Scene;
 
@@ -110,6 +112,66 @@ namespace AwManaged.Tests
             Main((string[])args);
         }
 
+
+        public static bool HasUniverseConnection()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(0);
+            if (string.IsNullOrEmpty(config.AppSettings.Settings["UniverseConnection"].Value))
+                return false;
+            return true;
+        }
+
+        public static void WriteAppSetting(string key, string value)
+        {
+            try
+            {
+                var config = ConfigurationManager.OpenExeConfiguration(0);
+                if (string.IsNullOrEmpty(config.AppSettings.Settings[key].Value))
+                {
+                    config.AppSettings.Settings[key].Value = value;
+                    config.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Can't write your configuration, if you are on Vista or Windows7 make sure you run the console application under elevated user rights, such as administrator.");
+                System.Console.WriteLine("Press enter to exit.");
+                System.Console.ReadLine();
+                Environment.Exit(0);
+            }
+        }
+
+
+        public static string GetMandatoryInformation(string prompt)
+        {
+            string result=null;
+            while (string.IsNullOrEmpty(result))
+            {
+                System.Console.WriteLine(prompt);
+                result = System.Console.ReadLine();
+            }
+            return result;
+        }
+
+        public static int GetMandatoryInformationInt(string prompt)
+        {
+            int intResult = 0;
+            string result = null;
+            while (string.IsNullOrEmpty(result))
+            {
+                System.Console.WriteLine(prompt);
+                result = System.Console.ReadLine();
+                if (!int.TryParse(result,out intResult))
+                {
+                    System.Console.WriteLine("Please enter a valid integer number.");
+                    result = null;
+                }
+
+            }
+            return intResult;
+        }
+
+
         public static void Main(string[] args)
         {
             Console.BackgroundColor = ConsoleColor.Black;
@@ -135,6 +197,25 @@ namespace AwManaged.Tests
             wp.ptMaxPosition.X = 10;
             wp.ptMaxPosition.Y = 20;
             SetWindowPlacement(hMenu, ref wp);
+
+
+            if (!HasUniverseConnection())
+            {
+                UniverseConnectionProperties prop = new UniverseConnectionProperties();
+                System.Console.WriteLine("Please enter your universe server information:");
+                prop.Domain = GetMandatoryInformation("Universe Server Hostname >");
+                prop.Port = GetMandatoryInformationInt("Universe Server Port >");
+                prop.Owner = GetMandatoryInformationInt("Privilege Citizen Number >");
+                prop.PrivilegePassword = GetMandatoryInformation("Privilege Password >");
+                prop.World = GetMandatoryInformation("Enter World >");
+
+                string conf =
+                    string.Format(
+                        "provider=aw;domain={0};port={1};login owner={2};privilege password={3};login name=awmanaged;world={4};position=0,0,0;rotation=0,0,0",
+                        prop.Domain, prop.Port, prop.Owner, prop.PrivilegePassword, prop.World);
+            WriteAppSetting("UniverseConnection",conf);
+                    
+            }
 
 
             if (IsIconic(hMenu))

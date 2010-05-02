@@ -93,6 +93,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{15F09334
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RwxStatistics", "RwxStatistics\RwxStatistics.csproj", "{24FC2065-4F29-49C9-8E92-C34B122271D2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{66F0DD47-2916-4269-B417-A3CDC006BD8C}"
+	ProjectSection(SolutionItems) = preProject
+		Deployment\InformationAfterInstall.txt = Deployment\InformationAfterInstall.txt
+		Deployment\InformationBeforeInstall.txt = Deployment\InformationBeforeInstall.txt
+		Deployment\Setup.iss = Deployment\Setup.iss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

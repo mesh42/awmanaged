@@ -1,0 +1,1 @@
+Thank you for installing Aw Managed SDK Technology Preview. Please visit our website on http://awmanaged.codeplex.com for documentation and information on this project.

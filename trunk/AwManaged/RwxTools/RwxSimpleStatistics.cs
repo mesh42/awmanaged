@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AwManaged.Math;
 
 namespace AwManaged.RwxTools
 {
@@ -35,10 +36,26 @@ namespace AwManaged.RwxTools
                 var linelower = line.ToLower();
                 if (linelower.StartsWith("polygon"))
                 {
+                    //polygon 6 6 5 4 3 2 1
+                    var dat = linelower.Split(' ');
+                    var polygon = new Polygon();
+                    for (var i = 1;i<dat.Length-1;i=i+2)
+                    {
+                        polygon.Points.Add(new Vector2(float.Parse(dat[i]),float.Parse(dat[i+1])));
+                    }
+
+
+
+
                     _polygons++;
                 }
                 if (linelower.StartsWith("vertex"))
                 {
+                    // vertex -0.367136 0.117699 -0.408144 uv 0.666666 0.000000  #1
+                    var dat = linelower.Split(' ');
+                    var position = new Vector3(float.Parse(dat[1]), float.Parse(dat[2]), float.Parse(dat[3]));
+                    var uv = new Vector2(float.Parse(dat[5]), float.Parse(dat[6]));
+                    var tri = new RwxVertex(position, uv);
                     _verts++;
                 }
                 if (linelower.StartsWith("triangle"))

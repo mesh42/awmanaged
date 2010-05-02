@@ -1,3 +1,9 @@
+Release 0.5.15 (unstable) feature/maintenance release
+* Adding deployment configuration files for Inno setup 5.
+* Adding simple command line configuration for Universe Connection in the Server Console.
+* [Bug-Fix], plugin discovery does not always find the correct directory path.
+* Adding a friendly message to the server console, if a connection can not be made with the current Universe Connection configuration.
+
 Release 0.5.14 (unstable) feature/maintenance release
 * Unifying build targets to x86.
 * Adding A simple RWX analyzer, i needed for my RWX Megapath web site.
