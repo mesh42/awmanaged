@@ -10,6 +10,7 @@
  *
  * **********************************************************************************/
 using System;
+using System.Drawing;
 using AwManaged.Scene;
 using AwManaged.Scene.Interfaces;
 using AWManaged.Security;
@@ -46,5 +47,14 @@ namespace AwManaged.Interfaces
         /// <param name="avatar">The avatar.</param>
         /// <param name="message">The message.</param>
         void Say(int delay, SessionArgumentType sessionArgumentType, TAvatar avatar, string message);
+
+        /// <summary>
+        /// Sends a console message.
+        /// </summary>
+        /// <param name="color">The color of the console message.</param>
+        /// <param name="isBold">if set to <c>true</c> [is bold].</param>
+        /// <param name="isItalic">if set to <c>true</c> [is italic].</param>
+        /// <param name="message">The message.</param>
+        void ConsoleMessage(Color color, bool isBold, bool isItalic, string message);
     }
 }

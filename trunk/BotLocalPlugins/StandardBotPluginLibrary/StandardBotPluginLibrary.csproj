@@ -93,6 +93,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -109,6 +110,8 @@
     <Compile Include="AfkBot\AfkBotPlugin.cs" />
     <Compile Include="AfkBot\AvatarStatus.cs" />
     <Compile Include="AwMInfoBot\AwMInfoBotPlugin.cs" />
+    <Compile Include="ColorChatBot\AvatarColorChatSetting.cs" />
+    <Compile Include="ColorChatBot\ColorBotPlugin.cs" />
     <Compile Include="GreeterBot\GreeterBotPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuoteBot\QuoteItem.cs" />

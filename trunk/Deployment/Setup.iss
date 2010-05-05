@@ -9,7 +9,7 @@ EnableISX=true
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{3DB14680-D0A4-4D49-BDC0-5383BB2C5257}
 AppName=Active Worlds Managed SDK Tech. Preview
-AppVerName=AwManaged 0.5.14
+AppVerName=AwManaged 0.5.15
 AppPublisher=TCPX Incorporated
 AppPublisherURL=http://awmanaged.codeplex.com
 AppSupportURL=http://awmanaged.codeplex.com
@@ -20,9 +20,13 @@ LicenseFile=D:\ManagedActiveWorlds\AwManaged.Tests\bin\x86\Debug\License.txt
 InfoBeforeFile=D:\ManagedActiveWorlds\Deployment\InformationBeforeInstall.txt
 InfoAfterFile=D:\ManagedActiveWorlds\Deployment\InformationAfterInstall.txt
 OutputDir=D:\ManagedActiveWorlds\Deployment
-OutputBaseFilename=awmanaged-sdk-0.5.14
+OutputBaseFilename=awmanaged-sdk-0.5.15
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=admin
+
+[Messages]
+AdminPrivilegesRequired=Please run this installer under administrative privileges.
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -114,7 +118,7 @@ begin
   if (not IsDotNetDetected('v4\Full', 0)) then begin
     dotNetNeeded := true;
     if (not IsAdminLoggedOn()) then begin
-      MsgBox('MyApp needs the Microsoft .NET Framework to be installed by an Administrator', mbInformation, MB_OK);
+      MsgBox('Aw Managed .NET SDK needs the Microsoft .NET Framework to be installed by an Administrator', mbInformation, MB_OK);
       Result := false;
     end else begin
       memoDependenciesNeeded := memoDependenciesNeeded + '      .NET Framework' #13;

@@ -61,7 +61,7 @@ namespace StandardBotPluginLibrary.AfkBot
             return status;
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="GreeterBotPlugin"/> class.
+        /// Initializes a new instance of the <see cref="ColorChatBotPlugin"/> class.
         /// </summary>
         /// <param name="bot">The bot.</param>
         public AfkBotPlugin(BotEngine bot): base(bot)

@@ -21,13 +21,13 @@ namespace StandardBotPluginLibrary.GreeterBot
     /// Part of the Standard Bot Plugin Library.
     /// </summary>
     [PluginInfo("gbot","This is a simple greeterbot.")] /* plugin information for the plugin provider */
-    public class GreeterBotPlugin :  BotLocalPlugin
+    public class ColorChatBotPlugin :  BotLocalPlugin
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GreeterBotPlugin"/> class.
+        /// Initializes a new instance of the <see cref="ColorChatBotPlugin"/> class.
         /// </summary>
         /// <param name="bot">The bot.</param>
-        public GreeterBotPlugin(BotEngine bot) : base(bot)
+        public ColorChatBotPlugin(BotEngine bot) : base(bot)
         {
             // The bot needs to attach to two events for operation.
             bot.AvatarEventAdd += AvatarEventAdd;

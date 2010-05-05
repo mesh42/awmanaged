@@ -159,6 +159,7 @@
     <Compile Include="UnitTests\ObjectTests.cs" />
     <Compile Include="UnitTests\PromptInterpreterTests.cs" />
     <Compile Include="UnitTests\ReflectionTests.cs" />
+    <Compile Include="UnitTests\RemotingTests.cs" />
     <Compile Include="UnitTests\ResourceTests.cs" />
     <Compile Include="UnitTests\TreeNodeTests.cs" />
     <Compile Include="UnitTests\WebServerTests.cs" />

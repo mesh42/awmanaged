@@ -990,7 +990,21 @@ namespace AwManaged
         [Browsable(true)]
         [Category("Behavior")]
         [Description("When set to true, the bot will echo messages send into the chat room. It requires the world attribute echo chat setting to be turned of.")]
-        public bool IsEchoChat { get; set;}
+        public bool IsEchoChat
+        {
+            get
+            {
+                bool read_only;
+                return aw.GetBool(AW.Attributes.WorldDisableChat); 
+            } 
+
+            set
+            {
+                int rc = aw.WorldAttributeSet((int)AW.Attributes.WorldDisableChat, "1");
+                if (rc != 0)
+                    throw new AwException(rc);
+            }
+        }
 
         [Browsable(false)]
         public LoginConfiguration LoginConfiguration
@@ -1161,6 +1175,18 @@ namespace AwManaged
                 HandleExceptionManaged(ex);
             }
         }
+
+        public void ConsoleMessage(System.Drawing.Color color, bool isBold, bool isItalic, string message)
+        {
+            aw.SetInt(Attributes.ConsoleRed, color.R);
+            aw.SetInt(Attributes.ConsoleGreen, color.G);
+            aw.SetInt(Attributes.ConsoleBlue, color.B);
+            aw.SetBool(Attributes.ConsoleBold, isBold);
+            aw.SetBool(Attributes.ConsoleItalics, isItalic);
+            aw.SetString(Attributes.ConsoleMessage, message);
+            aw.ConsoleMessage(0);
+        }
+
         public void Say(string message)
         {
             try
