@@ -29,7 +29,7 @@ namespace StandardBotPluginLibrary.StatsBot
         private IObjectContainer _db;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GreeterBotPlugin"/> class.
+        /// Initializes a new instance of the <see cref="ColorChatBotPlugin"/> class.
         /// </summary>
         /// <param name="bot">The bot.</param>
         public StatsBotPlugin(BotEngine bot)

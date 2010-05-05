@@ -25,7 +25,7 @@ namespace StandardBotPluginLibrary.AwMInfoBot
     public class AwMInfoBotPlugin : BotLocalPlugin
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GreeterBotPlugin"/> class.
+        /// Initializes a new instance of the <see cref="ColorChatBotPlugin"/> class.
         /// </summary>
         /// <param name="bot">The bot.</param>
         public AwMInfoBotPlugin(BotEngine bot)

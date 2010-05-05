@@ -48,7 +48,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScriptControl", "ScriptCont
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db4o", "db4o", "{EA4B30D5-5B3C-40E5-B924-5CD464A18A02}"
 	ProjectSection(SolutionItems) = preProject
+		Dependencies\db4o\Cecil.FlowAnalysis.dll = Dependencies\db4o\Cecil.FlowAnalysis.dll
 		Dependencies\db4o\db4o.license.html = Dependencies\db4o\db4o.license.html
+		Dependencies\db4o\Db4objects.Db4o.CS.dll = Dependencies\db4o\Db4objects.Db4o.CS.dll
 		Dependencies\db4o\Db4objects.Db4o.dll = Dependencies\db4o\Db4objects.Db4o.dll
 		Dependencies\db4o\Db4objects.Db4o.Linq.dll = Dependencies\db4o\Db4objects.Db4o.Linq.dll
 	EndProjectSection

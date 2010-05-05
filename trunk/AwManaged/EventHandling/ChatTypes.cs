@@ -19,11 +19,11 @@ namespace AwManaged.EventHandling
         /// <summary>
         /// A normal chat message from a certain avatar.
         /// </summary>
-        Normal = 0,
+        Normal = 1,
         /// <summary>
         /// A chat message received from a public speaker.
         /// </summary>
-        Broadcast = 1,
+        Broadcast = 0,
         /// <summary>
         /// A chat message sent only to you a certain avatar.
         /// </summary>

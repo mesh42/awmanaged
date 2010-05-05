@@ -1,3 +1,8 @@
+Release 0.5.16 (unstable) feature/maintenance release
+* Adding ConsoleMessage method to IChatCommands
+* Adding Color Chat Bot to the standard bot plugin library.
+* Adding some missing dependency libraries, for db4o.
+
 Release 0.5.15 (unstable) feature/maintenance release
 * Adding deployment configuration files for Inno setup 5.
 * Adding simple command line configuration for Universe Connection in the Server Console.
