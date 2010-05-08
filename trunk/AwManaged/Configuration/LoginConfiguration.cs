@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.Services;

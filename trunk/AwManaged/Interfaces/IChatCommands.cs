@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Drawing;
 using AwManaged.Scene;
 using AwManaged.Scene.Interfaces;
@@ -17,7 +17,7 @@ using AWManaged.Security;
 
 namespace AwManaged.Interfaces
 {
-    public interface IChatCommands<TAvatar> where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+    public interface IChatCommands<TAvatar> where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         /// <summary>
         /// Whispers a message to all user within a specified role.
@@ -49,12 +49,18 @@ namespace AwManaged.Interfaces
         void Say(int delay, SessionArgumentType sessionArgumentType, TAvatar avatar, string message);
 
         /// <summary>
-        /// Sends a console message.
+        /// Sends a console message to the chat room with a specified delay.
+        /// If at the time the specified avatar session is not available,
+        /// the message will be not be echoed to the chat room.
+        /// Great for Greeter bots to prevent greeting message flooding.
         /// </summary>
-        /// <param name="color">The color of the console message.</param>
+        /// <param name="delay">The delay.</param>
+        /// <param name="argumentType">Type of the argument.</param>
+        /// <param name="avatar">The avatar.</param>
+        /// <param name="color">The color.</param>
         /// <param name="isBold">if set to <c>true</c> [is bold].</param>
         /// <param name="isItalic">if set to <c>true</c> [is italic].</param>
         /// <param name="message">The message.</param>
-        void ConsoleMessage(Color color, bool isBold, bool isItalic, string message);
+        void ConsoleMessage(int delay, SessionArgumentType argumentType, TAvatar avatar, Color color, bool isBold, bool isItalic, string message);
     }
 }

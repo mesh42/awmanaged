@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using System.Configuration;
 using System.Threading;
 using AwManaged.Core.ServicesManaging;

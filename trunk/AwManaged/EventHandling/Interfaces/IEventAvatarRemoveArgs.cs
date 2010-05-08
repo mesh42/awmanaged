@@ -9,13 +9,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
     public interface IEventAvatarRemoveArgs<TAvatar>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         TAvatar Avatar { get; }
     }

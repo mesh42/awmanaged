@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.EventHandling.Templated;
 
 namespace AwManaged.EventHandling.Interfaces
 {
     public interface IBotEvents<TSender, TConnectionProperties>
-        where TConnectionProperties : MarshalByRefObject, IUniverseConnectionProperties<TConnectionProperties>
+        where TConnectionProperties : MarshalIndefinite, IUniverseConnectionProperties<TConnectionProperties>
     {
         /// <summary>
         /// Occurs when [bot enters world].

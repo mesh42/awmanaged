@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.ServicesManaging.Interfaces;
 
@@ -18,7 +18,7 @@ namespace AwManaged.Core.EventHandling
     [Serializable]
     public delegate void ServiceStartedelegate(IServicesManager sender, ServiceStartedArgs e);
 
-    public sealed class ServiceStartedArgs : MarshalByRefObject
+    public sealed class ServiceStartedArgs : MarshalIndefinite
     {
         private readonly IIdentifiable _service;
 

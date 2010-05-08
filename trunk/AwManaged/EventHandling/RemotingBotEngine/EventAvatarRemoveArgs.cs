@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Scene;
 
@@ -21,7 +21,7 @@ namespace AwManaged.EventHandling.RemotingBotEngine
     /// <summary>
     /// This event gets fired when an avatar is removed from the world list.
     /// </summary>
-    public sealed class EventAvatarRemoveArgs : MarshalByRefObject
+    public sealed class EventAvatarRemoveArgs : MarshalIndefinite
     {
         public Avatar Avatar { get; private set; }
 

@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AW;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
@@ -24,9 +24,9 @@ namespace AwManaged.Scene.Interfaces
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <typeparam name="TCamera">The type of the camera.</typeparam>
     public interface IZone<T,TModel,TCamera> : ISceneNode<T>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TCamera : MarshalByRefObject, ICamera<TCamera>
-        where T : MarshalByRefObject
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TCamera : MarshalIndefinite, ICamera<TCamera>
+        where T : MarshalIndefinite
     {
         /// <summary>
         /// Gets or sets the model object atttached to this zone.

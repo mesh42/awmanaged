@@ -94,6 +94,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -112,8 +115,14 @@
     <Compile Include="AwMInfoBot\AwMInfoBotPlugin.cs" />
     <Compile Include="ColorChatBot\AvatarColorChatSetting.cs" />
     <Compile Include="ColorChatBot\ColorBotPlugin.cs" />
+    <Compile Include="GlobalWeatherBot\GlobalWeatherBotPlugin.cs" />
     <Compile Include="GreeterBot\GreeterBotPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="QuoteBot\QuoteItem.cs" />
     <Compile Include="QuoteBot\QuoteBotPlugin.cs" />
     <Compile Include="QuoteBot\QuoteStatistic.cs" />
@@ -121,14 +130,30 @@
     <Compile Include="QuoteBot\Rss\RssReader.cs" />
     <Compile Include="StatsBot\ModelClickStatistics.cs" />
     <Compile Include="StatsBot\StatsBotPlugin.cs" />
+    <Compile Include="Web References\GlobalWeatherService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="AwManagedSignature.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\GlobalWeatherService\globalweather.wsdl" />
+    <None Include="Web References\GlobalWeatherService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Web References\GlobalWeatherService\globalweather.disco" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -146,6 +171,31 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://www.webservicex.net/globalweather.asmx">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\GlobalWeatherService\</RelPath>
+      <UpdateFromURL>http://www.webservicex.net/globalweather.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>StandardBotPluginLibrary_GlobalWeatherService_GlobalWeather</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharedMemory\SharedMemory.csproj">
+      <Project>{B377E456-FC1D-4B39-8714-A8EC129B1B16}</Project>
+      <Name>SharedMemory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

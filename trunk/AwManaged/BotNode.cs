@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -28,7 +28,7 @@ namespace AwManaged
     /// </summary>
     [Serializable]
     public class BotNode<TConnection, TModel> : INode, IRemoveObjects<TModel>, IAddObjects<TModel>, IChangedObjects<TModel>, ILogin<TConnection>
-        where TModel : MarshalByRefObject, IModel<TModel>
+        where TModel : MarshalIndefinite, IModel<TModel>
         where TConnection : UniverseConnectionProperties
     {
 
@@ -327,7 +327,7 @@ namespace AwManaged
     }
 
     public interface IChangedObjects<TModel>
-         where TModel : MarshalByRefObject, IModel<TModel>
+         where TModel : MarshalIndefinite, IModel<TModel>
     {
         void ChangeObject(TModel model);
     }
@@ -346,13 +346,13 @@ namespace AwManaged
     }
 
     public interface IAddObjects<TModel>
-        where TModel : MarshalByRefObject, IModel<TModel>
+        where TModel : MarshalIndefinite, IModel<TModel>
     {
         void AddObject(TModel model);
     }
 
     public interface IRemoveObjects<TModel>
-        where TModel : MarshalByRefObject, IModel<TModel>
+        where TModel : MarshalIndefinite, IModel<TModel>
     {
         void RemoveObject(TModel model);
     }

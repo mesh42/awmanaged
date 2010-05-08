@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using AwManaged.Scene;
 
 namespace StandardBotPluginLibrary.AfkBot

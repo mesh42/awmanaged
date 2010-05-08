@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Storage;
 using Db4objects.Db4o.Config.Attributes;
 using Db4objects.Db4o.Linq;

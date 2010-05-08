@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -42,6 +42,7 @@ using AwManaged.Scene.ActionInterpreter.Interface;
 using AWManaged.Security;
 using AwManaged.Security.RemoteBotEngine;
 using AwManaged.Storage;
+using Cassini;
 using Camera=AwManaged.Scene.Camera;
 using Mover=AwManaged.Scene.Mover;
 using Zone=AwManaged.Scene.Zone;
@@ -51,10 +52,10 @@ namespace AwManaged
     /// <summary>
     /// Exact abstract type implementation of an active worlds "master" bot.
     /// </summary>
-    public class BotEngine : MarshalByRefObject, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection, LocalBotPluginServicesManager>
+    [Serializable]
+    public class BotEngine : MarshalIndefinite, IBotEngine<Avatar,Model,Camera,Zone,Mover,HudBase<Avatar>,Scene.Particle,Scene.ParticleFlags, Db4OConnection, LocalBotPluginServicesManager>
     {
-
-
+  
         public ConsoleHelpers Console = new ConsoleHelpers();
 
         #region Fields
@@ -432,6 +433,7 @@ namespace AwManaged
 
                 // Have the bot enter the specified world under Care Taker Privileges (default/prefered)
                 if (aw.GetBool(Attributes.WorldCaretakerCapability))
+                    // bug Byte MR, always returns false
                 {
                     aw.SetBool(Attributes.EnterGlobal, true);
                     rc = aw.Enter(_universeConnection.Connection.World);
@@ -441,7 +443,7 @@ namespace AwManaged
                 }
                 else
                 {
-                    aw.SetBool(Attributes.EnterGlobal, false);
+                    aw.SetBool(Attributes.EnterGlobal, true);
                     IsEnterGlobal = false;
                     rc = aw.Enter(_universeConnection.Connection.World);
                     if (rc != 0)
@@ -506,12 +508,17 @@ namespace AwManaged
             }
         }
 
+        public CrossAppDomainSingleton cross = new CrossAppDomainSingleton();
+
+
         private void StartServices()
         {
             SchedulingService = new SchedulingService();
             ServicesManager.Start();
             LocalBotPluginServicesManager.Start();
             ServicesManager.AddService(SchedulingService);
+           
+            
 
             _actionInterpreter = new GenericInterpreterService<ACEnumTypeAttribute, ACEnumBindingAttribute, ACItemBindingAttribute>(Assembly.GetAssembly(typeof(ACEnumBindingAttribute))) { IdentifyableTechnicalName = "ActionInterpreter" };
             ServicesManager.AddService(_actionInterpreter);
@@ -546,7 +553,9 @@ namespace AwManaged
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["WebServerConnection"]))
             {
-                _webServerService = new WebServerService(ConfigurationManager.AppSettings["WebServerConnection"]){IdentifyableTechnicalName="w3svc"};
+                _webServerService = new WebServerService(ConfigurationManager.AppSettings["WebServerConnection"])
+                                        {IdentifyableTechnicalName = "w3svc"};
+                AppDomain.CurrentDomain.SetData("BotEngine", this);
                 ServicesManager.AddService(_webServerService);
             }
 
@@ -1175,7 +1184,14 @@ namespace AwManaged
                 HandleExceptionManaged(ex);
             }
         }
-
+    
+        public void ConsoleMessage(string prefix, System.Drawing.Color color, bool isBold, bool isItalic, string message)
+        {
+            string spacing = ":\t";
+            //spacing = spacing.PadRight(4 - (prefix.Length/8),'\t');
+            ConsoleMessage(color,isBold,isItalic,prefix + spacing + message);
+        }
+        
         public void ConsoleMessage(System.Drawing.Color color, bool isBold, bool isItalic, string message)
         {
             aw.SetInt(Attributes.ConsoleRed, color.R);
@@ -1198,11 +1214,36 @@ namespace AwManaged
                 HandleExceptionManaged(ex);
             }
         }
- 
+
         public void Say(int delay, SessionArgumentType argumentType, Avatar avatar, string message)
         {
-            var o = new CallbackStructT<Avatar>(avatar.Clone(),new object[]{message,argumentType});
+            var o = new CallbackStructT<Avatar>(avatar.Clone(), new object[] {message, argumentType});
             o.Timer = new Timer(SayCallback, o, delay, 0);
+        }
+
+        public void ConsoleMessage(int delay, SessionArgumentType argumentType, Avatar avatar, System.Drawing.Color color, bool isBold, bool isItalic, string message)
+        {
+            var o = new CallbackStructT<Avatar>(avatar.Clone(), new object[] { message, argumentType, color, isBold, isItalic });
+            o.Timer = new Timer(ConsoleMessageCallback, o, delay, 0);
+        }
+
+        private void ConsoleMessageCallback(object state)
+        {
+            var result = (CallbackStructT<Avatar>)state;
+            var exists = _sceneNodes.Avatars.Exists(p => p.Session == result.Clone.Session);
+            switch ((SessionArgumentType)result.Param[1])
+            {
+                // only send a message if the session is stil available.
+                case SessionArgumentType.AvatarSessionMustExist:
+                    if (exists)
+                        ConsoleMessage((System.Drawing.Color)result.Param[2],(bool)result.Param[3],(bool)result.Param[4], result.Param[0].ToString());
+                    break;
+                // only send a message if the session os not available.
+                case SessionArgumentType.AvatarSessionMustNotExist:
+                    if (!exists)
+                        ConsoleMessage((System.Drawing.Color)result.Param[2],(bool)result.Param[3],(bool)result.Param[4], result.Param[0].ToString());
+                    break;
+            }
         }
 
         private void SayCallback(object state)

@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Core.Patterns
@@ -17,6 +18,7 @@ namespace AwManaged.Core.Patterns
     /// Provides a list with minimal functionality exposed to prevent abuse of the AWManaged cache's.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public sealed class ProtectedList<T> : BaseCacheList<T,ProtectedList<T>> where T : ICloneableT<T>
     {
         public override ProtectedList<T> Clone()

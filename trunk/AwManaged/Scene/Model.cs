@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.ComponentModel;
 using System.Xml.Serialization;
 using AW;
@@ -20,7 +20,7 @@ using Db4objects.Db4o.Config.Attributes;
 
 namespace AwManaged.Scene
 {
-    public sealed class Model : MarshalByRefObject, IModel<Model>
+    public sealed class Model : MarshalIndefinite, IModel<Model>
     {
         [Indexed] private int _id;
         [Indexed] private int _owner;

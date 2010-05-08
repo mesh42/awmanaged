@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Core.Patterns;
 using AwManaged.Scene.Interfaces;
@@ -19,7 +19,8 @@ namespace AwManaged.Scene
     /// <summary>
     /// Exact implementation of scene nodes for active worlds scene objects.
     /// </summary>
-    public sealed class SceneNodes : MarshalByRefObject, ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar,Particle,ParticleFlags>, ICloneableT<SceneNodes>
+    [Serializable]
+    public sealed class SceneNodes : MarshalIndefinite, ISceneNodes<Model, Camera, Mover, Zone, HudBase<Avatar>, Avatar,Particle,ParticleFlags>, ICloneableT<SceneNodes>
     {
         #region ISceneNodes<Model,Camera,Mover,Zone,HudBase<Avatar>,Avatar> Members
 

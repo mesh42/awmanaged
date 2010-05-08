@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using System.Reflection;
 using System.Runtime.Remoting;
 
@@ -7,7 +7,7 @@ namespace AwManaged.ScriptServices
     /// <summary>
     /// Factory class to create objects exposing IRun
     /// </summary>
-    public class ScriptInstance : MarshalByRefObject
+    public class ScriptInstance : MarshalIndefinite
     {
         private const BindingFlags bfi = BindingFlags.Instance | BindingFlags.Public | BindingFlags.CreateInstance;
 

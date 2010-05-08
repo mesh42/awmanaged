@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Core.Patterns.Tree

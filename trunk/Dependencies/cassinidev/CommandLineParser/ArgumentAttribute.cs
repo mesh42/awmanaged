@@ -1,6 +1,6 @@
 ﻿
 
-using System;
+using SharedMemory;using System;
 using System.Diagnostics;
 
 namespace Cassini.CommandLine

@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AW;
 using AwManaged.Core.Interfaces;
 using AwManaged.Math;
@@ -17,7 +17,7 @@ using AwManaged.Math;
 namespace AwManaged.Scene.Interfaces
 {
     public interface IModel<T> : ISceneNode<T>, ITransactionItem,IIntId,IIdentifiable
-        where T : MarshalByRefObject
+        where T : MarshalIndefinite
     {
         int Owner { get; set; }
         DateTime Timestamp { get; }

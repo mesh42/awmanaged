@@ -9,13 +9,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public class ParticleFlags : MarshalByRefObject, IParticleFlags<ParticleFlags> 
+    public class ParticleFlags : MarshalIndefinite, IParticleFlags<ParticleFlags> 
     {
         public bool CameraEmit { get; set; }
         public bool DrawInFront { get; set; }

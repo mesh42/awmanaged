@@ -9,19 +9,19 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Interfaces;
 
 namespace AwManaged.EventHandling.Templated
 {
     public delegate void ObjectEventScanCompletedDelegate<TSender,TSceneNodes>(TSender sender, EventObjectScanCompletedEventArgs<TSceneNodes> e)
-        where TSceneNodes : MarshalByRefObject, ICloneableT<TSceneNodes>;
+        where TSceneNodes : MarshalIndefinite, ICloneableT<TSceneNodes>;
 
     /// <summary>
     /// Raised when object scanning of a world has been completed.
     /// </summary>
-    public sealed class EventObjectScanCompletedEventArgs<TSceneNodes> : MarshalByRefObject, IEventObjectScanEventArgs<TSceneNodes>
+    public sealed class EventObjectScanCompletedEventArgs<TSceneNodes> : MarshalIndefinite, IEventObjectScanEventArgs<TSceneNodes>
         where TSceneNodes : ICloneableT<TSceneNodes>
     {
         /// <summary>

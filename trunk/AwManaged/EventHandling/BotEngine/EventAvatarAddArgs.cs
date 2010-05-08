@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Scene;
 
@@ -18,7 +18,7 @@ namespace AwManaged.EventHandling.BotEngine
     [Serializable]
     public delegate void AvatarEventAddDelegate(AwManaged.BotEngine sender, EventAvatarAddArgs e);
 
-    public sealed class EventAvatarAddArgs : MarshalByRefObject
+    public sealed class EventAvatarAddArgs : MarshalIndefinite
     {
         public Avatar Avatar { get; private set; }
 

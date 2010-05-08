@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
@@ -23,6 +23,7 @@ namespace AwManaged.Core.Patterns
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TList">The type of the list implementation</typeparam>
+    [Serializable]
     public abstract class BaseCacheList<T,TList> : List<T>, IChanged<TList>, ICloneableListT<TList,T>, IEnumerator, IEnumerable<T> 
         where T : ICloneableT<T>
         where TList : IList<T>

@@ -9,15 +9,15 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Drawing;
 using AwManaged.Math;
 
 namespace AwManaged.Scene.Interfaces
 {
     public interface IParticle<TParticle, TPArticleFlags> : ISceneNode<TParticle> 
-        where TParticle : MarshalByRefObject
-        where TPArticleFlags : MarshalByRefObject, ISceneNode<TPArticleFlags>
+        where TParticle : MarshalIndefinite
+        where TPArticleFlags : MarshalIndefinite, ISceneNode<TPArticleFlags>
     {
         Vector3 AccelerationMinimum { set; get; }
         Vector3 AccelerationMaximum { set; get; }

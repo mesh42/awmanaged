@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Drawing;
 using AwManaged;
 using AwManaged.Core.Commanding;
 using AwManaged.Core.Reflection.Attributes;
@@ -21,7 +22,7 @@ namespace StandardBotPluginLibrary.AwMInfoBot
     /// Simple greeter bot. To demonstrate The Local Plugin Provider
     /// Part of the Standard Bot Plugin Library.
     /// </summary>
-    [PluginInfo("awmbot", "This bot provides version info of awmanged.")] /* plugin information for the plugin provider */
+    [PluginInfo("awmbot", "This bot provides version info of awmanaged.")] /* plugin information for the plugin provider */
     public class AwMInfoBotPlugin : BotLocalPlugin
     {
         /// <summary>
@@ -38,13 +39,13 @@ namespace StandardBotPluginLibrary.AwMInfoBot
         void ChatEvent(BotEngine sender, EventChatArgs e)
         {
             var cmd = new CommandLine(e.Message); /* use a simple command line interpreter */
-            if (string.IsNullOrEmpty(cmd.Command) || cmd.Command != "awm" || cmd.Arguments.Count==0)
+            if (string.IsNullOrEmpty(cmd.Command) || cmd.Command != "!awm" || cmd.Arguments.Count==0)
                 return;
 
             switch (cmd.Arguments[0].Value.Value)
             {
                 case "version" :
-                    sender.Say(string.Format("Managed Bot Engine Server {0}", sender.Version()));
+                    sender.ConsoleMessage(Color.Black,true,false,string.Format("Managed Bot Engine Server {0}", sender.Version()));
                     break;
             }
 

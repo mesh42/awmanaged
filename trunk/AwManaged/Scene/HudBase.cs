@@ -9,15 +9,15 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AW;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public sealed class HudBase<TAvatar> : MarshalByRefObject,
-        IHudBase<HudBase<TAvatar>, TAvatar> where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+    public sealed class HudBase<TAvatar> : MarshalIndefinite,
+        IHudBase<HudBase<TAvatar>, TAvatar> where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         private readonly Instance _aw;
 

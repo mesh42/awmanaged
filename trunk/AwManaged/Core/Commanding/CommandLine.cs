@@ -65,12 +65,12 @@ namespace AwManaged.Core.Commanding
         /// </summary>
         private void Disect()
         {
-            var mcmd = Regex.Match(Literal, "[!,//,a-z,0-9]{1,}");
-            var mquote = Regex.Matches(Literal, "\"(?<value>[a-z,0-9,\\s]{0,})\"");
-            var arg = Regex.Matches(Literal, " (?<value>[a-z,0-9,\\s]{0,})");
-            var valuepairs = Regex.Matches(Literal, "(?<name>[a-z,0-9]{1,})[\\s]{0,}=[\\s]{0,}(?<value>[a-z,0-9]{1,})");
-            var quotedvaluepairs = Regex.Matches(Literal, "(?<name>[a-z,0-9]{1,})[\\s]{0,}=[\\s]{0,}\"(?<value>[a-z,0-9,\\s]{1,})\"");
-            var flags = Regex.Matches(Literal, "/(?<name>[a-z,0-9]{1,})");
+            var mcmd = Regex.Match(Literal, "[!,//,a-z,A-Z,0-9]{1,}");
+            var mquote = Regex.Matches(Literal, "\"(?<value>[a-z,A-Z,0-9,\\s]{0,})\"");
+            var arg = Regex.Matches(Literal, " (?<value>[a-z,A-Z,0-9,\\s,#]{0,})");
+            var valuepairs = Regex.Matches(Literal, "(?<name>[a-z,A-Z,0-9]{1,})[\\s]{0,}=[\\s]{0,}(?<value>[a-z,A-Z,0-9]{1,})");
+            var quotedvaluepairs = Regex.Matches(Literal, "(?<name>[a-z,A-Z,0-9]{1,})[\\s]{0,}=[\\s]{0,}\"(?<value>[a-z,A-Z,0-9,\\s]{1,})\"");
+            var flags = Regex.Matches(Literal, "/(?<name>[a-z,A-Z,0-9]{1,})");
 
             Command = mcmd.Value;
 

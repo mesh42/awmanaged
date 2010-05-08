@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene.Interfaces
@@ -18,9 +18,9 @@ namespace AwManaged.Scene.Interfaces
     /// Scene node commands, allow for interacting with objects such as Camera's, Movers and Models (objects) in a managed fashion.
     /// </summary>
     public interface ISceneNodeCommands<TModel,TAvatar,THud>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where THud : MarshalByRefObject, IHudBase<THud,TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where THud : MarshalIndefinite, IHudBase<THud,TAvatar>
     {
         /// <summary>
         /// Displays a hud to the specified avatar.

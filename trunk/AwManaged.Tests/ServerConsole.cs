@@ -9,12 +9,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using AwManaged.ConsoleServices;
 using AwManaged.Core.Commanding;
 using AwManaged.Core.Commanding.Attributes;
@@ -27,6 +28,7 @@ using AwManaged.EventHandling;
 using AwManaged.EventHandling.BotEngine;
 using AwManaged.ExceptionHandling;
 using AwManaged.Math;
+using AwManaged.RemoteServices;
 using AwManaged.Scene;
 using AwManaged.Scene.ActionInterpreter.Interface;
 using AwManaged.Tests.Commands;
@@ -159,7 +161,7 @@ namespace AwManaged.Tests
                             Whisper(_whisperTo, message);
                             break;
                         case ChatType.Normal:
-                            Say(message);
+                            ConsoleMessage("[console]",Color.Black,true,false, message);
                             break;
                     }
 
@@ -216,7 +218,6 @@ namespace AwManaged.Tests
                         Console.ReadLine();
                         return;
                     }
-                    Console.ReadLine();
                 }
 
                 switch (commandLine.ToLower())
@@ -276,6 +277,7 @@ namespace AwManaged.Tests
                 base.Console.WriteLine(ConsoleMessageType.Error, ex.Message);
                 Console.ReadLine();
             }
+            Console.ReadLine();
         }
 
         void ChatMode_ChatEvent(BotEngine sender, EventChatArgs e)
@@ -305,6 +307,11 @@ namespace AwManaged.Tests
             Console.Title = string.Format("Managed Bot Engine Server {0}\r\n", base.Version());
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.Clear();
+
+            CrossAppDomainSingletonT<CrossAppDomainSingleton>.Instance.Shared = this;
+
+            
+ 
 
             ServicesManager.OnServiceStarted += ServicesManager_OnServiceStarted;
             LocalBotPluginServicesManager.OnServiceStarted += LocalBotPluginServicesManager_OnServiceStarted;

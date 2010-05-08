@@ -9,15 +9,15 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.EventHandling.Templated;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
     public interface IChatEvents<TSender, TAvatar, TEventChatArgs>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TEventChatArgs : MarshalByRefObject, IEventChatArgs<TAvatar>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TEventChatArgs : MarshalIndefinite, IEventChatArgs<TAvatar>
     {
         /// <summary>
         /// Occurs when [a chat event has been received].

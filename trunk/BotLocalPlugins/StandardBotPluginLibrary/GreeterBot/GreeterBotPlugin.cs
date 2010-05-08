@@ -9,6 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
+using System.Drawing;
 using AwManaged;
 using AwManaged.Core.Reflection.Attributes;
 using AwManaged.EventHandling.BotEngine;
@@ -43,8 +44,8 @@ namespace StandardBotPluginLibrary.GreeterBot
         {
             // Wait 5 seconds, before the leave message is sent. The message will not be send if the avatar reenters the world within that time.
             // This is to prevent message flooding.
-            sender.Say(5000, SessionArgumentType.AvatarSessionMustNotExist,
-                e.Avatar, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
+            sender.ConsoleMessage(5000, SessionArgumentType.AvatarSessionMustNotExist,
+                e.Avatar,System.Drawing.Color.DarkSlateGray,true,false, string.Format("{0} has left {1}.", e.Avatar.Name, sender.LoginConfiguration.Connection.World));
         }
 
         /// <summary>
@@ -56,8 +57,8 @@ namespace StandardBotPluginLibrary.GreeterBot
         {
             // Wait 5 seconds, before the greeting message is sent. The message will not be send if the avatar doesn't exist anymore at that time.
             // This is to prevent message flooding.
-            sender.Say(5000, SessionArgumentType.AvatarSessionMustExist,
-                e.Avatar,string.Format("{0} enters.", e.Avatar.Name));
+            sender.ConsoleMessage(5000, SessionArgumentType.AvatarSessionMustExist,
+                e.Avatar,System.Drawing.Color.DarkSlateGray,true,false,string.Format("{0} enters.", e.Avatar.Name));
         }
 
         public override void PluginInitialized()

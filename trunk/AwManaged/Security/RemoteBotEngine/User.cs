@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Linq;
 using AwManaged.Security.RemoteBotEngine.Interfaces;
 using Db4objects.Db4o;

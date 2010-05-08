@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Patterns;
 
 namespace AwManaged.Scene.Interfaces
@@ -26,14 +26,14 @@ namespace AwManaged.Scene.Interfaces
     /// <typeparam name="TParticle">The type of the particle.</typeparam>
     /// <typeparam name="TParticleFlags">The type of the particle flags.</typeparam>
     public interface ISceneNodes<TModel, TCamera, TMover, TZone, THudBase, TAvatar, TParticle, TParticleFlags>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TCamera : MarshalByRefObject, ICamera<TCamera>
-        where TMover : MarshalByRefObject, IMover<TMover>
-        where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TZone : MarshalByRefObject, IZone<TZone, TModel, TCamera>
-        where TParticle : MarshalByRefObject, IParticle<TParticle, TParticleFlags>
-        where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TCamera : MarshalIndefinite, ICamera<TCamera>
+        where TMover : MarshalIndefinite, IMover<TMover>
+        where THudBase : MarshalIndefinite, IHudBase<THudBase, TAvatar>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TZone : MarshalIndefinite, IZone<TZone, TModel, TCamera>
+        where TParticle : MarshalIndefinite, IParticle<TParticle, TParticleFlags>
+        where TParticleFlags : MarshalIndefinite, IParticleFlags<TParticleFlags>
     {
         /// <summary>
         /// Gets the avatars.

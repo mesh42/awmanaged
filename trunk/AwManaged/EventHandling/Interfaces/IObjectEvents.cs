@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Templated;
 using AwManaged.Scene;
@@ -18,9 +18,9 @@ using AwManaged.Scene.Interfaces;
 namespace AwManaged.EventHandling.Interfaces
 {
     interface IObjectEvents<TSender, TAvatar, TModel, TSceneNodes> 
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TSceneNodes : MarshalByRefObject, ICloneableT<TSceneNodes>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TSceneNodes : MarshalIndefinite, ICloneableT<TSceneNodes>
     {
         event ObjectEventClickDelegate<TSender, TAvatar,TModel> ObjectEventClick;
         /// <summary>

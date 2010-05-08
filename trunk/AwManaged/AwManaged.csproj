@@ -118,6 +118,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -243,6 +244,7 @@
     <Compile Include="LocalServices\WebServerConnection.cs" />
     <Compile Include="LocalServices\WebServer\Attributes\WebFormFieldAttribute.cs" />
     <Compile Include="LocalServices\WebServer\WebServerService.cs" />
+    <Compile Include="RemoteServices\CrossAppDomainSingleton.cs" />
     <Compile Include="RemoteServices\RemotingBotClient.cs" />
     <Compile Include="RemoteServices\RemotingBotEngine.cs" />
     <Compile Include="RemoteServices\Client\RemotingClient.cs" />
@@ -473,6 +475,10 @@
       <Project>{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}</Project>
       <Name>CassiniDev %28Dependencies\cassinidev\CassiniDev%29</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharedMemory\SharedMemory.csproj">
+      <Project>{B377E456-FC1D-4B39-8714-A8EC129B1B16}</Project>
+      <Name>SharedMemory</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -502,6 +508,17 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="mscoree">
+      <Guid>{5477469E-83B1-11D2-8B49-00A0C9B7C9C4}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -102,6 +102,7 @@
       <SubType>
       </SubType>
     </Compile>
+    <Compile Include="Cassini Source\IHostBotReference.cs" />
     <Compile Include="Cassini Source\Server.cs" />
     <Compile Include="CommandLineParser\ArgumentsAttribute.cs" />
     <Compile Include="CommandLineParser\ArgumentType.cs" />
@@ -188,6 +189,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharedMemory\SharedMemory.csproj">
+      <Project>{B377E456-FC1D-4B39-8714-A8EC129B1B16}</Project>
+      <Name>SharedMemory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

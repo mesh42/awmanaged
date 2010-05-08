@@ -9,11 +9,12 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
+using AwManaged.Core.Patterns;
 
 namespace AwManaged.Scene.Interfaces
 {
-    public interface IParticleFlags<T> : ISceneNode<T> where T : MarshalByRefObject
+    public interface IParticleFlags<T> : ISceneNode<T> where T : MarshalIndefinite
     {
         bool CameraEmit { get; set; }
         bool DrawInFront { get; set; }

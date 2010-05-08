@@ -9,13 +9,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene.Interfaces
 {
     public interface IWorld<T> : ISceneNode<T>
-        where T : MarshalByRefObject
+        where T : MarshalIndefinite
     {
         string Name { get; set; }
         Guid Id { get; }

@@ -10,7 +10,7 @@
  *
  * **********************************************************************************/
 
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -247,6 +247,7 @@ namespace Cassini
                         host = (Host)CreateWorkerAppDomainWithHost(_virtualPath, _physicalPath, typeof(Host));
                         host.Configure(this, _port, _virtualPath, _physicalPath);
                         _host = host;
+                       
                     }
                 }
             }
@@ -266,6 +267,11 @@ namespace Cassini
             var buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
             var buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
 
+           // HostingEnvironment.ApplicationHost.GetPhysicalPath();
+            HostingEnvironment.Cache.Insert("Test", "Cool");
+
+
+
             // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
             buildManagerHostType.InvokeMember(
                 "RegisterAssembly",
@@ -273,8 +279,6 @@ namespace Cassini
                 null,
                 buildManagerHost,
                 new object[2] { hostType.Assembly.FullName, hostType.Assembly.Location });
-
-            // create Host in the worker app domain
             return appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false);
         }
     }

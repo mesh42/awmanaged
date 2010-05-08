@@ -211,7 +211,7 @@
 //    01/01/2010 sky: cleaned up Parser.cs
 //////////////////////////////////////////////////////////////////////////////
 /// 
-using System;
+using SharedMemory;using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;

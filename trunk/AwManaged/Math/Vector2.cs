@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 
 namespace AwManaged.Math
 {

@@ -9,12 +9,12 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.Scene.Interfaces
 {
-    public interface ISceneNode<T> : IObjectLifetime, ICloneableT<T>, IChanged<T> where T : MarshalByRefObject
+    public interface ISceneNode<T> : IObjectLifetime, ICloneableT<T>, IChanged<T> where T : MarshalIndefinite
     {
     }
 }

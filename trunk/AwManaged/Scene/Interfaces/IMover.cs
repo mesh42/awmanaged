@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AW;
 using AwManaged.Math;
 
 namespace AwManaged.Scene.Interfaces
 {
     public interface IMover<T> : ISceneNode<T>
-        where T : MarshalByRefObject
+        where T : MarshalIndefinite
     {
         sbyte AccelerationTiltX { set; get; }
         sbyte AccelerationTiltZ { set; get; }

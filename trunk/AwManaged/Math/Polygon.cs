@@ -1,6 +1,6 @@
 ﻿namespace AwManaged.Math
 {
-    using System;
+    using SharedMemory;using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Xml.Serialization;
