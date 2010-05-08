@@ -1,4 +1,5 @@
 using System;
+using SharedMemory;using System;
 
 namespace Cassini.CommandLine
 {

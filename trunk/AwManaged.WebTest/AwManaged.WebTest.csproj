@@ -41,7 +41,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>..\AwManaged.Tests\bin\x86\Debug\www\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -60,6 +60,9 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Db4objects.Db4o, Version=7.4.58.11547, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
@@ -89,23 +92,25 @@
   <ItemGroup>
     <Content Include="Default.aspx">
     </Content>
+    <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="WebForm1.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTestClass.cs" />
     <Compile Include="Default.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemotingClient.cs" />
     <Compile Include="WebForm1.aspx.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="WebForm1.aspx.designer.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
@@ -116,6 +121,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AwManaged\AwManaged.csproj">
+      <Project>{5A015714-4A31-4054-B251-F705353CA91D}</Project>
+      <Name>AwManaged</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dependencies\cassinidev\CassiniDev.csproj">
+      <Project>{0D9F0FEA-45F7-4CE4-9868-6FB9BBE3DD4C}</Project>
+      <Name>CassiniDev %28Dependencies\cassinidev\CassiniDev%29</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharedMemory\SharedMemory.csproj">
+      <Project>{B377E456-FC1D-4B39-8714-A8EC129B1B16}</Project>
+      <Name>SharedMemory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -135,4 +154,13 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)\*.aspx" "$(TargetDir)..\"
+copy "$(ProjectDir)\*.config" "$(TargetDir)..\"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -9,7 +9,7 @@
 //  * You must not remove this notice, or any other, from this software.
 //  *
 //  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Net;
 using System.Threading;
 using CassiniDev;
@@ -35,6 +35,8 @@ namespace Cassini
         private int _requestCount;
         private int _timeout;
         private Timer _timer;
+
+        public static object BotEngine { get; set; }
 
         public Server(ServerArguments args)
             : this(args.Port, args.VirtualPath, args.ApplicationPath)

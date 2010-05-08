@@ -1,5 +1,6 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
+using AwManaged.Core.Patterns;
 using AwManaged.Scene;
 
 namespace AwManaged.EventHandling.BotEngine
@@ -7,7 +8,7 @@ namespace AwManaged.EventHandling.BotEngine
     [Serializable]
     public delegate void AvatarEventChangeDelegate(AwManaged.BotEngine sender, EventAvatarChangeArgs e);
 
-    public class EventAvatarChangeArgs : MarshalByRefObject
+    public class EventAvatarChangeArgs : MarshalIndefinite
     {
         public Avatar AvatarPreviousState
         {

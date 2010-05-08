@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.EventHandling.Templated;
 using AwManaged.Scene.Interfaces;
 
@@ -19,10 +19,10 @@ namespace AwManaged.EventHandling.Interfaces
     /// Interface which exposes the events of a bot instance
     /// </summary>
     public interface IAvatarEvents<TSender, TAvatar, TEventAvatarAddArgs, TEventAvatarClickArgs, TEventAvatarRemoveArgs>
-        where TAvatar: MarshalByRefObject, IAvatar<TAvatar>
-        where TEventAvatarAddArgs: MarshalByRefObject, IEventAvatarAddArgs<TAvatar>
-        where TEventAvatarClickArgs : MarshalByRefObject, IEventAvatarClickArgs<TAvatar>
-        where TEventAvatarRemoveArgs : MarshalByRefObject, IEventAvatarRemoveArgs<TAvatar>
+        where TAvatar: MarshalIndefinite, IAvatar<TAvatar>
+        where TEventAvatarAddArgs: MarshalIndefinite, IEventAvatarAddArgs<TAvatar>
+        where TEventAvatarClickArgs : MarshalIndefinite, IEventAvatarClickArgs<TAvatar>
+        where TEventAvatarRemoveArgs : MarshalIndefinite, IEventAvatarRemoveArgs<TAvatar>
     {
         /// <summary>
         /// Occurs when [avatar is added].

@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Interfaces;
 using AwManaged.Scene.Interfaces;
@@ -17,12 +17,12 @@ using AwManaged.Scene.Interfaces;
 namespace AwManaged.EventHandling.Templated
 {
     public delegate void ObjectEventRemoveDelegate<TSender, TAvatar, TModel>(TSender sender, EventObjectRemoveArgs<TAvatar,TModel> e)
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>;
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>;
 
-    public sealed class EventObjectRemoveArgs<TAvatar, TModel> : MarshalByRefObject, IEventObjectRemoveArgs<TModel,TAvatar>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+    public sealed class EventObjectRemoveArgs<TAvatar, TModel> : MarshalIndefinite, IEventObjectRemoveArgs<TModel,TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         #region IEventObjectRemoveArgs<Model,Avatar> Members
 

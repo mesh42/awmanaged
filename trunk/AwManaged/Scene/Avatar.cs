@@ -9,13 +9,15 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
+using AwManaged.Core.Patterns;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public sealed class Avatar : MarshalByRefObject, IAvatar<Avatar>
+    [Serializable]
+    public sealed class Avatar : MarshalIndefinite, IAvatar<Avatar>
     {
         public int Session { get; set; }
         public string Name { get; set; }
@@ -69,12 +71,12 @@ namespace AwManaged.Scene
 
         public TimeSpan LifeTime
         {
-            get { throw new NotImplementedException(); }
+            get { return new TimeSpan(); }
         }
 
         public TimeSpan IdleTime
         {
-            get { throw new NotImplementedException(); }
+            get { return new TimeSpan(); }
         }
 
         #endregion

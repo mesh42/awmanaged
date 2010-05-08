@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 
 namespace AwManaged.EventHandling.BotEngine
@@ -17,7 +17,7 @@ namespace AwManaged.EventHandling.BotEngine
     [Serializable]
     public delegate void TransactionEventCompletedDelegate(AwManaged.BotEngine sender, EventTransactionCompletedArgs e);
 
-    public sealed class EventTransactionCompletedArgs : MarshalByRefObject
+    public sealed class EventTransactionCompletedArgs : MarshalIndefinite
     {
         public EventTransactionCompletedArgs(ITransaction transaction)
         {

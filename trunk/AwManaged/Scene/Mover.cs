@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public sealed class Mover : MarshalByRefObject, IMover<Mover>
+    public sealed class Mover : MarshalIndefinite, IMover<Mover>
     {
         #region ICloneableT<Mover> Members
 

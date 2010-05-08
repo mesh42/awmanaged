@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -97,15 +97,16 @@ namespace StandardBotPluginLibrary.ColorChatBot
         {
             switch (e.ChatType)
             {
-                case ChatType.Normal:
+                case ChatType.Normal: 
+                case ChatType.Broadcast:
                     var setting =
                         (from AvatarColorChatSetting p in _settings where (p.Citizen == e.Avatar.Citizen) select p).
                             Single();
                     var name = e.Avatar.Name + ":".PadRight(31 - e.Avatar.Name.Length);
-                    Bot.ConsoleMessage(setting.Color, setting.IsBold, setting.IsItalic, name + e.Message);
+                    Bot.ConsoleMessage(e.Avatar.Name,setting.Color, setting.IsBold, setting.IsItalic,e.Message);
                     break;
-                case ChatType.Whisper:
-                    var cmd = new CommandLine(e.Message); /* use a simple command line interpreter */
+                case ChatType.Whisper: 
+                    var cmd = new CommandLine(e.Message.ToLower()); /* use a simple command line interpreter */
                     switch (cmd.Command)
                     {
                         case "!ccbot":
@@ -121,7 +122,7 @@ namespace StandardBotPluginLibrary.ColorChatBot
                                      select p).Single();
                                 try
                                 {
-                                    currentColor.Color = ColorTranslator.FromHtml(cmd.Arguments[0].Value.Value);
+                                    currentColor.Color = ColorTranslator.FromHtml(cmd.Arguments[0].Value.Value.ToLower());
                                     var dbColor = (from AvatarColorChatSetting p in sender.Storage.Db where (p.Citizen == e.Avatar.Citizen)
                                                   select p).Single();
                                     dbColor.Color = currentColor.Color; /* todo: this object reference pattern should be genericly embedded within BotEngine */

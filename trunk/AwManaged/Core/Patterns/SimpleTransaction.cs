@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using System.Diagnostics;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.BotEngine;

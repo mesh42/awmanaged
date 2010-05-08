@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.ComponentModel;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Core.Interfaces;
@@ -18,7 +18,7 @@ using AWManaged.Security;
 
 namespace AwManaged.Configuration
 {
-    public class UniverseConnectionProperties : MarshalByRefObject, IUniverseConnectionProperties<UniverseConnectionProperties>
+    public class UniverseConnectionProperties : MarshalIndefinite, IUniverseConnectionProperties<UniverseConnectionProperties>
     {
         private int _connectionTimeOut = 10000;
 

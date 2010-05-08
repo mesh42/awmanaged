@@ -10,7 +10,7 @@
  *
  * **********************************************************************************/
 
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -26,7 +26,7 @@ namespace Cassini {
     /// <summary>
     /// 12/29/09 sky: changed visibility to public
     /// </summary>
-    public class Connection : MarshalByRefObject {
+    public class Connection : MarshalIndefinite {
         Server _server;
         Socket _socket;
         string _localServerIP;

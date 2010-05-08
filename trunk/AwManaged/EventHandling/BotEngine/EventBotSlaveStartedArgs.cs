@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Configuration;
 using AwManaged.Core.Interfaces;
 
@@ -18,7 +18,7 @@ namespace AwManaged.EventHandling.BotEngine
     [Serializable]
     public delegate void BotEventSlaveStarted(AwManaged.BotEngine sender, EventBotSlaveStartedArgs e);
 
-    public class EventBotSlaveStartedArgs : MarshalByRefObject
+    public class EventBotSlaveStartedArgs : MarshalIndefinite
     {
         private readonly int _node;
 

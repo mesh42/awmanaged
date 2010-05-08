@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -17,7 +17,7 @@ using System.Runtime.Serialization.Formatters;
 
 namespace AwManaged.RemoteServices
 {
-    public class RemotingBotEngine : MarshalByRefObject
+    public class RemotingBotEngine : MarshalIndefinite
     {
         public void CallEventTest()
         {

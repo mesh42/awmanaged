@@ -20,7 +20,7 @@ LicenseFile=D:\ManagedActiveWorlds\AwManaged.Tests\bin\x86\Debug\License.txt
 InfoBeforeFile=D:\ManagedActiveWorlds\Deployment\InformationBeforeInstall.txt
 InfoAfterFile=D:\ManagedActiveWorlds\Deployment\InformationAfterInstall.txt
 OutputDir=D:\ManagedActiveWorlds\Deployment
-OutputBaseFilename=awmanaged-sdk-0.5.15
+OutputBaseFilename=awmanaged-sdk-0.5.16.2
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
@@ -39,7 +39,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 Source: D:\Program Files (x86)\ISTool\isxdl.dll; Flags: dontcopy
 Source: "D:\ManagedActiveWorlds\AwManaged.Tests\bin\x86\Debug\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\ManagedActiveWorlds\AwManaged.Tests\bin\x86\Debug\*.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\ManagedActiveWorlds\AwManaged.Tests\bin\x86\Debug\Console.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\ManagedActiveWorlds\Deployment\Console.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

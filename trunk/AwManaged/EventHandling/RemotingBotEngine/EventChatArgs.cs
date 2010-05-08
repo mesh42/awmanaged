@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Scene;
 
@@ -18,7 +18,7 @@ namespace AwManaged.EventHandling.RemotingBotEngine
     [Serializable]
     public delegate void ChatEventDelegate(RemoteServices.RemotingBotEngine sender, EventChatArgs e);
 
-    public sealed class EventChatArgs : MarshalByRefObject
+    public sealed class EventChatArgs : MarshalIndefinite
     {
         public EventChatArgs(ICloneableT<Avatar> avatar, ChatType chatType, string message)
         {

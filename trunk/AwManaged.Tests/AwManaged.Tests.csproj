@@ -169,6 +169,10 @@
       <Project>{5A015714-4A31-4054-B251-F705353CA91D}</Project>
       <Name>AwManaged</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharedMemory\SharedMemory.csproj">
+      <Project>{B377E456-FC1D-4B39-8714-A8EC129B1B16}</Project>
+      <Name>SharedMemory</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt">

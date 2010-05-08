@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Math;
 using AwManaged.Scene;
 
 namespace AwManaged.Scene.Interfaces
 {
     public interface IAvatar<T> : ISceneNode<T>
-        where T : MarshalByRefObject
+        where T : MarshalIndefinite
     {
         /// <summary>
         /// Gets or sets the session.

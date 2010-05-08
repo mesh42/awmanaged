@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.ServiceModel;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
@@ -21,7 +21,7 @@ namespace AwManaged.Scene.Interfaces
     /// </summary>
     /// <typeparam name="TAvatar">The type of the avatar, which needs to implement IAvatar</typeparam>
     [ServiceContract]
-    public interface IAvatarCommands<TAvatar> where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+    public interface IAvatarCommands<TAvatar> where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         /// <summary>
         /// Sets the avatar's position and yaw.

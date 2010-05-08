@@ -1,3 +1,13 @@
+Release 0.5.17 (unstable) feature/maintenance release
+* Abstracting MarshalByRefObject to MarshalIndefinite, note this breaks compatibility with previous verisons of DB on the AFK bot.
+* Adding Cross AppDomain Singleton Pattern, for sharing object memory between web server and BotEngine.
+* Adding Case Sensitivity Match to CommandLineIntepreter
+* [Bug-Fix] minor bugs in some bot plugins
+* Migrating to console messaging for bots, so they work when Chat is set to Hidden in the World.
+* [Bug-Fix] Console Prompt, console color did not reset after error message.
+* [Bug-Fix] Console Prompt does not change in time when switching to chat mode.
+* Adding Exception handling code to the quote bot for network connectivity issues.
+
 Release 0.5.16 (unstable) feature/maintenance release
 * Adding ConsoleMessage method to IChatCommands
 * Adding Color Chat Bot to the standard bot plugin library.
@@ -15,6 +25,7 @@ Release 0.5.14 (unstable) feature/maintenance release
 * Adding Vector2 to math, primarliy used for UV coordinates on the simple RWX analyzer.
 * Adding Polygon to math, also used primarily by the simple RWX analyzer.
 * Adding a commmand line tool, that dumps the RWX statistics under /Tools solution folder.
+
 
 Release 0.5.13 (unstable) major maintenance release
 * Upgraded to Visual Studio 2010

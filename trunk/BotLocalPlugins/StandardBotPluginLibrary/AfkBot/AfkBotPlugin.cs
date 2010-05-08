@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using AwManaged;
 using AwManaged.Core.Commanding;
@@ -94,7 +94,7 @@ namespace StandardBotPluginLibrary.AfkBot
             var status = query.Single();
             status.LastSeen = DateTime.Now;
             var cmd = new CommandLine(e.Message); /* use a simple command line interpreter */
-            switch (cmd.Command)
+            switch (cmd.Command.ToLower())
             {
                 case "!seen":
                     if (cmd.Arguments.Count == 0)

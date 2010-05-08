@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace AwManagedIde.Properties {
-    using System;
+    using SharedMemory;using System;
     
     
     /// <summary>

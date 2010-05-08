@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Drawing;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
@@ -17,7 +17,7 @@ using Db4objects.Db4o.Config.Attributes;
 
 namespace AwManaged.Scene
 {
-    public class Particle : MarshalByRefObject, IParticle<Particle, ParticleFlags>
+    public class Particle : MarshalIndefinite, IParticle<Particle, ParticleFlags>
     {
         [Indexed]private Vector3 _accelerationMinimum;
         [Indexed]private Vector3 _accelerationMaximum;

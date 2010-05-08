@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.EventHandling.Interfaces;
 using AwManaged.Scene.Interfaces;
@@ -18,12 +18,12 @@ namespace AwManaged.EventHandling.Templated
 {
     public delegate void ObjectEventChangeDelegate<TSender, TAvatar, TModel>(
         TSender sender, EventObjectChangeArgs<TAvatar, TModel> e)
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TModel : MarshalByRefObject, IModel<TModel>;
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>;
 
     public sealed class EventObjectChangeArgs<TAvatar,TModel> : IEventObjectChangeArgs<TModel, TAvatar>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TModel : MarshalByRefObject, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>
     {
         public TModel Model { get; private set; }
         public TAvatar Avatar { get; private set; }

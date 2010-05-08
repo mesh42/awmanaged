@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Configuration;
 using AwManaged.Core.Interfaces;
 
@@ -18,7 +18,7 @@ namespace AwManaged.EventHandling.BotEngine
     [Serializable]
     public delegate void BotEventEntersWorldDelegate(AwManaged.BotEngine sender, EventBotEntersWorldArgs e);
 
-    public class EventBotEntersWorldArgs : MarshalByRefObject
+    public class EventBotEntersWorldArgs : MarshalIndefinite
     {
         public UniverseConnectionProperties ConnectionProperties{get;private set;}
 

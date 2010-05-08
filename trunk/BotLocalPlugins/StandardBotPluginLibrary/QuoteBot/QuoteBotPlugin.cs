@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SharedMemory;using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AwManaged;
@@ -28,7 +28,14 @@ namespace StandardBotPluginLibrary.QuoteBot
         {
             _random = new Random();
             _db = Bot.Storage.Clone();
-            _rss = new RssReader("http://quotes4all.net/rss/090010110/quotes.xml");
+            try
+            {
+                _rss = new RssReader("http://quotes4all.net/rss/090010110/quotes.xml");
+            }
+            catch (Exception ex)
+            {
+                Bot.Console.Write(ConsoleMessageType.Error,"QuoteBot: Can't connect to rss feed.");
+            }
             _totalQuotes = _db.Query(typeof(QuoteItem)).Count;
             // Add scheduling for polling the Rss feed.
             _rssSchedulingItem = new SchedulingItem();
@@ -51,14 +58,31 @@ namespace StandardBotPluginLibrary.QuoteBot
             Bot.Console.WriteLine(string.Format("QuoteBot: Polling Rss service."));
             try
             {
-                _rss.Refresh();
-                foreach (var rssItem in _rss.Entries)
+                try
                 {
-                    var quoteItem = new QuoteItem(_totalQuotes + 1, Regex.Replace(rssItem.Description, @"(<[^>]+>)", string.Empty).Trim());
-                    if ((from QuoteItem p in _db where p.Hash == quoteItem.Hash select p).Count() != 0) continue;
-                    _db.Store(quoteItem);
-                    _db.Commit();
-                    _totalQuotes++;
+                    _rss.Refresh();
+                }
+                catch
+                {
+                    Bot.Console.Write(ConsoleMessageType.Error, "QuoteBot: Can't connect to rss feed.");
+                    return;
+                }
+                try
+                {
+                    foreach (var rssItem in _rss.Entries)
+                    {
+                        var quoteItem = new QuoteItem(_totalQuotes + 1,
+                                                      Regex.Replace(rssItem.Description, @"(<[^>]+>)", string.Empty).
+                                                          Trim());
+                        if ((from QuoteItem p in _db where p.Hash == quoteItem.Hash select p).Count() != 0) continue;
+                        _db.Store(quoteItem);
+                        _db.Commit();
+                        _totalQuotes++;
+                    }
+                }
+                catch
+                {
+                    Bot.Console.Write(ConsoleMessageType.Error, "QuoteBot: Incorrect Rss format.");
                 }
             }
             catch (Exception ex)
@@ -78,7 +102,7 @@ namespace StandardBotPluginLibrary.QuoteBot
             var quote = (from QuoteItem p in _db where p.Id == id select p);
             var text = quote.Single().Quote;
             Bot.Console.WriteLine(string.Format("QuoteBot: {0}", text));
-            Bot.Say(text);
+            Bot.ConsoleMessage(System.Drawing.Color.DarkBlue,false,true, "Quote: \""  + text + "\"");
         }
 
         public override void Dispose()

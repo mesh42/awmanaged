@@ -9,13 +9,13 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Core.Interfaces;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public sealed class Camera : MarshalByRefObject, ICamera<Camera>
+    public sealed class Camera : MarshalIndefinite, ICamera<Camera>
     {
         #region ICloneableT<Camera> Members
 

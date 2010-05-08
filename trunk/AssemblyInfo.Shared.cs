@@ -15,5 +15,5 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright © 2009-2010 TCPX Software Engineering")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("0.5.16")]
-[assembly: AssemblyFileVersion("0.5.16")]
+[assembly: AssemblyVersion("0.5.17")]
+[assembly: AssemblyFileVersion("0.5.17")]

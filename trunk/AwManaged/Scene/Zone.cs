@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.Drawing;
 using AwManaged.Scene;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.Scene
 {
-    public sealed class Zone : MarshalByRefObject, IZone<Zone, Model, Camera>
+    public sealed class Zone : MarshalIndefinite, IZone<Zone, Model, Camera>
     {
         #region IZone Members
 

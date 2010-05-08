@@ -9,15 +9,38 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
+using System.Web.Hosting;
+using AwManaged.Interfaces;
+using AwManaged.LocalServices;
+using AwManaged.RemoteServices;
+using AwManaged.Scene;
+using AwManaged.Storage;
+using Cassini;
+using CassiniDev.Cassini_Source;
+
 //using AwManaged.LocalServices.WebServer.Attributes;
 
 namespace AwManaged.WebTest
 {
     public partial class _Default : System.Web.UI.Page
     {
+
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            //var b = AppDomain.CurrentDomain.GetData("BotEngine");
+
+
+            GridView1.DataSource = Global.Bot.SceneNodes.Avatars.ToArray();
+            GridView1.DataBind();
+            //foreach (Avatar avatar in Global.Bot.SceneNodes.Avatars)
+            //{
+            //    Response.Write(avatar.Citizen + ":" + avatar.Name + "<br/>");
+           // }
+            
+
+            //Response.Write(b.SceneNodes.Avatars.Count);
             //var c = new DataTestClass();
 
             //foreach (var property in c.GetType().GetProperties())

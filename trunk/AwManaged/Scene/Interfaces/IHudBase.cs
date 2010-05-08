@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AW;
 using AwManaged.Math;
 using AwManaged.Scene.Interfaces;
@@ -20,8 +20,8 @@ namespace AwManaged.Scene.Interfaces
     /// Hud Base Interface
     /// </summary>
     public interface IHudBase<THudBase,TAvatar> : ISceneNode<THudBase>
-        where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+        where THudBase : MarshalIndefinite, IHudBase<THudBase, TAvatar>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         /// <summary>
         /// Gets or sets the id.

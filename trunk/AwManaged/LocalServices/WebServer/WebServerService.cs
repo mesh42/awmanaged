@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using System.IO;
 using AwManaged.Core.Services;
 using Cassini;
@@ -18,7 +18,7 @@ namespace AwManaged.LocalServices.WebServer
 {
     public class WebServerService : BaseConnectedServiceDevice<WebServerConnection>
     {
-        private Cassini.Server _server;
+        public Cassini.Server _server;
 
         public WebServerService(string connection) : base(connection)
         {

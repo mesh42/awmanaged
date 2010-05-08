@@ -1,4 +1,4 @@
-using System;
+using SharedMemory;using System;
 using System.Runtime.InteropServices;
 using AwManaged.Math;
 using AwManaged.Serialization;

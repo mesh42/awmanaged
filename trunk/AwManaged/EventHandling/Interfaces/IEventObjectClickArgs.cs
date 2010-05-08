@@ -9,14 +9,14 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Scene.Interfaces;
 
 namespace AwManaged.EventHandling.Interfaces
 {
     public interface IEventObjectClickArgs<TModel, TAvatar>
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
     {
         /// <summary>
         /// The object the user clicked on.

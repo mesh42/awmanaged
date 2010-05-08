@@ -9,7 +9,7 @@
  * You must not remove this notice, or any other, from this software.
  *
  * **********************************************************************************/
-using System;
+using SharedMemory;using System;
 using AwManaged.Configuration;
 using AwManaged.Configuration.Interfaces;
 using AwManaged.Core.Interfaces;
@@ -22,24 +22,35 @@ namespace AwManaged.Interfaces
 {
     /// <summary>
     /// Main Interface for building a bot engine (remoting support is added in the interface).
-    /// The interface is build up as such, that a bot implementation can use different types of implementations 
+    /// The interface is build up as such, that a bot implementation can use different types of implementations
     /// in order to support a factory pattern.
     /// </summary>
-    public interface IBotEngine<TAvatar,TModel,TCamera,TZone, TMover, THudBase, TParticle, TParticleFlags,TConnectionInterface, TLocalBotServicesManager> : 
+    /// <typeparam name="TAvatar">The type of the avatar.</typeparam>
+    /// <typeparam name="TModel">The type of the model.</typeparam>
+    /// <typeparam name="TCamera">The type of the camera.</typeparam>
+    /// <typeparam name="TZone">The type of the zone.</typeparam>
+    /// <typeparam name="TMover">The type of the mover.</typeparam>
+    /// <typeparam name="THudBase">The type of the hud base.</typeparam>
+    /// <typeparam name="TParticle">The type of the particle.</typeparam>
+    /// <typeparam name="TParticleFlags">The type of the particle flags.</typeparam>
+    /// <typeparam name="TConnectionInterface">The type of the connection interface.</typeparam>
+    /// <typeparam name="TLocalBotServicesManager">The type of the local bot services manager.</typeparam>
+    public interface IBotEngine<TAvatar, TModel, TCamera, TZone, TMover, THudBase, TParticle, TParticleFlags,
+                                TConnectionInterface, TLocalBotServicesManager> :  
         IIdentifiable,
         IBotEngineEvents,
         IHandleExceptionManaged,
-        ISceneNodeCommands<TModel,TAvatar,THudBase>,
+        ISceneNodeCommands<TModel, TAvatar, THudBase>,
         IChatCommands<TAvatar>,
         IAvatarCommands<TAvatar>, IConfigurable
-        where TModel : MarshalByRefObject, IModel<TModel>
-        where TAvatar : MarshalByRefObject, IAvatar<TAvatar>
-        where TCamera : MarshalByRefObject, ICamera<TCamera>
-        where TMover : MarshalByRefObject, IMover<TMover>
-        where TZone : MarshalByRefObject, IZone<TZone, TModel, TCamera>
-        where THudBase : MarshalByRefObject, IHudBase<THudBase, TAvatar>
-        where TParticle : MarshalByRefObject, IParticle<TParticle,TParticleFlags>
-        where TParticleFlags : MarshalByRefObject, IParticleFlags<TParticleFlags>
+        where TModel : MarshalIndefinite, IModel<TModel>
+        where TAvatar : MarshalIndefinite, IAvatar<TAvatar>
+        where TCamera : MarshalIndefinite, ICamera<TCamera>
+        where TMover : MarshalIndefinite, IMover<TMover>
+        where TZone : MarshalIndefinite, IZone<TZone, TModel, TCamera>
+        where THudBase : MarshalIndefinite, IHudBase<THudBase, TAvatar>
+        where TParticle : MarshalIndefinite, IParticle<TParticle, TParticleFlags>
+        where TParticleFlags : MarshalIndefinite, IParticleFlags<TParticleFlags>
         where TConnectionInterface : IConnection<TConnectionInterface>
         where TLocalBotServicesManager : IServicesManager
     {

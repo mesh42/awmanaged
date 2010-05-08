@@ -10,7 +10,7 @@
  *
  * **********************************************************************************/
 
-using System;
+using SharedMemory;using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -23,6 +23,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Security.Permissions;
 using System.Security.Principal;
+using CassiniDev.Cassini_Source;
 
 namespace Cassini {
     /// <summary>
@@ -34,7 +35,7 @@ namespace Cassini {
     ///               and since I am no longer recommending that the server be used as a library in testing (run a console instance in a new process).
     ///               
     /// </summary>  
-    class Host : MarshalByRefObject, IRegisteredObject {
+    public class Host : MarshalIndefinite, IHostBotReference, IRegisteredObject {
         Server _server;
 
         int _port;
@@ -46,12 +47,13 @@ namespace Cassini {
         string _installPath;
         string _physicalClientScriptPath;
         string _lowerCasedClientScriptPathWithTrailingSlash;
-
-
         public override object InitializeLifetimeService() {
             // never expire the license
             return null;
         }
+
+        public static object BotEngine;
+        public static string bla2;
 
         public Host() {
             HostingEnvironment.RegisterObject(this);
@@ -170,6 +172,11 @@ namespace Cassini {
             if (path == null) return false;
             path = CultureInfo.InvariantCulture.TextInfo.ToLower(path);
             return (path == _lowerCasedVirtualPath || path == _lowerCasedVirtualPathWithTrailingSlash);
+        }
+
+        public string bla
+        {
+            get; set;
         }
     }
 }
